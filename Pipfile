@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 ipykernel = "*"
+epd-library = "*"
+pillow = "*"
 
 [dev-packages]
 
