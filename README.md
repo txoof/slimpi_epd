@@ -17,13 +17,13 @@ ctl.!default {
 
 ## Setup Python Environment
 ### Requirements
-- Debian Packages
+- Debian Packages -- install with apt
   * libtiff5-dev libopenjp2-7-dev
 
-- Python Libraries
+- Python Libraries -- install with pip
   * RPi.GPIO
   * spidev
   * Pillow
-- WaveShare i
+- WaveShare -- not sure best way to manage yet
   * epd-library: epd-library
 
