@@ -4,8 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-epd-library = "*"
 pillow = "*"
+ipykernel = "*"
+waveshare-epd = {editable = true,git = "https://github.com/txoof/e-Paper.git",subdirectory = "RaspberryPi_and_JetsonNano/python/"}
 
 [dev-packages]
 

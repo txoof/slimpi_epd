@@ -20,10 +20,13 @@ ctl.!default {
 - Debian Packages -- install with apt
   * libtiff5-dev libopenjp2-7-dev
 
-- Python Libraries -- install with pip
+- Python Libraries -- install with pipenv
   * RPi.GPIO
   * spidev
   * Pillow
-- WaveShare -- not sure best way to manage yet install with pip/pipenv
-  * epd-library: epd-library
+- WaveShare -- not sure best way to manage yet install with pipenv -- this is a fork of the library with the RaspberryPi directory renamed to remove the ampersand (&) character
+  * `pipenv install -e "git+https://github.com/txoof/e-Paper.git#egg=waveshare-epd&subdirectory=RaspberryPi_and_JetsonNano/python/"`
 
+
+## Notes & Useful Links
+[Pi Pinout](https://pinout.xyz/pinout/pin1_3v3_power)
