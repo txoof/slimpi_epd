@@ -24,6 +24,6 @@ ctl.!default {
   * RPi.GPIO
   * spidev
   * Pillow
-- WaveShare -- not sure best way to manage yet
+- WaveShare -- not sure best way to manage yet install with pip/pipenv
   * epd-library: epd-library
 
