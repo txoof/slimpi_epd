@@ -219,7 +219,7 @@
         "waveshare-epd": {
             "editable": true,
             "git": "https://github.com/txoof/e-Paper.git",
-            "ref": "4160442d34d5df0175e9975d62e317dc27ce113d",
+            "ref": "99ddc788d660b42f905ba4daa3ade7050033f8e3",
             "subdirectory": "RaspberryPi_and_JetsonNano/python/"
         },
         "wcwidth": {
