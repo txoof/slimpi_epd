@@ -3,26 +3,7 @@
 # coding: utf-8
 
 
-# In[2]:
-
-
-#get_ipython().run_line_magic('alias', 'nbconvert nbconvert constants.ipynb')
-
-
-
-
-# In[ ]:
-
-
-#get_ipython().run_line_magic('nbconvert', '')
-
-
-
-
-# In[16]:
-
-
-FONT = './fonts/Open_Sans/OpenSans-Regular.ttf'
+FONT = '../fonts/Open_Sans/OpenSans-Regular.ttf'
 
 # US English - Upper and lower case letters
 USA_CHARDIST = {
