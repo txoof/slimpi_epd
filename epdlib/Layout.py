@@ -1,130 +1,214 @@
-This application is used to convert notebook files (*.ipynb) to various other
-formats.
+#!/usr/bin/env ipython
+#!/usr/bin/env python
+# coding: utf-8
 
-WARNING: THE COMMANDLINE INTERFACE MAY CHANGE IN FUTURE RELEASES.
 
-Options
--------
+# In[11]:
 
-Arguments that take values are actually convenience aliases to full
-Configurables, whose aliases are listed on the help line. For more information
-on full configurables, see '--help-all'.
 
---debug
-    set log level to logging.DEBUG (maximize logging output)
---generate-config
-    generate default config file
--y
-    Answer yes to any questions instead of prompting.
---execute
-    Execute the notebook prior to export.
---allow-errors
-    Continue notebook execution even if one of the cells throws an error and include the error message in the cell output (the default behaviour is to abort conversion). This flag is only relevant if '--execute' was specified, too.
---stdin
-    read a single notebook file from stdin. Write the resulting notebook with default basename 'notebook.*'
---stdout
-    Write notebook output to stdout instead of files.
---inplace
-    Run nbconvert in place, overwriting the existing notebook (only 
-    relevant when converting to notebook format)
---clear-output
-    Clear output of current file and save in place, 
-    overwriting the existing notebook.
---no-prompt
-    Exclude input and output prompts from converted document.
---no-input
-    Exclude input cells and output prompts from converted document. 
-    This mode is ideal for generating code-free reports.
---log-level=<Enum> (Application.log_level)
-    Default: 30
-    Choices: (0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL')
-    Set the log level by value or name.
---config=<Unicode> (JupyterApp.config_file)
-    Default: ''
-    Full path of a config file.
---to=<Unicode> (NbConvertApp.export_format)
-    Default: 'html'
-    The export format to be used, either one of the built-in formats
-    ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf',
-    'python', 'rst', 'script', 'slides'] or a dotted object name that represents
-    the import path for an `Exporter` class
---template=<Unicode> (TemplateExporter.template_file)
-    Default: ''
-    Name of the template file to use
---writer=<DottedObjectName> (NbConvertApp.writer_class)
-    Default: 'FilesWriter'
-    Writer class used to write the  results of the conversion
---post=<DottedOrNone> (NbConvertApp.postprocessor_class)
-    Default: ''
-    PostProcessor class used to write the results of the conversion
---output=<Unicode> (NbConvertApp.output_base)
-    Default: ''
-    overwrite base name use for output files. can only be used when converting
-    one notebook at a time.
---output-dir=<Unicode> (FilesWriter.build_directory)
-    Default: ''
-    Directory to write output(s) to. Defaults to output to the directory of each
-    notebook. To recover previous default behaviour (outputting to the current
-    working directory) use . as the flag value.
---reveal-prefix=<Unicode> (SlidesExporter.reveal_url_prefix)
-    Default: ''
-    The URL prefix for reveal.js (version 3.x). This defaults to the reveal CDN,
-    but can be any url pointing to a copy  of reveal.js.
-    For speaker notes to work, this must be a relative path to a local  copy of
-    reveal.js: e.g., "reveal.js".
-    If a relative path is given, it must be a subdirectory of the current
-    directory (from which the server is run).
-    See the usage documentation
-    (https://nbconvert.readthedocs.io/en/latest/usage.html#reveal-js-html-
-    slideshow) for more details.
---nbformat=<Enum> (NotebookExporter.nbformat_version)
-    Default: 4
-    Choices: [1, 2, 3, 4]
-    The nbformat version to write. Use this to downgrade notebooks.
+#get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
 
-To see all available configurables, use `--help-all`
 
-Examples
---------
 
-    The simplest way to use nbconvert is
+
+# In[14]:
+
+
+#get_ipython().run_line_magic('nbconvert', '')
+
+
+
+
+# In[16]:
+
+
+import logging
+from pathlib import Path
+import copy
+from . import layouts
+from . import constants
+from PIL import Image, ImageDraw, ImageFont
+# from TextBlock import TextBlock
+# from ImageBlock import ImageBlock
+from . import Block
+
+
+
+
+# In[5]:
+
+
+class Layout:
+    '''Class for defining layout of epd screen
     
-    > jupyter nbconvert mynotebook.ipynb
+    This class allows screen layouts to be declared in terms of image blocks in an X, Y plane. 
+    Block placement is defined in terms of absolute or relative positions. Only one block 
+    with absolute coordinates is needed. Block size is calculated based on screen size.
     
-    which will convert mynotebook.ipynb to the default format (probably HTML).
+    Attributes:
+        resolution (:obj:`tuple` of :obj: `int`): X, Y screen resolution in pixles
+        font (str): path to font file
+        layout (dict): dictionary with layout instructions (see below)
+        
+    '''
+    def __init__(self, resolution=(600, 448), layout=None, font=constants.FONT):
+        self.resolution = resolution
+        self.font = str(Path(font).resolve())
+        self.layout = copy.deepcopy(layout)
+        self.images = None
+
+    def _check_keys(self, dictionary={}, values={}):
+        logging.debug('checking key/values')
+        for k, v in values.items():
+            try:
+                dictionary[k]
+            except KeyError as e:
+                logging.debug(f'missing key: {k}; adding and setting to {v}')
+                dictionary[k] = v
+        return dictionary
     
-    You can specify the export format with `--to`.
-    Options include ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'rst', 'script', 'slides'].
+    def _scalefont(self, font=None, lines=1, text="W", dimensions=(100, 100)):
+        
+        if font:
+            font = str(Path(font).resolve())
+        else:
+            font = str(Path(self.font).resolve())
+            
+        logging.debug('calculating font size')
+        logging.debug(f'using font at path: {font}')
+        
+        
+        # start calculating at size 1
+        fontsize = 1
+        y_fraction = .7
+        target = dimensions[1]/lines*y_fraction
+        testfont = ImageFont.truetype(font, fontsize)
+        fontdim = testfont.getsize(text)
+        
+        logging.debug(f'target Y fontsize: {target}')
+        
+        # work up until font covers img_fraction of the resolution return one smaller than this as the fontsize
+        while fontdim[1] < target:
+            fontdim = testfont.getsize(text)
+            if fontdim[1] > dimensions[1]:
+                logging.warn('font Y dimension is larger than Y area; bailing out')
+                break
+            fontsize += 1
+            testfont = ImageFont.truetype(font, fontsize)
+            
+        # back off one 
+        fontsize -= 1
+        logging.debug(f'fontsize: {fontsize}')
+        return fontsize
     
-    > jupyter nbconvert --to latex mynotebook.ipynb
+    @property
+    def layout(self):
+        return self._layout
     
-    Both HTML and LaTeX support multiple output templates. LaTeX includes
-    'base', 'article' and 'report'.  HTML includes 'basic' and 'full'. You
-    can specify the flavor of the format used.
+    @layout.setter
+    def layout(self, layout):
+        logging.debug(f'calculating values from layout for resolution {self.resolution}')
+        if not layout:
+            logging.info('no layout provided')
+            self._layout = None
+        else:
+            self._layout = self.calculate_layout(layout)
+#             self.set_images()
     
-    > jupyter nbconvert --to html --template basic mynotebook.ipynb
     
-    You can also pipe the output to stdout, rather than a file
-    
-    > jupyter nbconvert mynotebook.ipynb --stdout
-    
-    PDF is generated via latex
-    
-    > jupyter nbconvert mynotebook.ipynb --to pdf
-    
-    You can get (and serve) a Reveal.js-powered slideshow
-    
-    > jupyter nbconvert myslides.ipynb --to slides --post serve
-    
-    Multiple notebooks can be given at the command line in a couple of 
-    different ways:
-    
-    > jupyter nbconvert notebook*.ipynb
-    > jupyter nbconvert notebook1.ipynb notebook2.ipynb
-    
-    or you can specify the notebooks list in a config file, containing::
-    
-        c.NbConvertApp.notebooks = ["my_notebook.ipynb"]
-    
-    > jupyter nbconvert --config mycfg.py
+    def calculate_layout(self, layout):
+        if not layout:
+            return None
+        l = layout
+        resolution = self.resolution
+        # required values that will be used in calculating the layout
+        values = {'image': None, 'max_lines': 1, 'padding': 0, 'width': 1, 'height': 1, 
+                  'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 'relative': False, 
+                  'font': self.font, 'fontsize': None, 'dimensions': None}        
+        for section in l:
+            logging.debug(f'***{section}***')
+            this_section = self._check_keys(l[section], values)
+                    
+            dimensions = (round(resolution[0]*this_section['width']), 
+                          round(resolution[1]*this_section['height']))
+            
+            this_section['dimensions'] = dimensions
+            logging.debug(f'dimensions: {dimensions}')       
+        
+            # set the thumbnail_size to resize the image
+            if this_section['image']:
+                maxsize = min(this_section['dimensions'])-this_section['padding']*2
+                this_section['thumbnail_size'] = (maxsize, maxsize)
+            
+            # calculate the relative position if needed
+            # if either of the coordinates are set as "None" - attempt to calculate the position
+            if this_section['abs_coordinates'][0] is None or this_section['abs_coordinates'][1] is None:
+                logging.debug(f'has calculated position')
+                # store coordinates
+                pos = []
+                # check each value in relative section
+                for idx, r in enumerate(this_section['relative']):
+                    if r == section:
+                        # use the value from this_section
+                        pos.append(this_section['abs_coordinates'][idx])
+                    else:
+                        # use the value from another section
+                        pos.append(l[r]['dimensions'][idx] + l[r]['abs_coordinates'][idx])
+                
+                # save the values as a tuple
+                this_section['abs_coordinates']=(pos[0], pos[1])
+            else:
+                logging.debug('has explict position')
+                ac= this_section['abs_coordinates']
+            logging.debug(f'abs_coordinates: {ac}')
+                          
+            # calculate fontsize
+            if this_section['max_lines']:
+                if not this_section['font']:
+                    this_section['font'] = self.font
+                          
+                if not this_section['fontsize']:
+                    this_section['fontsize'] = self._scalefont(font=this_section['font'], 
+                                                               dimensions=this_section['dimensions'],
+                                                               lines=this_section['max_lines'])    
+
+            l[section] = this_section    
+        return l
+                              
+    def set_images(self):
+        '''create dictonary of all image blocks with using the current set layout
+        
+            Sets
+            ----
+                ::blocks :dict of: TextBlock(), ImageBlock()
+            '''
+                          
+        
+        layout = self.layout
+        
+        blocks = {}
+        for sec in layout:
+            logging.debug(f'***{sec}***)')
+            section = layout[sec]
+            # any section with max lines accepts text
+            if section['max_lines']:
+                logging.debug('set text block')
+                blocks[sec] = Block.TextBlock(area=section['dimensions'], text='.', font=section['font'], 
+                                       font_size=section['fontsize'], max_lines=section['max_lines'],
+                                       hcenter=section['hcenter'], vcenter=section['vcenter'],
+                                       abs_coordinates=section['abs_coordinates'])
+            if section['image']:
+                logging.debug('set image block')
+                blocks[sec] = Block.ImageBlock(image=None, abs_coordinates=section['abs_coordinates'], 
+                                         area=section['dimensions'], hcenter=section['hcenter'],
+                                         vcenter=section['vcenter'], padding=section['padding'])
+        self.blocks = blocks
+                              
+    def update_contents(self, updates=None):
+        if not updates:
+            logging.debug('nothing to do')
+        
+        for key, val in updates.items():
+            self.blocks[key].update(val)
+
 

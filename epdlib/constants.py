@@ -2,8 +2,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from pathlib import Path
 
-FONT = '../fonts/Open_Sans/OpenSans-Regular.ttf'
+FONT = str(Path('./fonts/Open_Sans/OpenSans-Regular.ttf').resolve())
 
 # US English - Upper and lower case letters
 USA_CHARDIST = {
