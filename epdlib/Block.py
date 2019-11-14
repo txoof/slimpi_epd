@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[16]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[17]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,19 +19,23 @@
 
 
 
-# In[15]:
+# In[ ]:
 
 
 import logging
 import textwrap
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
-from . import constants
+
+try:
+    from . import constants
+except ImportError as e:
+    import constants
 
 
 
 
-# In[3]:
+# In[ ]:
 
 
 class Block:
@@ -83,7 +87,7 @@ class Block:
     def abs_coordinates(self, abs_coordinates):
         if self._coordcheck(abs_coordinates):
             self._abs_coordinates = abs_coordinates
-            self.img_coolrdinates = abs_coordinates
+            self.img_coordinates = abs_coordinates
             logging.debug(f'absolute coordinates: {abs_coordinates}')
         else:
             raise ValueError(f'bad absoluote coordinates: {abs_coordinates}')
@@ -125,12 +129,13 @@ class Block:
 
 
 
-# In[4]:
+# In[ ]:
 
 
 class ImageBlock(Block):
     def __init__(self, image=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         self.image = image
         
     @property
@@ -143,13 +148,20 @@ class ImageBlock(Block):
     @image.setter
     def image(self, image):
         if not image:
-            self._image = None
-            return None
+            logging.debug(f'setting empty 1x1 image')
+            self._image = Image.new('L', (1, 1), 255)
+            return self._image
+        
         logging.debug(f'formatting image: {image}')
         dim = min(self.area)-self.padding
         logging.debug(f'set image dimensions: {dim}')
         size = (dim, dim)
-        im = Image.open(image)
+        try:
+            im = Image.open(image)
+        except (PermissionError, FileNotFoundError, OSError) as e:
+            logging.warn(f'could not open image at {image}')
+            logging.warn('setting to blank 1x1 image')
+            im = Image.new('1', (1, 1), 255)
         im.convert(mode='L', colors=2)
         im.thumbnail(size)
         self.dimensions = im.size

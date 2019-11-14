@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[11]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[14]:
+# In[4]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,23 +19,49 @@
 
 
 
-# In[16]:
+# In[ ]:
 
 
 import logging
 from pathlib import Path
 import copy
+from PIL import Image, ImageDraw, ImageFont
+
+
+
+
+# In[2]:
+
+
 from . import layouts
 from . import constants
-from PIL import Image, ImageDraw, ImageFont
-# from TextBlock import TextBlock
-# from ImageBlock import ImageBlock
 from . import Block
 
 
 
 
-# In[5]:
+# In[ ]:
+
+
+# try: 
+#     from . import layouts
+# except ImportError as e:
+#     import layouts 
+    
+# try:
+#     from . import constants
+# except ImportError as e:
+#     import constants
+
+# try:
+#     from . import Block as Block
+# except ImportError as e:
+#     import Block as Block
+
+
+
+
+# In[ ]:
 
 
 class Layout:
@@ -45,19 +71,41 @@ class Layout:
     Block placement is defined in terms of absolute or relative positions. Only one block 
     with absolute coordinates is needed. Block size is calculated based on screen size.
     
+    Examples:
+    layotus.threeRow has the sections: 'title', 'album', 'artist', 'mode', 'coverart'
+    # creates the object and calculates the positions based on the rules set 
+    # in the layouts file and screen size
+    l = Layout(resolution=(600, 448), layout=layouts.threeRow)
+    # update/add content to the layout object, applying formatting from layout file
+    l.update_contents({'title': 'Hannah Hunt', 'album': 'Modern Vampires of the City', 
+                       'artist': 'Vampire Weekend', 'mode': 'playing', 
+                       'coverart': '/temp/VampireWeekend_ModernVampires.jpg'})
+    
     Attributes:
         resolution (:obj:`tuple` of :obj: `int`): X, Y screen resolution in pixles
         font (str): path to font file
         layout (dict): dictionary with layout instructions (see below)
+        blocks (dict): dictionary of ImageBlock and TextBlock objects
         
     '''
     def __init__(self, resolution=(600, 448), layout=None, font=constants.FONT):
+        logging.debug(f'{globals()}')
         self.resolution = resolution
         self.font = str(Path(font).resolve())
         self.layout = copy.deepcopy(layout)
         self.images = None
 
     def _check_keys(self, dictionary={}, values={}):
+        '''Check `dictionary` for missing key/value pairs specified in `values`
+        
+        Args:
+            dictionary(dict): dictionary
+            values(dict): dictionary
+            
+        Returns:
+            dictionary(dict): dictionary with missing key/value pairs updated
+        
+        '''
         logging.debug('checking key/values')
         for k, v in values.items():
             try:
@@ -68,7 +116,17 @@ class Layout:
         return dictionary
     
     def _scalefont(self, font=None, lines=1, text="W", dimensions=(100, 100)):
+        '''Scale a font to fit the number of `lines` within `dimensions`
         
+        Args:
+            font(str): path to true type font
+            lines(int): number of lines of text to fit within the `dimensions`
+            dimensions(:obj:`tuple` of :obj:`int`): dimensions of pixles
+            
+        Returns:
+            :obj:int: font size as integer
+        
+        '''
         if font:
             font = str(Path(font).resolve())
         else:
@@ -103,6 +161,11 @@ class Layout:
     
     @property
     def layout(self):
+        ''':obj:dict: dictonary of layout properties and rules for formatting text and image blocks
+        
+        Sets:
+            blocks (dict): dict of ImageBlock or TextBlock objects 
+        '''
         return self._layout
     
     @layout.setter
@@ -112,11 +175,22 @@ class Layout:
             logging.info('no layout provided')
             self._layout = None
         else:
-            self._layout = self.calculate_layout(layout)
-#             self.set_images()
+            self._layout = self._calculate_layout(layout)
+            if self._layout:
+                self._set_images()
+            else:
+                logging.debug('no layout provided')
     
     
-    def calculate_layout(self, layout):
+    def _calculate_layout(self, layout):
+        '''Calculate the size and position of each text block based on rules in layout
+        
+        Args:
+            layout(dict): dictionary containing the layout to be used
+        
+        Returns:
+            layout(dict): dictionary that includes rules and values for the layout
+        '''
         if not layout:
             return None
         l = layout
@@ -175,12 +249,11 @@ class Layout:
             l[section] = this_section    
         return l
                               
-    def set_images(self):
+    def _set_images(self):
         '''create dictonary of all image blocks with using the current set layout
         
-            Sets
-            ----
-                ::blocks :dict of: TextBlock(), ImageBlock()
+         Sets:
+            blocks (dict): dictionary of :obj:`TextBlock`, :obj:`ImageBlock`
             '''
                           
         
@@ -205,10 +278,31 @@ class Layout:
         self.blocks = blocks
                               
     def update_contents(self, updates=None):
+        '''Update the contents of the layout
+        
+        Args:
+            updates(dict): dictionary of keys and values that match keys in `blocks`
+        
+        Sets:
+            blocks 
+        '''
+        logging.debug('updating blocks')
         if not updates:
             logging.debug('nothing to do')
         
         for key, val in updates.items():
-            self.blocks[key].update(val)
+            if key in self.blocks:
+                logging.debug(f'updating block: {key}')
+                self.blocks[key].update(val)
+            else:
+                logging.debug(f'ignoring block {key}')
+
+
+
+
+# In[ ]:
+
+
+
 
 
