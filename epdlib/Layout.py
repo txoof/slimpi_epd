@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[4]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -30,7 +30,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[2]:
+# In[ ]:
 
 
 from . import layouts
@@ -89,7 +89,6 @@ class Layout:
         
     '''
     def __init__(self, resolution=(600, 448), layout=None, font=constants.FONT):
-        logging.debug(f'{globals()}')
         self.resolution = resolution
         self.font = str(Path(font).resolve())
         self.layout = copy.deepcopy(layout)
