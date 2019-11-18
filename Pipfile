@@ -8,6 +8,7 @@ pillow = "*"
 ipykernel = "*"
 waveshare-epd = {editable = true,git = "https://github.com/txoof/e-Paper.git",subdirectory = "RaspberryPi_and_JetsonNano/python/"}
 docrep = "*"
+cachepath = "*"
 
 [dev-packages]
 
