@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[ ]:
+# In[7]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -226,7 +226,11 @@ class Layout:
                         pos.append(this_section['abs_coordinates'][idx])
                     else:
                         # use the value from another section
-                        pos.append(l[r]['dimensions'][idx] + l[r]['abs_coordinates'][idx])
+                        try:
+                            pos.append(l[r]['dimensions'][idx] + l[r]['abs_coordinates'][idx])
+                        except KeyError as e:
+                            m = f'bad relative section value: "{r}" in section "{section}"'
+                            raise KeyError(m)
                 
                 # save the values as a tuple
                 this_section['abs_coordinates']=(pos[0], pos[1])

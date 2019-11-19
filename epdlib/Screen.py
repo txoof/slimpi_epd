@@ -11,7 +11,7 @@
 
 
 
-# In[3]:
+# In[10]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -85,7 +85,7 @@ class Screen:
             elements = self.elements
             
         for e in elements:
-            logging.debug(f'pasing image at: {e.img_coordinates}')
+            logging.debug(f'pasting image at: {e.img_coordinates}')
             self.image.paste(e.image,  e.img_coordinates)
         return(self.image)
     

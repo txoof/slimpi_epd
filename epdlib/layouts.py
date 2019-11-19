@@ -124,3 +124,30 @@ threeRow = {
              'vcenter': True,
              'relative': ['coverart', 'album']},
 }
+
+clock = {
+  'time':
+         {'image': None,
+          'max_lines': 1,
+          'padding': 10,
+          'width': 1,
+          'height': 7/8,
+          'abs_coordinates': (0, 0),
+          'hcenter': False,
+          'vcenter': False,
+          'relative': False,
+          'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+          'fontsize': None},
+  'mode':
+         {'image': None,
+          'max_lines': 1,
+          'padding': 10,
+          'width': 1,
+          'height': 1/8,
+          'abs_coordinates': (None, None),
+          'hcenter': True,
+          'vcenter': False,
+          'relative': ['mode', 'time'],
+          'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+          'fontsize': None},
+}
