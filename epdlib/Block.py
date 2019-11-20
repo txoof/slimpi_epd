@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[ ]:
+# In[8]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[ ]:
+# In[1]:
 
 
 import logging
@@ -149,21 +149,29 @@ class ImageBlock(Block):
     def image(self, image):
         if not image:
             logging.debug(f'setting empty 1x1 image')
-            self._image = Image.new('L', (1, 1), 255)
+            self._image = Image.new('1', (1, 1), 255)
             return self._image
         
         logging.debug(f'formatting image: {image}')
         dim = min(self.area)-self.padding
         logging.debug(f'set image dimensions: {dim}')
         size = (dim, dim)
-        try:
-            im = Image.open(image)
-        except (PermissionError, FileNotFoundError, OSError) as e:
-            logging.warn(f'could not open image at {image}')
-            logging.warn('setting to blank 1x1 image')
-            im = Image.new('1', (1, 1), 255)
-        im.convert(mode='L', colors=2)
-        im.thumbnail(size)
+        if isinstance(image, str):
+            try:
+                im = Image.open(image)
+            except (PermissionError, FileNotFoundError, OSError) as e:
+                logging.warning(f'could not open image at {image}')
+                logging.warning('setting to blank 1x1 image')
+                im = Image.new('1', (1, 1), 255)
+            im.thumbnail(size)
+        if isinstance(image, Image.Image):
+            logging.debug('using passed image')
+            im = image
+            if im.size != size:
+                logging.debug('resizing image')
+                im.resize(size)
+        
+        im.convert(mode='1')
         self.dimensions = im.size
         x_new, y_new = self.abs_coordinates
         
@@ -188,7 +196,7 @@ class ImageBlock(Block):
         if update:
             try:
                 self.image = update
-            except Excepiton as e:
+            except Exception as e:
                 logging.error(f'failed to update: {e}')
                 return False
             return True        
