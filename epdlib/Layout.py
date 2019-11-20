@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[39]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[7]:
+# In[44]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[ ]:
+# In[1]:
 
 
 import logging
@@ -30,38 +30,38 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[ ]:
+# In[2]:
 
 
-from . import layouts
-from . import constants
-from . import Block
+# from . import layouts
+# from . import constants
+# from . import Block
 
 
 
 
-# In[ ]:
+# In[16]:
 
 
-# try: 
-#     from . import layouts
-# except ImportError as e:
-#     import layouts 
+try: 
+    from . import layouts
+except ImportError as e:
+    import layouts 
     
-# try:
-#     from . import constants
-# except ImportError as e:
-#     import constants
+try:
+    from . import constants
+except ImportError as e:
+    import constants
 
-# try:
-#     from . import Block as Block
-# except ImportError as e:
-#     import Block as Block
-
-
+try:
+    from . import Block as Block
+except ImportError as e:
+    import Block
 
 
-# In[ ]:
+
+
+# In[36]:
 
 
 class Layout:
@@ -114,7 +114,7 @@ class Layout:
                 dictionary[k] = v
         return dictionary
     
-    def _scalefont(self, font=None, lines=1, text="W", dimensions=(100, 100)):
+    def _scalefont(self, font=None, lines=1, text="W W W ", dimensions=(100, 100)):
         '''Scale a font to fit the number of `lines` within `dimensions`
         
         Args:
@@ -137,25 +137,44 @@ class Layout:
         
         # start calculating at size 1
         fontsize = 1
+        x_fraction = .85        
         y_fraction = .7
-        target = dimensions[1]/lines*y_fraction
+        xtarget = dimensions[0]*x_fraction
+        ytarget = dimensions[1]/lines*y_fraction
         testfont = ImageFont.truetype(font, fontsize)
         fontdim = testfont.getsize(text)
         
-        logging.debug(f'target Y fontsize: {target}')
+        logging.debug(f'target X font dimension {xtarget}')
+        logging.debug(f'target Y dimension: {ytarget}')
         
+        cont = True
         # work up until font covers img_fraction of the resolution return one smaller than this as the fontsize
-        while fontdim[1] < target:
-            fontdim = testfont.getsize(text)
-            if fontdim[1] > dimensions[1]:
-                logging.warn('font Y dimension is larger than Y area; bailing out')
-                break
+#         while (fontdim[0] < xtarget) or (fontdim[1] < ytarget):
+        while cont:
             fontsize += 1
             testfont = ImageFont.truetype(font, fontsize)
             
+            fontdim = testfont.getsize(text)
+#             logging.debug(f'size: {fontsize}; dimensions: {fontdim}')
+            if fontdim[0] > xtarget:
+                cont = False
+                logging.debug(f'X target exceeded')
+                
+            if fontdim[1] > ytarget:
+                cont = False
+                logging.debug('Y target exceeded')
+#             if (fontdim[0] > dimensions[0]) or (fontdim[1] > dimensions[1]):
+#                 logging.warning(f'font dimension exceeds X or Y dimensions!')
+#                 logging.debug(f'fontsize: {fontsize}; fontdim: {fontdim}; dimensions {dimensions}')
+#                 logging.debug('setting font size to 1')
+#                 return 1
+            # need a check here to ensure that a minimum of 8-10 characters can fit on the line
+
+
+            
         # back off one 
         fontsize -= 1
-        logging.debug(f'fontsize: {fontsize}')
+        logging.debug(f'test string: {text}; dimensions for fontsize {fontsize}: {fontdim}')
         return fontsize
     
     @property
@@ -299,6 +318,45 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
+
+
+
+
+# In[29]:
+
+
+# import logging
+# # this works best as a global variable
+# # logConfig = Path(cfg.LOGCONFIG)
+# # logging.config.fileConfig(logConfig.absolute())
+# # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)s %(levelname)s: %(message)s')
+
+# logging = logging.getlogging(__name__)
+# logging.basicConfig(level=logging.DEBUG)
+
+
+
+
+# In[37]:
+
+
+# l = Layout(resolution=(600, 392))
+
+
+
+
+# In[38]:
+
+
+# l._scalefont(font='../fonts/Ubuntu/Ubuntu-Regular.ttf', dimensions=(600,392))
+
+
+
+
+# In[ ]:
+
+
+
 
 
 
