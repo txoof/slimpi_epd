@@ -122,6 +122,7 @@ threeRow = {
              'abs_coordinates': (None, None),
              'hcenter': False,
              'vcenter': True,
+             'rand': True,
              'relative': ['coverart', 'album']},
 }
 
