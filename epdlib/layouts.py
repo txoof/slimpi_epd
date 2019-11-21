@@ -68,7 +68,7 @@ twoColumn = {
 threeRow = {
     'title':
             {'image': None,
-             'max_lines': 2,
+             'max_lines': 3,
              'padding': 10,
              'width': 1,
              'height': 4/7,
@@ -135,6 +135,7 @@ clock = {
           'abs_coordinates': (0, 0),
           'hcenter': False,
           'vcenter': False,
+          'rand': True,
           'relative': False,
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'fontsize': None},
@@ -147,6 +148,7 @@ clock = {
           'abs_coordinates': (0, None),
           'hcenter': False,
           'vcenter': True,
+          'rand': True,
           'relative': ['mode', 'time'],
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'fontsize': None},

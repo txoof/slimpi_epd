@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[39]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[44]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -89,6 +89,7 @@ class Layout:
         
     '''
     def __init__(self, resolution=(600, 448), layout=None, font=constants.FONT):
+        logging.info('create layout')
         self.resolution = resolution
         self.font = str(Path(font).resolve())
         self.layout = copy.deepcopy(layout)
@@ -215,10 +216,10 @@ class Layout:
         resolution = self.resolution
         # required values that will be used in calculating the layout
         values = {'image': None, 'max_lines': 1, 'padding': 0, 'width': 1, 'height': 1, 
-                  'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 'relative': False, 
-                  'font': self.font, 'fontsize': None, 'dimensions': None}        
+                  'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 'rand': False,
+                  'relative': False, 'font': self.font, 'fontsize': None, 'dimensions': None}        
         for section in l:
-            logging.debug(f'***{section}***')
+            logging.info(f'***{section}***')
             this_section = self._check_keys(l[section], values)
                     
             dimensions = (round(resolution[0]*this_section['width']), 
@@ -291,7 +292,7 @@ class Layout:
                 blocks[sec] = Block.TextBlock(area=section['dimensions'], text='.', font=section['font'], 
                                        font_size=section['fontsize'], max_lines=section['max_lines'],
                                        hcenter=section['hcenter'], vcenter=section['vcenter'],
-                                       abs_coordinates=section['abs_coordinates'])
+                                       rand=section['rand'], abs_coordinates=section['abs_coordinates'])
             if section['image']:
                 logging.debug('set image block')
                 blocks[sec] = Block.ImageBlock(image=None, abs_coordinates=section['abs_coordinates'], 

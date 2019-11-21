@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[52]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[8]:
+# In[53]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,11 +19,12 @@
 
 
 
-# In[1]:
+# In[51]:
 
 
 import logging
 import textwrap
+from random import randrange
 from PIL import Image, ImageDraw, ImageFont
 from pathlib import Path
 
@@ -35,13 +36,13 @@ except ImportError as e:
 
 
 
-# In[ ]:
+# In[4]:
 
 
 class Block:
-    def __init__(self, area=(600, 448), hcenter=False, vcenter=False, abs_coordinates=(0,0),
+    def __init__(self, area=(600, 448), hcenter=False, vcenter=False, rand=False, abs_coordinates=(0,0),
                  padding=0):
-        '''Constructor for ImageBlock Class.
+        '''Base constructor for Block Class.
         
         Args:
             image (PIL.Image): Image to be formatted and resized to fit within
@@ -53,12 +54,16 @@ class Block:
             hcenter (boolean, optional): True - horizontal-align image within the area, 
                 False - left-align image
             vcenter (boolean, optional): True - vertical-align image within the area,
-                False - top-align image
-            padding (int, optional): amount of padding between resized image and edge of area'''    
+                False - top-align image\
+            rand (boolean, optional): True - ignore vcenter, hcenter choose random position for
+                image within area
+            padding (int, optional): amount of padding between resized image and edge of area'''
+        
         self.area = area
         self.padding = padding
         self.hcenter = hcenter
         self.vcenter = vcenter
+        self.rand = rand
         self.abs_coordinates = abs_coordinates
     
     
@@ -129,13 +134,13 @@ class Block:
 
 
 
-# In[ ]:
+# In[5]:
 
 
 class ImageBlock(Block):
     def __init__(self, image=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+        logging.info(f'create ImageBlock')
         self.image = image
         
     @property
@@ -175,6 +180,9 @@ class ImageBlock(Block):
         self.dimensions = im.size
         x_new, y_new = self.abs_coordinates
         
+        if self.rand:
+            pass
+        
         if self.hcenter:
             x_new = self.abs_coordinates[0] + round(self.area[0]/2 - self.dimensions[0]/2)
         if self.vcenter:
@@ -204,13 +212,14 @@ class ImageBlock(Block):
 
 
 
-# In[ ]:
+# In[39]:
 
 
 class TextBlock(Block):
     def __init__(self, text=' ', font=None, font_size=24, max_lines=1, maxchar=None,
                  chardist=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        logging.info(f'create TextBlock')
         if font:
             self.font = ImageFont.truetype(str(Path(font).resolve()), size=font_size)
         else:
@@ -329,6 +338,7 @@ class TextBlock(Block):
             :obj:`PIL.Image`
         '''
         
+        logging.debug(f'random is set: {self.rand}')
         # determine the extents of the text block image
         y_total = 0
         x_max = 0
@@ -360,19 +370,53 @@ class TextBlock(Block):
         
         # set image coordinates
         new_x, new_y = self.abs_coordinates
-        if self.hcenter:
-            logging.debug(f'h-center image coordinates')
-            new_x = self.abs_coordinates[0] + round(self.area[0]/2 - self.dimensions[0]/2)
-
-            
-        if self.vcenter:
-            logging.debug(f'v-center image coordinates')
-            new_y = self.abs_coordinates[1] + round(self.area[1]/2 - self.dimensions[1]/2)
         
-        if self.hcenter or self.vcenter:
-            logging.debug(f'image coordinates {(new_x, new_y)}')
-            self.img_coordinates = (new_x, new_y)
+        if self.rand:
+            logging.debug('setting random position within area')
+            x_range = self.area[0] - self.dimensions[0]
+            y_range = self.area[1] - self.dimensions[1]
+            
+            rand_x = randrange(x_range)
+            rand_y = randrange(y_range)
+            rand_image = Image.new('1', self.area, 255)
+            rand_image.paste(image, (rand_x, rand_y))
+            image = rand_image
+        else:
+            if self.hcenter:
+                logging.debug(f'h-center image coordinates')
+                new_x = self.abs_coordinates[0] + round(self.area[0]/2 - self.dimensions[0]/2)
+
+
+            if self.vcenter:
+                logging.debug(f'v-center image coordinates')
+                new_y = self.abs_coordinates[1] + round(self.area[1]/2 - self.dimensions[1]/2)
+        
+            if self.hcenter or self.vcenter:
+                logging.debug(f'image coordinates {(new_x, new_y)}')
+                self.img_coordinates = (new_x, new_y)
         
         return image        
+
+
+
+
+# In[22]:
+
+
+# import logging
+# this works best as a global variable
+# logConfig = Path(cfg.LOGCONFIG)
+# logging.config.fileConfig(logConfig.absolute())
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)s %(levelname)s: %(message)s')
+# logging.basicConfig(level=logging.DEBUG)
+
+
+
+
+# In[48]:
+
+
+# b = TextBlock(text='White Teeth Teens', area=(600, 448), rand=True, hcenter=True, max_lines=2, font_size=80, font='../fonts/Anton/Anton-Regular.ttf')
+# b.image
 
 
