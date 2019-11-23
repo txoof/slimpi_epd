@@ -10,6 +10,7 @@ waveshare-epd = {editable = true,git = "https://github.com/txoof/e-Paper.git",su
 docrep = "*"
 cachepath = "*"
 lmsquery-fork = "*"
+ratelimiter = "*"
 
 [dev-packages]
 

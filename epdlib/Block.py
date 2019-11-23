@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[52]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[53]:
+# In[4]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,13 +19,13 @@
 
 
 
-# In[51]:
+# In[29]:
 
 
 import logging
 import textwrap
 from random import randrange
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 from pathlib import Path
 
 try:
@@ -36,12 +36,12 @@ except ImportError as e:
 
 
 
-# In[4]:
+# In[23]:
 
 
 class Block:
-    def __init__(self, area=(600, 448), hcenter=False, vcenter=False, rand=False, abs_coordinates=(0,0),
-                 padding=0):
+    def __init__(self, area=(600, 448), hcenter=False, vcenter=False, rand=False, 
+                 abs_coordinates=(0,0), padding=0, inverse=False):
         '''Base constructor for Block Class.
         
         Args:
@@ -64,8 +64,26 @@ class Block:
         self.hcenter = hcenter
         self.vcenter = vcenter
         self.rand = rand
+        self.inverse = inverse
         self.abs_coordinates = abs_coordinates
     
+    @property
+    def inverse(self):
+        return self._inverse
+    
+    @inverse.setter
+    def inverse(self, inv):
+        logging.debug(f'set inverse: {inv}')
+        self._inverse = inv
+        if inv:
+            bkground = 0
+            fill = 255
+        else:
+            bkground = 255
+            fill = 0
+        
+        self.fill = fill
+        self.bkground = bkground
     
     @property
     def area(self):
@@ -134,7 +152,7 @@ class Block:
 
 
 
-# In[5]:
+# In[45]:
 
 
 class ImageBlock(Block):
@@ -154,7 +172,7 @@ class ImageBlock(Block):
     def image(self, image):
         if not image:
             logging.debug(f'setting empty 1x1 image')
-            self._image = Image.new('1', (1, 1), 255)
+            self._image = Image.new('1', (1, 1), self.bkground)
             return self._image
         
         logging.debug(f'formatting image: {image}')
@@ -167,7 +185,7 @@ class ImageBlock(Block):
             except (PermissionError, FileNotFoundError, OSError) as e:
                 logging.warning(f'could not open image at {image}')
                 logging.warning('setting to blank 1x1 image')
-                im = Image.new('1', (1, 1), 255)
+                im = Image.new('1', (1, 1), self.bkground)
             im.thumbnail(size)
         if isinstance(image, Image.Image):
             logging.debug('using passed image')
@@ -175,8 +193,7 @@ class ImageBlock(Block):
             if im.size != size:
                 logging.debug('resizing image')
                 im.resize(size)
-        
-        im.convert(mode='1')
+
         self.dimensions = im.size
         x_new, y_new = self.abs_coordinates
         
@@ -191,6 +208,12 @@ class ImageBlock(Block):
         if self.hcenter or self.vcenter:
             self.img_coordinates = (x_new, y_new)
         logging.debug(f'set img_coordinates: {self.img_coordinates}')
+        
+        # set the inverse of the image
+        if self.inverse:
+            im = ImageOps.invert(im)
+        # convert to 1 bit
+        im = im.convert(mode='L')
             
         self._image = im
         return im        
@@ -212,7 +235,7 @@ class ImageBlock(Block):
 
 
 
-# In[39]:
+# In[46]:
 
 
 class TextBlock(Block):
@@ -247,7 +270,7 @@ class TextBlock(Block):
         if update:
             try:
                 self.text = update
-            except Excepiton as e:
+            except Exception as e:
                 logging.error(f'failed to update: {e}')
                 return False
             return True
@@ -354,7 +377,7 @@ class TextBlock(Block):
         logging.debug(f'text image dimensions: {self.dimensions}')
         
         # build image
-        image = Image.new('1', self.dimensions, 255)
+        image = Image.new('1', self.dimensions, self.bkground)
         # get a drawing context
         draw = ImageDraw.Draw(image)
         
@@ -365,7 +388,7 @@ class TextBlock(Block):
             if self.hcenter:
                 logging.debug(f'h-center line: {line}')
                 x_pos = round(self.dimensions[0]/2-x/2)
-            draw.text((x_pos, y_total), line, font=self.font)
+            draw.text((x_pos, y_total), line, font=self.font, fill=self.fill)
             y_total += y
         
         # set image coordinates
@@ -378,7 +401,7 @@ class TextBlock(Block):
             
             rand_x = randrange(x_range)
             rand_y = randrange(y_range)
-            rand_image = Image.new('1', self.area, 255)
+            rand_image = Image.new('1', self.area, self.bkground)
             rand_image.paste(image, (rand_x, rand_y))
             image = rand_image
         else:
@@ -400,23 +423,25 @@ class TextBlock(Block):
 
 
 
-# In[22]:
+# In[26]:
 
 
 # import logging
-# this works best as a global variable
-# logConfig = Path(cfg.LOGCONFIG)
-# logging.config.fileConfig(logConfig.absolute())
+# # this works best as a global variable
+# # logConfig = Path(cfg.LOGCONFIG)
+# # logging.config.fileConfig(logConfig.absolute())
 # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)s %(levelname)s: %(message)s')
 # logging.basicConfig(level=logging.DEBUG)
 
 
 
 
-# In[48]:
+# In[28]:
 
 
-# b = TextBlock(text='White Teeth Teens', area=(600, 448), rand=True, hcenter=True, max_lines=2, font_size=80, font='../fonts/Anton/Anton-Regular.ttf')
+# b = TextBlock(text='White Teeth Teens', area=(600, 448), rand=True, hcenter=True, 
+#               max_lines=2, font_size=80, font='../fonts/Anton/Anton-Regular.ttf',
+#              inverse=False)
 # b.image
 
 

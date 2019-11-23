@@ -137,6 +137,7 @@ clock = {
           'hcenter': False,
           'vcenter': False,
           'rand': True,
+          'inverse': True,
           'relative': False,
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'fontsize': None},

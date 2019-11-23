@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[2]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -30,7 +30,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[2]:
+# In[ ]:
 
 
 # from . import layouts
@@ -40,7 +40,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[16]:
+# In[2]:
 
 
 try: 
@@ -61,7 +61,7 @@ except ImportError as e:
 
 
 
-# In[36]:
+# In[3]:
 
 
 class Layout:
@@ -148,6 +148,7 @@ class Layout:
         logging.debug(f'target X font dimension {xtarget}')
         logging.debug(f'target Y dimension: {ytarget}')
         
+        # loop control variable
         cont = True
         # work up until font covers img_fraction of the resolution return one smaller than this as the fontsize
 #         while (fontdim[0] < xtarget) or (fontdim[1] < ytarget):
@@ -213,11 +214,14 @@ class Layout:
         if not layout:
             return None
         l = layout
+        
         resolution = self.resolution
+        
         # required values that will be used in calculating the layout
         values = {'image': None, 'max_lines': 1, 'padding': 0, 'width': 1, 'height': 1, 
-                  'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 'rand': False,
-                  'relative': False, 'font': self.font, 'fontsize': None, 'dimensions': None}        
+                  'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 
+                  'rand': False, 'inverse': False, 'relative': False, 'font': self.font, 
+                  'fontsize': None, 'dimensions': None}        
         for section in l:
             logging.info(f'***{section}***')
             this_section = self._check_keys(l[section], values)
@@ -287,16 +291,18 @@ class Layout:
             logging.debug(f'***{sec}***)')
             section = layout[sec]
             # any section with max lines accepts text
-            if section['max_lines']:
+            if not section['image']: # ['max_lines']:
                 logging.debug('set text block')
                 blocks[sec] = Block.TextBlock(area=section['dimensions'], text='.', font=section['font'], 
                                        font_size=section['fontsize'], max_lines=section['max_lines'],
-                                       hcenter=section['hcenter'], vcenter=section['vcenter'],
-                                       rand=section['rand'], abs_coordinates=section['abs_coordinates'])
+                                       hcenter=section['hcenter'], vcenter=section['vcenter'], 
+                                       inverse=section['inverse'], rand=section['rand'], 
+                                       abs_coordinates=section['abs_coordinates'])
             if section['image']:
                 logging.debug('set image block')
                 blocks[sec] = Block.ImageBlock(image=None, abs_coordinates=section['abs_coordinates'], 
                                          area=section['dimensions'], hcenter=section['hcenter'],
+                                         inverse=section['inverse'], 
                                          vcenter=section['vcenter'], padding=section['padding'])
         self.blocks = blocks
                               
@@ -319,52 +325,5 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
-
-
-
-
-# In[29]:
-
-
-# import logging
-# # this works best as a global variable
-# # logConfig = Path(cfg.LOGCONFIG)
-# # logging.config.fileConfig(logConfig.absolute())
-# # logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)s %(levelname)s: %(message)s')
-
-# logging = logging.getlogging(__name__)
-# logging.basicConfig(level=logging.DEBUG)
-
-
-
-
-# In[37]:
-
-
-# l = Layout(resolution=(600, 392))
-
-
-
-
-# In[38]:
-
-
-# l._scalefont(font='../fonts/Ubuntu/Ubuntu-Regular.ttf', dimensions=(600,392))
-
-
-
-
-# In[ ]:
-
-
-
-
-
-
-
-# In[ ]:
-
-
-
 
 
