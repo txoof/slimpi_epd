@@ -11,7 +11,7 @@
 
 
 
-# In[10]:
+# In[320]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,11 +19,66 @@
 
 
 
-# In[7]:
+# In[5]:
 
 
 import logging
 from PIL import Image, ImageDraw, ImageFont
+import time
+
+
+
+
+# In[321]:
+
+
+class Update:
+    '''class for creating a montotonicly aware object that records passage of time
+    
+    create an update aware object:
+        myObj = Update()
+        
+    Time since creation:
+        myObj.age
+        
+    Time since last updated:
+        myObj.last_updated
+        
+    
+    Update the object:
+        myObj.update = True
+
+    '''
+    
+    def __init__(self):
+        '''constructor for Update class'''
+        
+        self.start = self.now
+        self.update = True
+        
+    @property
+    def age(self):
+        '''age of the object in seconds since created'''
+        return self.now - self.start
+    
+    @property
+    def now(self):
+        return time.clock_gettime(time.CLOCK_MONOTONIC)
+    
+    @property
+    def last_updated(self):
+        '''seconds since object was last updated'''
+        return self.now - self._last_updated
+    
+    @last_updated.setter
+    def update(self, update=True):
+        '''update the object
+        
+        Args:
+            update(boolean): True updates object'''
+        if update:
+            self._last_updated = self.now
+    
 
 
 
@@ -47,14 +102,18 @@ class Screen:
         '''Constructor for Screen class.
         
         Args:
-            resolution (:obj:`tuple` of :obj: `int`): resolution of EPD
+            resolution (:obj:`tuple` of :obj:`int`): resolution of EPD
             elements (:obj:`list` of :obj:`ImageBlock` or `TextBlock`): images to be assembled
             image (:obj:`PIL.Image`): composite image to be written to screen
-            epd (:obj:`waveshare.epd`): waveshare EPD object'''
+            epd (:obj:`waveshare.epd`): waveshare EPD object
+        Properties:
+            resolution (tuple): resolution of screen
+            elements (:obj:`list` of :obj:`PIL.Image`: list of all image objects that form the larger image'''
         self.resolution = resolution
         self.elements = elements
         self.image = self.clearScreen()
         self.epd = epd
+        self.update = Update()
         
     def clearScreen(self):
         '''Sets a clean base image for building screen layout.
@@ -73,12 +132,15 @@ class Screen:
                 provided, use the existing elements
                 
         Sets:
-            image (:obj:`PIL.Image`): composite of all members of `elements`
+            image (:obj:`PIL.Image`): concatination of all image members of `elements` 
+            last_updated (:obj: `Update`): registeres the time the images were updated
             
         Returns:
             image (:obj:`PIL.Image`)
         '''
         self.image = self.clearScreen()
+        # register that the object has been modified
+        self.update.update = True
         if elements:
             elements = elements
         else:
