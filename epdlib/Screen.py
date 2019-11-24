@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[322]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Screen.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[320]:
+# In[323]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -163,6 +163,8 @@ class Screen:
             self.epd.init()
         except Exception as e:
             logging.error(f'failed to init epd: {e}')
+            
+        logging.info(f'{self.epd} initialized')
         return True
     
     def clearEPD(self):

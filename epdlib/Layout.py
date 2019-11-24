@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[6]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[ ]:
+# In[7]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -89,7 +89,6 @@ class Layout:
         
     '''
     def __init__(self, resolution=(600, 448), layout=None, font=constants.FONT):
-        logging.info('create layout')
         self.resolution = resolution
         self.font = str(Path(font).resolve())
         self.layout = copy.deepcopy(layout)

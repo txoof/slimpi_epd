@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[2]:
+# In[4]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[53]:
+# In[5]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -171,7 +171,7 @@ class ImageBlock(Block):
     @image.setter
     def image(self, image):
         if not image:
-            logging.debug(f'setting empty 1x1 image')
+            logging.debug(f'no image object provided, setting empty 1x1 image')
             self._image = Image.new('1', (1, 1), self.bkground)
             return self._image
         
@@ -183,12 +183,12 @@ class ImageBlock(Block):
             try:
                 im = Image.open(image)
             except (PermissionError, FileNotFoundError, OSError) as e:
-                logging.warning(f'could not open image at {image}')
+                logging.warning(f'could not open image file: {image}')
                 logging.warning('setting to blank 1x1 image')
                 im = Image.new('1', (1, 1), self.bkground)
             im.thumbnail(size)
         if isinstance(image, Image.Image):
-            logging.debug('using passed image')
+            logging.debug('using PIL.Image image')
             im = image
             if im.size != size:
                 logging.debug('resizing image')
