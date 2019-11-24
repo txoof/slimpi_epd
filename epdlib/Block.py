@@ -11,7 +11,7 @@
 
 
 
-# In[4]:
+# In[53]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -342,7 +342,7 @@ class TextBlock(Block):
         if not max_lines:
             max_lines = self.max_lines
         
-        wrapper = textwrap.TextWrapper(width=maxchar, max_lines=max_lines)
+        wrapper = textwrap.TextWrapper(width=maxchar, max_lines=max_lines, placeholder='…')
         formatted = wrapper.wrap(text)
         logging.debug(f'formatted list:\n {formatted}')
         return(formatted)
