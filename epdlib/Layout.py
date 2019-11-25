@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[6]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[7]:
+# In[4]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -222,7 +222,7 @@ class Layout:
                   'rand': False, 'inverse': False, 'relative': False, 'font': self.font, 
                   'fontsize': None, 'dimensions': None}        
         for section in l:
-            logging.info(f'***{section}***')
+            logging.debug(f'***{section}***')
             this_section = self._check_keys(l[section], values)
                     
             dimensions = (round(resolution[0]*this_section['width']), 
