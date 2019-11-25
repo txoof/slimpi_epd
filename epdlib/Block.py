@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[4]:
+# In[6]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[5]:
+# In[7]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -158,7 +158,7 @@ class Block:
 class ImageBlock(Block):
     def __init__(self, image=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        logging.info(f'create ImageBlock')
+        logging.debug(f'create ImageBlock')
         self.image = image
         
     @property
@@ -242,7 +242,7 @@ class TextBlock(Block):
     def __init__(self, text=' ', font=None, font_size=24, max_lines=1, maxchar=None,
                  chardist=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        logging.info(f'create TextBlock')
+        logging.debug(f'create TextBlock')
         if font:
             self.font = ImageFont.truetype(str(Path(font).resolve()), size=font_size)
         else:
