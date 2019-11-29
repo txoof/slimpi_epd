@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[22]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[4]:
+# In[23]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[1]:
+# In[14]:
 
 
 import logging
@@ -30,24 +30,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[ ]:
+# In[15]:
 
 
-# from . import layouts
-# from . import constants
-# from . import Block
-
-
-
-
-# In[2]:
-
-
-try: 
-    from . import layouts
-except ImportError as e:
-    import layouts 
-    
 try:
     from . import constants
 except ImportError as e:
@@ -61,7 +46,7 @@ except ImportError as e:
 
 
 
-# In[3]:
+# In[21]:
 
 
 class Layout:
@@ -88,9 +73,14 @@ class Layout:
         blocks (dict): dictionary of ImageBlock and TextBlock objects
         
     '''
-    def __init__(self, resolution=(600, 448), layout=None, font=constants.FONT):
+    def __init__(self, resolution=(600, 448), layout=None, font=None):
         self.resolution = resolution
-        self.font = str(Path(font).resolve())
+        if font:
+            logging.debug(f'font specified: {font}')
+            self.font = str(Path(font).resolve())
+        else:
+            logging.debug('no font specified yet')
+            self.font = None
         self.layout = copy.deepcopy(layout)
         self.images = None
 
@@ -324,5 +314,13 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
+
+
+
+
+# In[ ]:
+
+
+
 
 
