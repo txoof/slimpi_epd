@@ -103,7 +103,8 @@ threeRow = {
              'relative': ['coverart', 'title'],
              'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
              'fontsize': None},
-    'album':            {'image': None,
+    'album':
+            {'image': None,
              'max_lines': 2,
              'padding': 10,
              'width': 3/5,
@@ -123,7 +124,9 @@ threeRow = {
              'hcenter': False,
              'vcenter': True,
              'rand': True,
-             'relative': ['coverart', 'album']},
+             'relative': ['coverart', 'album'],
+             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
+             'fontsize': None}
 }
 
 clock = {
