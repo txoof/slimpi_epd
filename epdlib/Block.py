@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[6]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[7]:
+# In[4]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[29]:
+# In[14]:
 
 
 import logging
@@ -36,7 +36,7 @@ except ImportError as e:
 
 
 
-# In[23]:
+# In[15]:
 
 
 class Block:
@@ -152,7 +152,7 @@ class Block:
 
 
 
-# In[45]:
+# In[16]:
 
 
 class ImageBlock(Block):
@@ -235,18 +235,16 @@ class ImageBlock(Block):
 
 
 
-# In[46]:
+# In[34]:
 
 
 class TextBlock(Block):
-    def __init__(self, text=' ', font=None, font_size=24, max_lines=1, maxchar=None,
+    def __init__(self, font, text='.', font_size=24, max_lines=1, maxchar=None,
                  chardist=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         logging.debug(f'create TextBlock')
-        if font:
-            self.font = ImageFont.truetype(str(Path(font).resolve()), size=font_size)
-        else:
-            self.font = ImageFont.truetype(str(Path(constants.FONT).resolve()), size=font_size)
+        self.font_size = font_size
+        self.font = font
         
         if chardist:
             self._chardist = chardist
@@ -274,7 +272,27 @@ class TextBlock(Block):
                 logging.error(f'failed to update: {e}')
                 return False
             return True
-        
+    
+    @property
+    def font_size(self):
+        return self._font_size
+    
+    @font_size.setter
+    def font_size(self, font_size):
+        self._font_size = font_size
+ 
+    
+    @property
+    def font(self):
+        return self._font
+    
+    @font.setter
+    def font(self, font):
+        if font:
+            self._font = ImageFont.truetype(str(Path(font).resolve()), size=self.font_size)
+        else: 
+            raise TypeError('font file required')
+    
     @property
     def maxchar(self):
         '''int: maximum number of characters per line - if no value 
@@ -419,29 +437,5 @@ class TextBlock(Block):
                 self.img_coordinates = (new_x, new_y)
         
         return image        
-
-
-
-
-# In[26]:
-
-
-# import logging
-# # this works best as a global variable
-# # logConfig = Path(cfg.LOGCONFIG)
-# # logging.config.fileConfig(logConfig.absolute())
-# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)s %(levelname)s: %(message)s')
-# logging.basicConfig(level=logging.DEBUG)
-
-
-
-
-# In[28]:
-
-
-# b = TextBlock(text='White Teeth Teens', area=(600, 448), rand=True, hcenter=True, 
-#               max_lines=2, font_size=80, font='../fonts/Anton/Anton-Regular.ttf',
-#              inverse=False)
-# b.image
 
 
