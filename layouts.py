@@ -15,7 +15,7 @@ twoColumn = {
                 'hcenter': True, # horizontal center-align the contents
                 'vcenter': True, # vertically center-align the contents
                 'relative': False, # False if position is absolute
-                'font': None,
+                'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
                 'fontsize': None # font size to use for text
     },
     'title': { # track title
@@ -33,7 +33,7 @@ twoColumn = {
                 'vcenter': True, # vertically center-align the contents
                 'relative': ['coverart', 'title'], # [X Section: abs_coordinates+dimension
                                                    #, Y section abs_coordinates+dimension]
-                'font': None,
+                'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
                 'fontsize': None # font size to use for text
 
     },
@@ -47,7 +47,7 @@ twoColumn = {
                 'hcenter': False,
                 'vcenter': True,
                 'relative': ['coverart', 'title'],
-                'font': None,
+                'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
                 'fontsize': None
     },
     'album': { #album name
@@ -60,7 +60,7 @@ twoColumn = {
                 'hcenter': False,
                 'vcenter': True,
                 'relative': ['coverart', 'artist'],
-                'font': None,
+                'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
                 'fontsize': None
     }
 }
@@ -76,7 +76,7 @@ threeRow = {
              'hcenter': True,
              'vcenter': True,
              'relative': False,
-             'font': None,
+             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
              'fontsize': None},
     'coverart':
             {'image': True,
@@ -88,7 +88,7 @@ threeRow = {
              'hcenter': True,
              'vcenter': True,
              'relative': ['coverart', 'title'],
-             'font': None,
+             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
              'fontsize': None},
 
     'artist': 
@@ -101,7 +101,7 @@ threeRow = {
              'hcenter': False,
              'vcenter': True,
              'relative': ['coverart', 'title'],
-             'font': None,
+             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
              'fontsize': None},
     'album':            {'image': None,
              'max_lines': 2,
@@ -112,7 +112,7 @@ threeRow = {
              'hcenter': False,
              'vcenter': True,
              'relative': ['coverart', 'artist'],
-             'font': None,
+             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
              'fontsize': None},
     'mode':
             {'image': False,
@@ -154,4 +154,52 @@ clock = {
           'relative': ['mode', 'time'],
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'fontsize': None},
+}
+
+splash =  {
+  'appShortName':
+           {'image': None,
+            'max_lines': 1,
+            'padding': 10,
+            'width': 1,
+            'height': 2/5,
+            'abs_coordinates': (0, 0),
+            'hcenter': True,
+            'vcenter': True,
+            'rand': False,
+            'inverse': False,
+            'relative': False,
+            'font': './fonts/Anton/Anton-Regular.ttf',
+            'fontsize': None},
+
+  'version':
+          {'image': None,
+           'max_lines': 1,
+           'padding': 10,
+           'width': 1,
+           'height': 2/5,
+           'abs_coordinates': (0, None),
+           'hcenter': True,
+           'vcenter': True,
+           'rand': False,
+           'inverse': False,
+           'relative': ['version', 'appShortName'],
+           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+           'fontsize': None},
+
+  'url':
+          {'image': None,
+           'max_lines': 1,
+           'padding': 10,
+           'width': 1,
+           'height': 1/5,
+           'abs_coordinates': (0, None),
+           'hcenter': True,
+           'vcenter': True,
+           'rand': False,
+           'inverse': False,
+           'relative': ['url', 'version'],
+           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+           'fontsize': None},
+
 }
