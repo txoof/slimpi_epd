@@ -16,7 +16,7 @@ twoColumn = {
                 'vcenter': True, # vertically center-align the contents
                 'relative': False, # False if position is absolute
                 'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-                'fontsize': None # font size to use for text
+                'font_size': None # font size to use for text
     },
     'title': { # track title
                 'image': None, # none if no image is needed
@@ -34,7 +34,7 @@ twoColumn = {
                 'relative': ['coverart', 'title'], # [X Section: abs_coordinates+dimension
                                                    #, Y section abs_coordinates+dimension]
                 'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-                'fontsize': None # font size to use for text
+                'font_size': None # font size to use for text
 
     },
     'artist': { # track artist
@@ -48,7 +48,7 @@ twoColumn = {
                 'vcenter': True,
                 'relative': ['coverart', 'title'],
                 'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-                'fontsize': None
+                'font_size': None
     },
     'album': { #album name
                 'image': None,
@@ -61,7 +61,7 @@ twoColumn = {
                 'vcenter': True,
                 'relative': ['coverart', 'artist'],
                 'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-                'fontsize': None
+                'font_size': None
     }
 }
 
@@ -77,7 +77,7 @@ threeRow = {
              'vcenter': True,
              'relative': False,
              'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-             'fontsize': None},
+             'font_size': None},
     'coverart':
             {'image': True,
              'max_lines': None,
@@ -89,7 +89,7 @@ threeRow = {
              'vcenter': True,
              'relative': ['coverart', 'title'],
              'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-             'fontsize': None},
+             'font_size': None},
 
     'artist': 
             {'image': None,
@@ -102,7 +102,7 @@ threeRow = {
              'vcenter': True,
              'relative': ['coverart', 'title'],
              'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-             'fontsize': None},
+             'font_size': None},
     'album':
             {'image': None,
              'max_lines': 2,
@@ -114,7 +114,7 @@ threeRow = {
              'vcenter': True,
              'relative': ['coverart', 'artist'],
              'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-             'fontsize': None},
+             'font_size': None},
     'mode':
             {'image': False,
              'max_lines': 1,
@@ -126,7 +126,7 @@ threeRow = {
              'rand': True,
              'relative': ['coverart', 'album'],
              'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
-             'fontsize': None}
+             'font_size': None}
 }
 
 clock = {
@@ -143,7 +143,7 @@ clock = {
           'inverse': True,
           'relative': False,
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
-          'fontsize': None},
+          'font_size': None},
   'mode':
          {'image': None,
           'max_lines': 1,
@@ -156,7 +156,7 @@ clock = {
           'rand': True,
           'relative': ['mode', 'time'],
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
-          'fontsize': None},
+          'font_size': None},
 }
 
 splash =  {
@@ -173,7 +173,7 @@ splash =  {
             'inverse': False,
             'relative': False,
             'font': './fonts/Anton/Anton-Regular.ttf',
-            'fontsize': None},
+            'font_size': None},
 
   'version':
           {'image': None,
@@ -188,7 +188,7 @@ splash =  {
            'inverse': False,
            'relative': ['version', 'appShortName'],
            'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
-           'fontsize': None},
+           'font_size': None},
 
   'url':
           {'image': None,
@@ -203,6 +203,6 @@ splash =  {
            'inverse': False,
            'relative': ['url', 'version'],
            'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
-           'fontsize': None},
+           'font_size': None},
 
 }
