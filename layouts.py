@@ -160,12 +160,12 @@ clock = {
 }
 
 splash =  {
-  'appShortName':
+  'app_name':
            {'image': None,
             'max_lines': 1,
             'padding': 10,
             'width': 1,
-            'height': 2/5,
+            'height': 6/10,
             'abs_coordinates': (0, 0),
             'hcenter': True,
             'vcenter': True,
@@ -180,22 +180,23 @@ splash =  {
            'max_lines': 1,
            'padding': 10,
            'width': 1,
-           'height': 2/5,
+           'height': 1/10,
            'abs_coordinates': (0, None),
            'hcenter': True,
            'vcenter': True,
            'rand': False,
            'inverse': False,
-           'relative': ['version', 'appShortName'],
+           'relative': ['version', 'app_name'],
            'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+           'maxchar': 20,
            'font_size': None},
 
   'url':
           {'image': None,
-           'max_lines': 1,
+           'max_lines': 2,
            'padding': 10,
            'width': 1,
-           'height': 1/5,
+           'height': 3/10,
            'abs_coordinates': (0, None),
            'hcenter': True,
            'vcenter': True,
@@ -203,6 +204,7 @@ splash =  {
            'inverse': False,
            'relative': ['url', 'version'],
            'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+           'maxchar': 35,
            'font_size': None},
 
 }
