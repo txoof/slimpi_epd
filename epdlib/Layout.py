@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[23]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[24]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[19]:
+# In[ ]:
 
 
 import logging
@@ -30,7 +30,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[2]:
+# In[ ]:
 
 
 try:
@@ -46,7 +46,7 @@ except ImportError as e:
 
 
 
-# In[22]:
+# In[ ]:
 
 
 class Layout:
@@ -227,7 +227,7 @@ class Layout:
         values = {'image': None, 'max_lines': 1, 'padding': 0, 'width': 1, 'height': 1, 
                   'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 
                   'rand': False, 'inverse': False, 'relative': False, 'font': self.font, 
-                  'font_size': None, 'maxchar': 6, 'dimensions': None}        
+                  'font_size': None, 'maxchar': None, 'dimensions': None}        
         for section in l:
             logging.debug(f'***{section}***')
             this_section = self._check_keys(l[section], values)
