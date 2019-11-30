@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[7]:
+# In[23]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[8]:
+# In[24]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[6]:
+# In[19]:
 
 
 import logging
@@ -46,7 +46,7 @@ except ImportError as e:
 
 
 
-# In[ ]:
+# In[22]:
 
 
 class Layout:
@@ -104,11 +104,15 @@ class Layout:
                 dictionary[k] = v
         return dictionary
     
-    def _scalefont(self, font=None, lines=1, text="W W W ", dimensions=(100, 100)):
+    def _scalefont(self, font=None, lines=1, text="W ", maxchar=6, dimensions=(100, 100)):
         '''Scale a font to fit the number of `lines` within `dimensions`
         
         Args:
             font(str): path to true type font
+            text(str): string to use when calculating (default: 'W ')
+            maxchar(int): number of characters of `text` to use when calculating 
+                default is 'W W W ' -- W is a large character and spaces allow 
+                textwrap to work properly
             lines(int): number of lines of text to fit within the `dimensions`
             dimensions(:obj:`tuple` of :obj:`int`): dimensions of pixles
             
@@ -116,12 +120,25 @@ class Layout:
             :obj:int: font size as integer
         
         '''
+        if not maxchar:
+            maxchar = 6
+            logging.debug(f'no max char set; using: {maxchar}')
+            
         if font:
             font = str(Path(font).resolve())
         else:
             font = str(Path(self.font).resolve())
-            
+        
+        if len(text) < maxchar:
+            multiplyer = round(maxchar/len(text))
+            text = text * multiplyer
+        else:
+            text = text[0:maxchar] 
+    
+        
+        
         logging.debug('calculating font size')
+        logging.debug(f'using text: {text}; maxchar: {maxchar}')
         logging.debug(f'using font at path: {font}')
         
         
@@ -210,7 +227,7 @@ class Layout:
         values = {'image': None, 'max_lines': 1, 'padding': 0, 'width': 1, 'height': 1, 
                   'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 
                   'rand': False, 'inverse': False, 'relative': False, 'font': self.font, 
-                  'font_size': None, 'dimensions': None}        
+                  'font_size': None, 'maxchar': 6, 'dimensions': None}        
         for section in l:
             logging.debug(f'***{section}***')
             this_section = self._check_keys(l[section], values)
@@ -260,7 +277,8 @@ class Layout:
                 if not this_section['font_size']:
                     this_section['font_size'] = self._scalefont(font=this_section['font'], 
                                                                dimensions=this_section['dimensions'],
-                                                               lines=this_section['max_lines'])    
+                                                               lines=this_section['max_lines'],
+                                                               maxchar=this_section['maxchar'])    
 
             l[section] = this_section    
         return l
@@ -282,11 +300,17 @@ class Layout:
             # any section with max lines accepts text
             if not section['image']: # ['max_lines']:
                 logging.debug('set text block')
-                blocks[sec] = Block.TextBlock(area=section['dimensions'], text='.', font=section['font'], 
-                                       font_size=section['font_size'], max_lines=section['max_lines'],
-                                       hcenter=section['hcenter'], vcenter=section['vcenter'], 
-                                       inverse=section['inverse'], rand=section['rand'], 
-                                       abs_coordinates=section['abs_coordinates'])
+                blocks[sec] = Block.TextBlock(area=section['dimensions'], 
+                                              text='.', 
+                                              font=section['font'], 
+                                              font_size=section['font_size'], 
+                                              max_lines=section['max_lines'], 
+                                              maxchar=section['maxchar'],
+                                              hcenter=section['hcenter'], 
+                                              vcenter=section['vcenter'], 
+                                              inverse=section['inverse'], 
+                                              rand=section['rand'], 
+                                              abs_coordinates=section['abs_coordinates'])
             if section['image']:
                 logging.debug('set image block')
                 blocks[sec] = Block.ImageBlock(image=None, abs_coordinates=section['abs_coordinates'], 
@@ -314,5 +338,13 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
+
+
+
+
+# In[ ]:
+
+
+
 
 
