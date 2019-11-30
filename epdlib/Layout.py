@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[22]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[23]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[14]:
+# In[1]:
 
 
 import logging
@@ -30,7 +30,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[15]:
+# In[2]:
 
 
 try:
@@ -46,7 +46,7 @@ except ImportError as e:
 
 
 
-# In[21]:
+# In[ ]:
 
 
 class Layout:
@@ -314,13 +314,5 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
-
-
-
-
-# In[ ]:
-
-
-
 
 
