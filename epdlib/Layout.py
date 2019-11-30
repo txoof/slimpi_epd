@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[4]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[ ]:
+# In[5]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -210,7 +210,7 @@ class Layout:
         values = {'image': None, 'max_lines': 1, 'padding': 0, 'width': 1, 'height': 1, 
                   'abs_coordinates': (None, None), 'hcenter': False, 'vcenter': False, 
                   'rand': False, 'inverse': False, 'relative': False, 'font': self.font, 
-                  'fontsize': None, 'dimensions': None}        
+                  'font_size': None, 'dimensions': None}        
         for section in l:
             logging.debug(f'***{section}***')
             this_section = self._check_keys(l[section], values)
