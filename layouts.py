@@ -68,7 +68,7 @@ twoColumn = {
 threeRow = {
     'title':
             {'image': None,
-             'max_lines': 3,
+             'max_lines': 2,
              'padding': 10,
              'width': 1,
              'height': 4/7,
@@ -76,7 +76,7 @@ threeRow = {
              'hcenter': True,
              'vcenter': True,
              'relative': False,
-             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
+             'font': './fonts/Anton/Anton-Regular.ttf',
              'font_size': None},
     'coverart':
             {'image': True,
@@ -88,10 +88,10 @@ threeRow = {
              'hcenter': True,
              'vcenter': True,
              'relative': ['coverart', 'title'],
-             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
+             'font': './fonts/Anton/Anton-Regular.ttf',
              'font_size': None},
 
-    'artist': 
+    'artist':
             {'image': None,
              'max_lines': 2,
              'padding': 10,
@@ -101,7 +101,7 @@ threeRow = {
              'hcenter': False,
              'vcenter': True,
              'relative': ['coverart', 'title'],
-             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
+             'font': './fonts/Anton/Anton-Regular.ttf',
              'font_size': None},
     'album':
             {'image': None,
@@ -113,7 +113,7 @@ threeRow = {
              'hcenter': False,
              'vcenter': True,
              'relative': ['coverart', 'artist'],
-             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
+             'font': './fonts/Anton/Anton-Regular.ttf',
              'font_size': None},
     'mode':
             {'image': False,
@@ -125,7 +125,7 @@ threeRow = {
              'vcenter': True,
              'rand': True,
              'relative': ['coverart', 'album'],
-             'font': './fonts/Open_Sans/OpenSans-Regular.ttf',
+             'font': './fonts/Anton/Anton-Regular.ttf',
              'font_size': None}
 }
 
@@ -154,6 +154,7 @@ clock = {
           'hcenter': False,
           'vcenter': True,
           'rand': True,
+          'inverse': True,
           'relative': ['mode', 'time'],
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'font_size': None},
@@ -187,7 +188,7 @@ splash =  {
            'rand': False,
            'inverse': False,
            'relative': ['version', 'app_name'],
-           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+           'font': './fonts/Dosis/static/Dosis-SemiBold.ttf',
            'maxchar': 20,
            'font_size': None},
 
@@ -203,7 +204,7 @@ splash =  {
            'rand': False,
            'inverse': False,
            'relative': ['url', 'version'],
-           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
+           'font': './fonts/Dosis/static/Dosis-SemiBold.ttf',
            'maxchar': 35,
            'font_size': None},
 
