@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[4]:
+# In[7]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[5]:
+# In[8]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[1]:
+# In[6]:
 
 
 import logging
@@ -257,8 +257,8 @@ class Layout:
                 if not this_section['font']:
                     this_section['font'] = self.font
                           
-                if not this_section['fontsize']:
-                    this_section['fontsize'] = self._scalefont(font=this_section['font'], 
+                if not this_section['font_size']:
+                    this_section['font_size'] = self._scalefont(font=this_section['font'], 
                                                                dimensions=this_section['dimensions'],
                                                                lines=this_section['max_lines'])    
 
@@ -283,7 +283,7 @@ class Layout:
             if not section['image']: # ['max_lines']:
                 logging.debug('set text block')
                 blocks[sec] = Block.TextBlock(area=section['dimensions'], text='.', font=section['font'], 
-                                       font_size=section['fontsize'], max_lines=section['max_lines'],
+                                       font_size=section['font_size'], max_lines=section['max_lines'],
                                        hcenter=section['hcenter'], vcenter=section['vcenter'], 
                                        inverse=section['inverse'], rand=section['rand'], 
                                        abs_coordinates=section['abs_coordinates'])
