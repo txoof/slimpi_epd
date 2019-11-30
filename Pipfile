@@ -13,6 +13,7 @@ lmsquery-fork = "*"
 ratelimiter = "*"
 dynaconf = "*"
 spidev = "*"
+humanfriendly = "*"
 
 [dev-packages]
 
