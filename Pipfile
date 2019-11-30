@@ -11,6 +11,8 @@ docrep = "*"
 cachepath = "*"
 lmsquery-fork = "*"
 ratelimiter = "*"
+dynaconf = "*"
+spidev = "*"
 
 [dev-packages]
 
