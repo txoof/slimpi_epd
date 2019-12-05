@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[43]:
+# In[44]:
 
 
 #get_ipython().magic(u'alias nbconvert nbconvert ./Configuration.ipynb')
@@ -216,7 +216,6 @@ class Options():
                     # do not include these keys in the nested dictionary
                     continue
                 # match those that are in the format [[SectionName]]__[[OptionName]]
-                logging.debug('checking match')
                 match = re.match('^(\w+)__(\w+)$', key)
                 if match:
                     # unpack into {sectionName: {OptionName: Value}}
