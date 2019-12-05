@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[41]:
+# In[43]:
 
 
 #get_ipython().magic(u'alias nbconvert nbconvert ./Configuration.ipynb')
@@ -200,7 +200,6 @@ class Options():
     
     @nested_opts_dict.setter
     def nested_opts_dict(self, opts_dict):
-        logging.debug('nesting dictionary')
         if not opts_dict:
             # skip processing
             self._nested_opts_dict = None
@@ -213,10 +212,8 @@ class Options():
             
             # process all the keys in opts_dict
             for key in opts_dict:
-                logging.debug(f'***examining key: {key}***')
                 if key in self.ignore_none or key in self.ignore_false:
                     # do not include these keys in the nested dictionary
-                    logging.debug(f'ignoring key: {key}')
                     continue
                 # match those that are in the format [[SectionName]]__[[OptionName]]
                 logging.debug('checking match')
@@ -228,7 +225,6 @@ class Options():
                     if not section in d:
                         # add the section if needed
                         d[section] = {}
-                    logging.debug(f'adding {section}: {option}: {opts_dict[key]}')
                     d[section][option] = opts_dict[key]
                 else:
                     # if not in `section__option format`, do not unpack add to dictionary
