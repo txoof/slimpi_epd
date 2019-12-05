@@ -3,17 +3,17 @@
 # coding: utf-8
 
 
-# In[125]:
+# In[ ]:
 
 
-#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Configuration.ipynb')
+#get_ipython().magic(u'alias nbconvert nbconvert ./Configuration.ipynb')
 
-#get_ipython().run_line_magic('nbconvert', '')
-
-
+#get_ipython().magic(u'nbconvert')
 
 
-# In[1]:
+
+
+# In[8]:
 
 
 import sys
@@ -27,7 +27,7 @@ import logging
 
 
 
-# In[2]:
+# In[9]:
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(name)s:%(funcName)s %(levelname)s: %(message)s')
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[3]:
+# In[10]:
 
 
 # class file():
@@ -76,7 +76,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[68]:
+# In[11]:
 
 
 def merge_dict(a, b):
@@ -107,7 +107,7 @@ def merge_dict(a, b):
 
 
 
-# In[4]:
+# In[12]:
 
 
 def fullPath(path):
@@ -116,7 +116,7 @@ def fullPath(path):
 
 
 
-# In[149]:
+# In[82]:
 
 
 class Options():
@@ -132,10 +132,13 @@ class Options():
         opts_dict(`dict`): namespace -> dictionary'''
     def __init__(self, args=None):
         self.parser = argparse.ArgumentParser()
+        self.ignore_none = []
+        self.ignore_false = []
         self.args = args
         self.options = None
         self.opts_dict = None
         self.nested_opts_dict = None
+
     
 #     @property
 #     def parser(self):
@@ -282,6 +285,22 @@ class Options():
         
         Args:
             *args, **kwargs'''
+        ignore_none = kwargs.pop('ignore_none', False)
+        ignore_false = kwargs.pop('ignore_false', False)
+
+        if 'dest' in kwargs:
+            dest = kwargs['dest']
+        elif len(args) == 2:
+            dest = args[1]
+        else:
+            #FIXME need to strip out `--` and turn `-` to `_`
+            dest = args[0]
+        
+        if ignore_none:
+            self.ignore_none.append(dest)
+        if ignore_false:
+            self.ignore_none.append(dest)
+        
         try:
             self.parser.add_argument(*args, **kwargs)
         except argparse.ArgumentError as e:
@@ -290,26 +309,26 @@ class Options():
 
 
 
-# In[150]:
+# In[83]:
 
 
-# o = Options(sys.argv)
+o = Options(sys.argv)
 
-# o.add_argument('-c', '--config-file', type=str, default=None, 
-#                         help='use the specified configuration file. Default is stored in ~/.config/myApp/config.ini')
-# o.add_argument('-l', '--log-level', type=str, dest='logging__log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], 
-#                         default = None,
-#                         help='set logging level: DEBUG, INFO, WARNING, ERROR')
-
-
-# o.parse_args(discard_none=['logging__log_level', 'foo'])
-# print(o.opts_dict)
-# print(o.nested_opts_dict)
+o.add_argument('-c', '--config-file', type=str, ignore_none=True, default=None, 
+                        help='use the specified configuration file. Default is stored in ~/.config/myApp/config.ini')
+o.add_argument('-l', '--log-level', type=str, dest='logging__log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], 
+                        default = None,
+                        help='set logging level: DEBUG, INFO, WARNING, ERROR')
 
 
+o.parse_args()
+print(o.opts_dict)
+print(o.nested_opts_dict)
 
 
-# In[127]:
+
+
+# In[ ]:
 
 
 class ConfigFile():
@@ -362,7 +381,7 @@ class ConfigFile():
 
 
 
-# In[64]:
+# In[ ]:
 
 
 # c = ConfigFile(default='./slimpi.cfg', user='~/.config/com.txoof.slimpi/slimpi.cfg')
@@ -383,7 +402,7 @@ class ConfigFile():
 # finally creating a dictionary of options
 
 
-# In[69]:
+# In[ ]:
 
 
 # merge_dict(c.config_dict, o.nested_opts_dict)
@@ -391,7 +410,7 @@ class ConfigFile():
 
 
 
-# In[23]:
+# In[ ]:
 
 
 # aa = dict(a)
