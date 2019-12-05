@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[44]:
+# In[47]:
 
 
 #get_ipython().magic(u'alias nbconvert nbconvert ./Configuration.ipynb')
@@ -65,7 +65,7 @@ def merge_dict(a, b):
 
 
 
-# In[5]:
+# In[46]:
 
 
 def fullPath(path):
@@ -77,7 +77,11 @@ def fullPath(path):
             and resolved
     Returns:
         `path.Path()`'''
-    return Path(path).expanduser().resolve()
+    if path is None:
+        path = None
+    else:
+        path = Path(path).expanduser().resolve()
+    return path
 
 
 
@@ -321,7 +325,7 @@ class ConfigFile():
 #         self.user = file(user)
         self.user = fullPath(user)
         self.parse_config()
-        
+    
     def parse_config(self):
         '''parse the config file(s) overriding the default configuration 
             with the user configuration (if provided)
@@ -330,12 +334,21 @@ class ConfigFile():
             config(obj:`configparser.ConfigParser`): parser object
             config_dict(`dict` of `dict` of `str`): dictionary representation of 
                 merged configuration files'''
-        if self.default.exists:
-#             self.cfg_files.append(self.default.file)
-            self.cfg_files.append(self.default)
-        if self.user.exists:
-#             self.cfg_files.append(self.user.file)
-            self.cfg_files.append(self.user)
+        def append(file):
+            if file:
+                if file.exists:
+                    self.cfg_files.append(file)
+                else:
+                    logging.warning(f'configuration file does not exist: {file}')
+                    
+        append(self.default)
+        append(self.user)
+#         if self.default.exists:
+# #             self.cfg_files.append(self.default.file)
+#             self.cfg_files.append(self.default)
+#         if self.user.exists:
+# #             self.cfg_files.append(self.user.file)
+#             self.cfg_files.append(self.user)
         if self.cfg_files:
             self.config = configparser.ConfigParser()
             self.config.read(self.cfg_files)
