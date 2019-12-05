@@ -21,10 +21,13 @@ app_long_name = '.'.join([devel_name, app_name])
 logging_cfg = 'logging.cfg'
 
 # default configuration
-default_cfg = 'slimpi.cfg'
+default_cfg_name = 'slimpi.cfg'
+
+# default configuration location
+default_cfg = f'./{default_cfg_name}'
 
 # default user configuration
-user_cfg = '/'.join(['~/.config/', app_long_name])
+user_cfg = '/'.join(['~/.config', app_long_name, default_cfg_name])
 
 # location of default image for albums that fail to return ablum art
 noartwork = './images/No-album-art.png'
