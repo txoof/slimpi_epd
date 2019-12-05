@@ -7,9 +7,10 @@ url = 'https://github.com/txoof/slimpi_epd'
 # short name of application
 app_name = 'slimpi'
 
-# developer's name
+# developer's name in reverse DNS format
 devel_name = 'com.txoof'
 
+# reverse dns name for this project
 app_long_name = '.'.join([devel_name, app_name])
 
 
@@ -22,7 +23,7 @@ logging_cfg = 'logging.cfg'
 # default configuration
 default_cfg = 'slimpi.cfg'
 
-# user configuration
+# default user configuration
 user_cfg = '/'.join(['~/.config/', app_long_name])
 
 # location of default image for albums that fail to return ablum art
