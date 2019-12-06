@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[108]:
+# In[109]:
 
 
 #get_ipython().magic(u'alias nbconvert nbconvert ./Configuration.ipynb')
@@ -314,7 +314,7 @@ class Options():
 
 
 
-# In[103]:
+# In[119]:
 
 
 class ConfigFile():
@@ -328,32 +328,70 @@ class ConfigFile():
         * suer - read last and overwrites system
         
     Args:
-        config_files(`list`): list of configuration files to read'''
+        config_files(`list`): list of configuration files to read
+    Properties:
+        config_files(`list` of `str` or `pathlib.PosixPath`): str or Path() objects to read
+        parser(`configparser.ConfigParser obj`): config parser object
+        config_dict(`dict` of `dict`): nested configuration dict following INI file format:
+            Sample config.ini:
+            
+                [Section]
+                option = value
+                option2 = True
+
+                [Main]
+                log_level = DEBUG
+            
+            Yeilds -> config_dict:
+            
+                {'Section': {'option': 'value', 'option2': True}
+                 'Main': {'log_level': 'DEBUG'}}
+        '''
     
-    def __init__(self, cfg_files=[]):
-        self.cfg_files = cfg_files
+    def __init__(self, config_files=[]):
+        self.config_dict = {}
         self.parser = configparser.ConfigParser()
+        self.config_files = config_files
         
     @property
-    def cfg_files(self):
-        return self._cfg_files
-    
-    @cfg_files.setter
-    def cfg_files(self, cfg_files):
-        if not isinstance(cfg_files, list):
-            raise TypeError(f'Type mismatch: expected {list}, but received {type(cfg_files)}: {cfg_files}')
+    def config_files(self):
+        '''list of configuration files
         
-        self._cfg_files = [Path(i).expanduser().resolve() for i in cfg_files]
+        Args:
+            config_files(`list` of `str` or `pathlib.PosixPath`): list of INI files to read
+        Sets:
+            config_files(`list`)
+            config_dict(`dict` of `dict`)
+            '''
+        return self._config_files
     
-    def parse_config(self):   
-        for file in self.cfg_files:
+    @config_files.setter
+    def config_files(self, config_files):
+        if not isinstance(config_files, list):
+            raise TypeError(f'Type mismatch: expected {list}, but received {type(config_files)}: {config_files}')
+        
+        self._config_files = [Path(i).expanduser().resolve() for i in config_files]
+        
+        if len(self.config_files) > 0:
+            self.parse_config()
+    
+    def parse_config(self):
+        '''reads and stores configuration values from `config_files` in left-to-right order
+            right-most section/option/values overwrite left-most section/option/values
+        
+        Returns:
+            config_dict(`dict` of `dict`)
+        Sets: config_dict'''
+        for file in self.config_files:
             if file.exists():
                 self.parser.read(file)
             else:
                 logging.warning(f'{file} does not exist')
                 
         if self.parser.sections():
-            self.config_dict = self._config_2dict(self.parser)        
+            self.config_dict = self._config_2dict(self.parser) 
+        
+        return self.config_dict
                 
     def _config_2dict(self, configuration):
         '''convert an argparse object into a dictionary
@@ -374,13 +412,10 @@ class ConfigFile():
 
 
 
-# In[106]:
+# In[121]:
 
 
-# c = ConfigFileN(['./slimpi.cfg', '~/.config/com.txoof.slimpi/slimpi.cfg'])
-# c.parse_config()
-
-# c.config_dict
+# c = ConfigFile(['./slimpi.cfg', '/etc/slimpi.cfg', '~/.config/com.txoof.slimpi/slimpi.cfg'])
 
 
 
