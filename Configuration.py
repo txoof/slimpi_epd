@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[47]:
+# In[ ]:
 
 
 #get_ipython().magic(u'alias nbconvert nbconvert ./Configuration.ipynb')
@@ -13,21 +13,21 @@
 
 
 
-# In[2]:
+# In[48]:
 
 
 import sys
 import argparse
 import configparser
 import re
-from pathlib import Path
+from pathlib import Path, PosixPath
 
 import logging
 
 
 
 
-# In[3]:
+# In[20]:
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(name)s:%(funcName)s %(levelname)s: %(message)s')
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[4]:
+# In[ ]:
 
 
 def merge_dict(a, b):
@@ -65,7 +65,7 @@ def merge_dict(a, b):
 
 
 
-# In[46]:
+# In[ ]:
 
 
 def fullPath(path):
@@ -86,7 +86,7 @@ def fullPath(path):
 
 
 
-# In[38]:
+# In[ ]:
 
 
 class Options():
@@ -286,7 +286,7 @@ class Options():
 
 
 
-# In[39]:
+# In[ ]:
 
 
 # o = Options(sys.argv)
@@ -306,7 +306,7 @@ class Options():
 
 
 
-# In[40]:
+# In[ ]:
 
 
 # o.ignore_none
@@ -314,49 +314,47 @@ class Options():
 
 
 
-# In[ ]:
+# In[103]:
 
 
 class ConfigFile():
-    def __init__(self, default=None, user=None):
-        self.cfg_files = []
-#         self.default = file(default)
-        self.default = fullPath(default)
-#         self.user = file(user)
-        self.user = fullPath(user)
-        self.parse_config()
+    '''Read and parse one or more INI style configuration files
     
-    def parse_config(self):
-        '''parse the config file(s) overriding the default configuration 
-            with the user configuration (if provided)
-            
-        Sets:
-            config(obj:`configparser.ConfigParser`): parser object
-            config_dict(`dict` of `dict` of `str`): dictionary representation of 
-                merged configuration files'''
-        def append(file):
-            if file:
-                if file.exists:
-                    self.cfg_files.append(file)
-                else:
-                    logging.warning(f'configuration file does not exist: {file}')
-                    
-        append(self.default)
-        append(self.user)
-#         if self.default.exists:
-# #             self.cfg_files.append(self.default.file)
-#             self.cfg_files.append(self.default)
-#         if self.user.exists:
-# #             self.cfg_files.append(self.user.file)
-#             self.cfg_files.append(self.user)
-        if self.cfg_files:
-            self.config = configparser.ConfigParser()
-            self.config.read(self.cfg_files)
+        Creates a configparser.ConfigParser() object and reads multiple
+        configuration files. Settings in each file supersedes pervious files
+        `config_files`=[default, system, user] 
+        * default - read first
+        * system - read second and overwrites default
+        * suer - read last and overwrites system
         
-        if self.config.sections():
-            self.config_dict = self._config_2dict(self.config)
+    Args:
+        config_files(`list`): list of configuration files to read'''
+    
+    def __init__(self, cfg_files=[]):
+        self.cfg_files = cfg_files
+        self.parser = configparser.ConfigParser()
         
+    @property
+    def cfg_files(self):
+        return self._cfg_files
+    
+    @cfg_files.setter
+    def cfg_files(self, cfg_files):
+        if not isinstance(cfg_files, list):
+            raise TypeError(f'Type mismatch: expected {list}, but received {type(cfg_files)}: {cfg_files}')
         
+        self._cfg_files = [Path(i).expanduser().resolve() for i in cfg_files]
+    
+    def parse_config(self):   
+        for file in self.cfg_files:
+            if file.exists():
+                self.parser.read(file)
+            else:
+                logging.warning(f'{file} does not exist')
+                
+        if self.parser.sections():
+            self.config_dict = self._config_2dict(self.parser)        
+                
     def _config_2dict(self, configuration):
         '''convert an argparse object into a dictionary
 
@@ -372,6 +370,79 @@ class ConfigFile():
                 d[section][opt] = configuration.get(section, opt)
 
         return d    
+
+
+
+
+# In[106]:
+
+
+# c = ConfigFileN(['./slimpi.cfg', '~/.config/com.txoof.slimpi/slimpi.cfg'])
+# c.parse_config()
+
+# c.config_dict
+
+
+
+
+# In[ ]:
+
+
+# class ConfigFile():
+#     def __init__(self, default=None, user=None):
+#         self.cfg_files = []
+# #         self.default = file(default)
+#         self.default = fullPath(default)
+# #         self.user = file(user)
+#         self.user = fullPath(user)
+#         self.parse_config()
+    
+#     def parse_config(self):
+#         '''parse the config file(s) overriding the default configuration 
+#             with the user configuration (if provided)
+            
+#         Sets:
+#             config(obj:`configparser.ConfigParser`): parser object
+#             config_dict(`dict` of `dict` of `str`): dictionary representation of 
+#                 merged configuration files'''
+#         def append(file):
+#             if file:
+#                 if file.exists:
+#                     self.cfg_files.append(file)
+#                 else:
+#                     logging.warning(f'configuration file does not exist: {file}')
+                    
+#         append(self.default)
+#         append(self.user)
+# #         if self.default.exists:
+# # #             self.cfg_files.append(self.default.file)
+# #             self.cfg_files.append(self.default)
+# #         if self.user.exists:
+# # #             self.cfg_files.append(self.user.file)
+# #             self.cfg_files.append(self.user)
+#         if self.cfg_files:
+#             self.config = configparser.ConfigParser()
+#             self.config.read(self.cfg_files)
+        
+#         if self.config.sections():
+#             self.config_dict = self._config_2dict(self.config)
+        
+        
+#     def _config_2dict(self, configuration):
+#         '''convert an argparse object into a dictionary
+
+#         Args:
+#             configuration(`configparser.ConfigParser`)
+
+#         Returns:
+#             `dict`'''
+#         d = {}
+#         for section in configuration.sections():
+#             d[section] = {}
+#             for opt in configuration.options(section):
+#                 d[section][opt] = configuration.get(section, opt)
+
+#         return d    
 
 
 
