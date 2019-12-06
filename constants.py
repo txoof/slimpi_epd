@@ -26,6 +26,9 @@ default_cfg_name = 'slimpi.cfg'
 # default configuration location
 default_cfg = f'./{default_cfg_name}'
 
+# default system configuration location for daemon
+system_cfg = f'/etc/{default_cfg_name}'
+
 # default user configuration
 user_cfg = '/'.join(['~/.config', app_long_name, default_cfg_name])
 
