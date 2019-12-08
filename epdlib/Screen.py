@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[322]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Screen.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[323]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -147,8 +147,11 @@ class Screen:
             elements = self.elements
             
         for e in elements:
-            logging.debug(f'pasting image at: {e.img_coordinates}')
-            self.image.paste(e.image,  e.img_coordinates)
+            logging.debug(f'pasting image at: {e.abs_coordinates}')
+            self.image.paste(e.image,  e.abs_coordinates)
+
+#             logging.debug(f'pasting image at: {e.img_coordinates}')
+#             self.image.paste(e.image,  e.img_coordinates)
         return(self.image)
     
     def initEPD(self):

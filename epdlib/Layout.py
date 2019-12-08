@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[10]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[1]:
+# In[11]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,18 @@
 
 
 
-# In[ ]:
+# In[1]:
+
+
+#get_ipython().run_line_magic('load_ext', 'autoreload')
+#get_ipython().run_line_magic('autoreload', '2')
+
+#get_ipython().run_line_magic('reload_ext', 'autoreload')
+
+
+
+
+# In[2]:
 
 
 import logging
@@ -30,7 +41,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[ ]:
+# In[3]:
 
 
 try:
@@ -46,7 +57,7 @@ except ImportError as e:
 
 
 
-# In[ ]:
+# In[4]:
 
 
 class Layout:
@@ -157,13 +168,11 @@ class Layout:
         # loop control variable
         cont = True
         # work up until font covers img_fraction of the resolution return one smaller than this as the fontsize
-#         while (fontdim[0] < xtarget) or (fontdim[1] < ytarget):
         while cont:
             fontsize += 1
             testfont = ImageFont.truetype(font, fontsize)
             
             fontdim = testfont.getsize(text)
-#             logging.debug(f'size: {fontsize}; dimensions: {fontdim}')
             if fontdim[0] > xtarget:
                 cont = False
                 logging.debug(f'X target exceeded')
@@ -171,14 +180,6 @@ class Layout:
             if fontdim[1] > ytarget:
                 cont = False
                 logging.debug('Y target exceeded')
-#             if (fontdim[0] > dimensions[0]) or (fontdim[1] > dimensions[1]):
-#                 logging.warning(f'font dimension exceeds X or Y dimensions!')
-#                 logging.debug(f'fontsize: {fontsize}; fontdim: {fontdim}; dimensions {dimensions}')
-#                 logging.debug('setting font size to 1')
-#                 return 1
-            # need a check here to ensure that a minimum of 8-10 characters can fit on the line
-
-
             
         # back off one 
         fontsize -= 1
@@ -338,13 +339,5 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
-
-
-
-
-# In[ ]:
-
-
-
 
 

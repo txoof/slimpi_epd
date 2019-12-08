@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[42]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[4]:
+# In[43]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[14]:
+# In[44]:
 
 
 import logging
@@ -36,7 +36,7 @@ except ImportError as e:
 
 
 
-# In[15]:
+# In[45]:
 
 
 class Block:
@@ -102,7 +102,8 @@ class Block:
     def abs_coordinates(self):
         ''':obj:`tuple` of :obj:`int`: absolute_coordinates of area within larger image.
         
-        Setting `abs_coordinates` atomatically sets `img_coordinates` to the same value.
+        Sets: 
+            abs_coordinates: atomatically sets `img_coordinates` to the same value.
         '''
         return self._abs_coordinates
     
@@ -152,7 +153,7 @@ class Block:
 
 
 
-# In[16]:
+# In[46]:
 
 
 class ImageBlock(Block):
@@ -235,7 +236,7 @@ class ImageBlock(Block):
 
 
 
-# In[34]:
+# In[151]:
 
 
 class TextBlock(Block):
@@ -366,76 +367,70 @@ class TextBlock(Block):
         return(formatted)
     
     def _text2image(self):
-        '''produces 1 bit image containing wrapped text.
+        logging.debug(f'creating blank image area: {self.area} with inverse: {self.inverse}')
         
-        calling this method will set `img_coordinates`
-            based on image size, hcenter and vcenter rules
+        # create image for holding text
+        text_image = Image.new('1', self.area, self.bkground)
+        # get a drawing context
+        draw = ImageDraw.Draw(text_image)
         
-        Sets:
-            dimensions (tuple): of (int) - dimensions of text image
-            img_coordinates (tuple): of int - absolute coordinates of text image 
+        # create an image to paste the text_image into
+        image = Image.new('1', self.area, self.bkground)
         
-        Returns:
-            :obj:`PIL.Image`
-        '''
-        
-        logging.debug(f'random is set: {self.rand}')
-        # determine the extents of the text block image
+        # set the dimensions for the text portion of the block
         y_total = 0
         x_max = 0
-        
         for line in self.text_formatted:
             x, y = self.font.getsize(line)
-            y_total += y # accumulate the total height
+            logging.debug(f'line size: {x}, {y}')
+            y_total += y # accumulate height
             if x > x_max:
                 x_max = x # find the longest line
-        
-        # set dimensions of the text block image
+                logging.debug(f'max x dim so far: {x_max}')
+                
+        # dimensions of text portion for formatting later
         self.dimensions = (x_max, y_total)
-        logging.debug(f'text image dimensions: {self.dimensions}')
+        logging.debug(f'dimensions of text portion of image: {self.dimensions}')     
         
-        # build image
-        image = Image.new('1', self.dimensions, self.bkground)
-        # get a drawing context
-        draw = ImageDraw.Draw(image)
-        
+        # layout the text with hcentering
         y_total = 0
         for line in self.text_formatted:
             x_pos = 0
             x, y = self.font.getsize(line)
             if self.hcenter:
-                logging.debug(f'h-center line: {line}')
+                logging.debug(f'hcenter line: {line}')
                 x_pos = round(self.dimensions[0]/2-x/2)
+            logging.debug(f'drawing text at {x_pos}, {y_total}')
+            logging.debug(f'with dimensions: {x}, {y}')
             draw.text((x_pos, y_total), line, font=self.font, fill=self.fill)
             y_total += y
-        
-        # set image coordinates
-        new_x, new_y = self.abs_coordinates
-        
+            
+        # produce the final image
+        # Start in upper left corner
+        x_pos = 0
+        y_pos = 0
+
         if self.rand:
-            logging.debug('setting random position within area')
+            logging.debug('randomly positioning text within area')
             x_range = self.area[0] - self.dimensions[0]
             y_range = self.area[1] - self.dimensions[1]
             
-            rand_x = randrange(x_range)
-            rand_y = randrange(y_range)
-            rand_image = Image.new('1', self.area, self.bkground)
-            rand_image.paste(image, (rand_x, rand_y))
-            image = rand_image
-        else:
+
+            x_pos = randrange(x_range)
+
+            y_pos = randrange(y_range)
+
+        else: # random and h/v center are mutually exclusive            
             if self.hcenter:
-                logging.debug(f'h-center image coordinates')
-                new_x = self.abs_coordinates[0] + round(self.area[0]/2 - self.dimensions[0]/2)
-
-
+                x_pos = round(self.area[0]/2 - self.dimensions[0]/2)
             if self.vcenter:
-                logging.debug(f'v-center image coordinates')
-                new_y = self.abs_coordinates[1] + round(self.area[1]/2 - self.dimensions[1]/2)
-        
-            if self.hcenter or self.vcenter:
-                logging.debug(f'image coordinates {(new_x, new_y)}')
-                self.img_coordinates = (new_x, new_y)
-        
-        return image        
+                y_pos = round(self.area[1]/2 - self.dimensions[1]/2)
+    
+    
+        logging.debug(f'pasting text portion at coordinates: {x_pos}, {y_pos}')
+        image.paste(text_image, (x_pos, y_pos))
+            
+                
+        return image#, text_image   
 
 
