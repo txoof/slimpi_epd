@@ -1,3 +1,5 @@
+import signal
+
 class SignalHandler(object):
     '''handle specific signals and allow graceful exiting while loop
         https://stackoverflow.com/a/31464349/5530152
