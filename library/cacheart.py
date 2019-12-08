@@ -1,4 +1,7 @@
+import logging
+import requests
 from cachepath import CachePath, TempPath, Path
+from shutil import copyfile, copyfileobj
 
 class CacheArt():
     '''download and cache album artwork from lms server
