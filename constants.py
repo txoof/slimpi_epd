@@ -41,3 +41,8 @@ waveshare = 'waveshare_epd'
 # layouts for display
 layouts = 'layouts'
 
+# plugins folder - not yet implemented
+plugins = 'plugins'
+
+# clock module to use if no other is specified
+clock = 'clock'
