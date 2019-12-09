@@ -3,17 +3,17 @@
 # coding: utf-8
 
 
-# In[28]:
+# In[29]:
 
 
-#get_ipython().magic(u'alias nbconvert nbconvert ./wordclock.ipynb')
+#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./wordclock.ipynb')
 
-#get_ipython().magic(u'nbconvert')
-
-
+#get_ipython().run_line_magic('nbconvert', '')
 
 
-# In[48]:
+
+
+# In[30]:
 
 
 import logging
@@ -23,7 +23,7 @@ from random import choice
 
 
 
-# In[40]:
+# In[31]:
 
 
 def time_list(time):
@@ -36,7 +36,7 @@ def time_list(time):
 
 
 
-# In[14]:
+# In[32]:
 
 
 def time_now():
@@ -45,7 +45,7 @@ def time_now():
 
 
 
-# In[89]:
+# In[33]:
 
 
 def map_val(a, b, s):
@@ -67,7 +67,7 @@ def map_val(a, b, s):
 
 
 
-# In[90]:
+# In[34]:
 
 
 # def maprange(a, b, s):
@@ -86,7 +86,7 @@ def map_val(a, b, s):
 
 
 
-# In[293]:
+# In[35]:
 
 
 def get_time(time=None):    
@@ -170,27 +170,9 @@ def get_time(time=None):
 
 
 
-# In[292]:
-
-
-get_time('12:25')
+# In[ ]:
 
 
 
-
-# In[96]:
-
-
-for i in range(60):
-    print(f'{i} maps to: {map_vals((1, 59), (0, 6), i)}')
-
-
-
-
-# In[95]:
-
-
-for i in range(60):
-     print(f'{i}: maps to {maprange((-4, 55), (0, 6), i)}')
 
 
