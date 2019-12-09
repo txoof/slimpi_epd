@@ -3,10 +3,10 @@
 # coding: utf-8
 
 
-# In[13]:
+# In[27]:
 
 
-#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./WordClock.ipynb')
+#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./wordclock.ipynb')
 
 #get_ipython().run_line_magic('nbconvert', '')
 
@@ -22,7 +22,7 @@ from random import choice
 
 
 
-# In[8]:
+# In[18]:
 
 
 def time():
@@ -31,7 +31,7 @@ def time():
 
 
 
-# In[9]:
+# In[19]:
 
 
 def time_now():
@@ -40,7 +40,7 @@ def time_now():
 
 
 
-# In[10]:
+# In[20]:
 
 
 def maprange(a, b, s):
@@ -59,7 +59,7 @@ def maprange(a, b, s):
 
 
 
-# In[12]:
+# In[25]:
 
 
 def get_time():    
@@ -100,7 +100,7 @@ def get_time():
 
     # this range shifts the period of the list so times around the 'tens' round nicely up and down
     minute = maprange((-5, 55), (0, 6), int(time()[1]))
-    hour_str = hours[time()[0]]
+    hour_str = hours[str(int(time()[0]))]
     min_str = minutes[str(minute)]
     
     myTime = {'wordtime': f'{choice(stems)} {choice(min_str).title()} {choice(hour_str).title()}',
@@ -109,6 +109,14 @@ def get_time():
     
     
     return myTime
+
+
+
+
+# In[26]:
+
+
+get_time()
 
 
 
