@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[42]:
+# In[179]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[43]:
+# In[180]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[44]:
+# In[183]:
 
 
 import logging
@@ -36,7 +36,7 @@ except ImportError as e:
 
 
 
-# In[45]:
+# In[184]:
 
 
 class Block:
@@ -153,72 +153,83 @@ class Block:
 
 
 
-# In[46]:
+# In[221]:
 
 
 class ImageBlock(Block):
     def __init__(self, image=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        logging.debug(f'create ImageBlock')
         self.image = image
         
     @property
     def image(self):
-        ''':obj:`PIL.Image`: resizes, and centers image to fit within the `area`
-        
-        Setting/Updating `image` recalculates `img_coordinates`'''
         return self._image
     
     @image.setter
     def image(self, image):
-        if not image:
-            logging.debug(f'no image object provided, setting empty 1x1 image')
-            self._image = Image.new('1', (1, 1), self.bkground)
-            return self._image
+        image_area = Image.new('1', self.area, self.bkground)
         
-        logging.debug(f'formatting image: {image}')
-        dim = min(self.area)-self.padding
-        logging.debug(f'set image dimensions: {dim}')
+        if not image:
+            logging.debug(f'no image provided - setting to blank image: {self.area}')
+            self._image = image_area
+            return
+        
+        dim = min(self.area)-self.padding*2
         size = (dim, dim)
+        logging.debug(f'setting usable image area to: {size} with padding {self.padding}')
+       
+        # handle image path
         if isinstance(image, str):
+            logging.debug(f'using image: {image}')
             try:
                 im = Image.open(image)
+                im.thumbnail(size)
             except (PermissionError, FileNotFoundError, OSError) as e:
                 logging.warning(f'could not open image file: {image}')
-                logging.warning('setting to blank 1x1 image')
-                im = Image.new('1', (1, 1), self.bkground)
-            im.thumbnail(size)
-        if isinstance(image, Image.Image):
-            logging.debug('using PIL.Image image')
+                logging.warning(f'using empty image')
+                self._image = image_area
+                return
+        elif isinstance(image, Image.Image):
+            logging.debug(f'using PIL image')
             im = image
             if im.size != size:
-                logging.debug('resizing image')
+                logging.debug(f'resizing image to {size}')
                 im.resize(size)
-
+                
         self.dimensions = im.size
-        x_new, y_new = self.abs_coordinates
+        
+        x_pos = 0
+        y_pos = 0
         
         if self.rand:
-            pass
+            # pick a random coordinate for the image
+            logging.debug(f'using random coordinates')
+            x_range = self.area[0] - self.dimensions[0]
+            y_range = self.area[1] - self.dimensions[1] 
+            x_pos = randrange(x_range)
+            y_pos = randrange(y_range)
+            
+        # h/v center is mutually exclusive to random
+        else:
+            if self.hcenter:
+                logging.debug(f'h centering image')
+                x_pos = round((self.area[0]-self.dimensions[0])/2)
+            if self.vcenter:
+                logging.debug(f'v centering')
+                y_pos = round((self.area[1]-self.dimensions[1])/2)
         
-        if self.hcenter:
-            x_new = self.abs_coordinates[0] + round(self.area[0]/2 - self.dimensions[0]/2)
-        if self.vcenter:
-            y_new = self.abs_coordinates[1] + round(self.area[1]/2 - self.dimensions[1]/2)
-        
-        if self.hcenter or self.vcenter:
-            self.img_coordinates = (x_new, y_new)
-        logging.debug(f'set img_coordinates: {self.img_coordinates}')
-        
-        # set the inverse of the image
         if self.inverse:
             im = ImageOps.invert(im)
-        # convert to 1 bit
-        im = im.convert(mode='L')
-            
-        self._image = im
-        return im        
-    
+        
+        logging.debug(f'pasting image into area at: {x_pos}, {y_pos}')
+        image_area.paste(im, (x_pos, y_pos))
+        
+        self._image = image_area
+        return
+        
+        
+        
+
     def update(self, update=None):
         '''Update image data including coordinates
         
@@ -231,7 +242,94 @@ class ImageBlock(Block):
             except Exception as e:
                 logging.error(f'failed to update: {e}')
                 return False
-            return True        
+            return True                
+
+            
+    
+        
+
+
+
+
+# In[185]:
+
+
+# class xImageBlock(Block):
+#     def __init__(self, image=None, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         logging.debug(f'create ImageBlock')
+#         self.image = image
+        
+#     @property
+#     def image(self):
+#         ''':obj:`PIL.Image`: resizes, and centers image to fit within the `area`
+        
+#         Setting/Updating `image` recalculates `img_coordinates`'''
+#         return self._image
+    
+#     @image.setter
+#     def image(self, image):
+#         if not image:
+#             logging.debug(f'no image object provided, setting empty 1x1 image')
+#             self._image = Image.new('1', (1, 1), self.bkground)
+#             return self._image
+        
+#         logging.debug(f'formatting image: {image}')
+#         dim = min(self.area)-self.padding
+#         logging.debug(f'set image dimensions: {dim}')
+#         size = (dim, dim)
+#         if isinstance(image, str):
+#             try:
+#                 im = Image.open(image)
+#             except (PermissionError, FileNotFoundError, OSError) as e:
+#                 logging.warning(f'could not open image file: {image}')
+#                 logging.warning('setting to blank 1x1 image')
+#                 im = Image.new('1', (1, 1), self.bkground)
+#             im.thumbnail(size)
+#         if isinstance(image, Image.Image):
+#             logging.debug('using PIL.Image image')
+#             im = image
+#             if im.size != size:
+#                 logging.debug('resizing image')
+#                 im.resize(size)
+
+#         self.dimensions = im.size
+#         x_new, y_new = self.abs_coordinates
+        
+#         if self.rand:
+#             pass
+        
+#         if self.hcenter:
+#             x_new = self.abs_coordinates[0] + round(self.area[0]/2 - self.dimensions[0]/2)
+#         if self.vcenter:
+#             y_new = self.abs_coordinates[1] + round(self.area[1]/2 - self.dimensions[1]/2)
+        
+#         if self.hcenter or self.vcenter:
+#             self.img_coordinates = (x_new, y_new)
+#         logging.debug(f'set img_coordinates: {self.img_coordinates}')
+        
+#         # set the inverse of the image
+#         if self.inverse:
+#             im = ImageOps.invert(im)
+#         # convert to 1 bit
+#         im = im.convert(mode='L')
+            
+#         self._image = im
+#         return im        
+    
+#     def update(self, update=None):
+#         '''Update image data including coordinates
+        
+#         Args:
+#             update (:obj:`PIL.Image`): image
+#         '''
+#         if update:
+#             try:
+#                 self.image = update
+#             except Exception as e:
+#                 logging.error(f'failed to update: {e}')
+#                 return False
+#             return True        
 
 
 
