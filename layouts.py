@@ -81,7 +81,7 @@ threeRow = {
     'coverart':
             {'image': True,
              'max_lines': None,
-             'padding': 10,
+             'padding': 2,
              'width': 2/5,
              'height': 3/7,
              'abs_coordinates': (0, None),
