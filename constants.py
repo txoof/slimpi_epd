@@ -1,5 +1,5 @@
 # application version number
-version = 'version 0.2.0'
+version = 'version 0.2.1'
 
 # url of github project
 url = 'https://github.com/txoof/slimpi_epd'
