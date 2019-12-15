@@ -37,12 +37,13 @@ noartwork = './images/No-album-art.png'
 
 ###### python modules that may change
 # EPD library
-waveshare = 'waveshare_epd' 
-# layouts for display
+waveshare = 'waveshare_epd'
+
+# layouts file for display
 layouts = 'layouts'
 
-# plugins folder - not yet implemented
+# plugins directory - clocks;
 plugins = 'plugins'
 
-# clock module to use if no other is specified
+# defualt clock module to use if no other is specified
 clock = 'clock'
