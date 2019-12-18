@@ -1,19 +1,19 @@
-#!/usr/bin/env ipython
+#!/usr/bin/env python
 #!/usr/bin/env python
 # coding: utf-8
 
 
-# In[109]:
+# In[3]:
 
 
-#get_ipython().magic(u'alias nbconvert nbconvert ./Configuration.ipynb')
+#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./configuration.ipynb')
 
-#get_ipython().magic(u'nbconvert')
-
-
+#get_ipython().run_line_magic('nbconvert', '')
 
 
-# In[48]:
+
+
+# In[4]:
 
 
 import sys
@@ -27,7 +27,7 @@ import logging
 
 
 
-# In[20]:
+# In[5]:
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(name)s:%(funcName)s %(levelname)s: %(message)s')
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[ ]:
+# In[6]:
 
 
 def merge_dict(a, b):
@@ -65,7 +65,7 @@ def merge_dict(a, b):
 
 
 
-# In[ ]:
+# In[7]:
 
 
 def fullPath(path):
@@ -86,7 +86,7 @@ def fullPath(path):
 
 
 
-# In[ ]:
+# In[15]:
 
 
 class Options():
@@ -216,7 +216,9 @@ class Options():
             
             # process all the keys in opts_dict
             for key in opts_dict:
-                if key in self.ignore_none or key in self.ignore_false:
+                # ignore keys if they in the ignore lists AND are False/None 
+                if (key in self.ignore_none or key in self.ignore_false) and not opts_dict[key]:
+                    logging.debug(f'ignoring key: {key}')
                     # do not include these keys in the nested dictionary
                     continue
                 # match those that are in the format [[SectionName]]__[[OptionName]]
@@ -286,7 +288,24 @@ class Options():
 
 
 
+# In[10]:
+
+
+# sys.argv.append('-p')
+# sys.argv.append('slimpi')
+
+
+
+
 # In[ ]:
+
+
+
+
+
+
+
+# In[16]:
 
 
 # o = Options(sys.argv)
@@ -297,6 +316,10 @@ class Options():
 #                         type=str, dest='logging__log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], 
 #                         default = None,
 #                         help='set logging level: DEBUG, INFO, WARNING, ERROR')
+
+# o.add_argument('-p', '--player-id', type=str, required=False, default=False,
+#                      dest='lms_server__player_id', ignore_false=True,
+#                      help='set the name of the player to monitor')
 
 
 # o.parse_args()
@@ -314,7 +337,7 @@ class Options():
 
 
 
-# In[119]:
+# In[ ]:
 
 
 class ConfigFile():
@@ -412,7 +435,7 @@ class ConfigFile():
 
 
 
-# In[121]:
+# In[ ]:
 
 
 # c = ConfigFile(['./slimpi.cfg', '/etc/slimpi.cfg', '~/.config/com.txoof.slimpi/slimpi.cfg'])
