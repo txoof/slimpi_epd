@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[2]:
+# In[6]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./configuration.ipynb')
@@ -86,7 +86,7 @@ def fullPath(path):
 
 
 
-# In[15]:
+# In[4]:
 
 
 class Options():
@@ -247,7 +247,10 @@ class Options():
             ignore_none(`bool`): ignore this when building 
             ignore_false(`bool`):
             *args, **kwargs'''
-        # pop out these keys to avoid sending to 
+        # pop out these keys to avoid sending to the dictionary
+        # this can probably be fixed by using the following:
+        # parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
+        
         ignore_none = kwargs.pop('ignore_none', False)
         ignore_false = kwargs.pop('ignore_false', False)
 
