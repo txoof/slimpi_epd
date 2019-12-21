@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[13]:
+# In[17]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[14]:
+# In[18]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -339,7 +339,7 @@ class TextBlock(Block):
     when writing to a WaveShare ePaper display.
     
     TextBlock objects are aware of their dimensions, absolute coordinates, and 
-    contain an grayscale PIL.Image object of the specified area.
+    contain an 1 bit PIL.Image object of the specified area.
     
     TextBlock objects format strings into multi-line text using wordwrap to 
     fit the maximum number of characters on each line given a particular font.
@@ -507,12 +507,12 @@ class TextBlock(Block):
         logging.debug(f'creating blank image area: {self.area} with inverse: {self.inverse}')
         
         # create image for holding text
-        text_image = Image.new('L', self.area, self.bkground)
+        text_image = Image.new('1', self.area, self.bkground)
         # get a drawing context
         draw = ImageDraw.Draw(text_image)
         
         # create an image to paste the text_image into
-        image = Image.new('L', self.area, self.bkground)
+        image = Image.new('1', self.area, self.bkground)
         
         # set the dimensions for the text portion of the block
         y_total = 0
