@@ -1,9 +1,9 @@
-#!/usr/bin/env ipython
+#!/usr/bin/env python
 #!/usr/bin/env python
 # coding: utf-8
 
 
-# In[29]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./wordclock.ipynb')
@@ -13,7 +13,7 @@
 
 
 
-# In[30]:
+# In[1]:
 
 
 import logging
@@ -23,7 +23,7 @@ from random import choice
 
 
 
-# In[31]:
+# In[2]:
 
 
 def time_list(time):
@@ -36,7 +36,7 @@ def time_list(time):
 
 
 
-# In[32]:
+# In[3]:
 
 
 def time_now():
@@ -45,7 +45,7 @@ def time_now():
 
 
 
-# In[33]:
+# In[4]:
 
 
 def map_val(a, b, s):
@@ -67,26 +67,7 @@ def map_val(a, b, s):
 
 
 
-# In[34]:
-
-
-# def maprange(a, b, s):
-#     '''map range `a` to `b` for value `s`
-
-#     Args:
-#         a(2 `tuple` of `int`): (start, end) of input values
-#         b(2 `tuple` of `int`): (start, end) of output values
-#         s(`float`, `int`): value to mape
-#     Returns:
-#         `int`'''
-    
-#     (a1, a2), (b1, b2) = a, b
-#     return  int(b1 + ((s - a1) * (b2 - b1) / (a2 - a1)))
-
-
-
-
-# In[35]:
+# In[9]:
 
 
 def get_time(time=None):    
@@ -139,7 +120,7 @@ def get_time(time=None):
     minute = map_val((1, 59), (0, 6), t_list[1])
 
     # set the hour appropriately
-    if t_list[1] <= 30:
+    if t_list[1] <= 40:
         hour_str = hours[str(t_list[0])]
     else:
         try:
@@ -166,13 +147,5 @@ def get_time(time=None):
     
     
     return myTime
-
-
-
-
-# In[ ]:
-
-
-
 
 
