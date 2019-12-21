@@ -14,6 +14,7 @@ ratelimiter = "*"
 dynaconf = "*"
 spidev = "*"
 humanfriendly = "*"
+pyinstaller = "*"
 
 [dev-packages]
 
