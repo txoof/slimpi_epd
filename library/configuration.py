@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./configuration.ipynb')
@@ -148,29 +148,15 @@ class Options():
             my_args = args
         else:
             my_args = self.args
-                
+        
         if my_args:
             options, unknown = self.parser.parse_known_args()
-            logging.warning(f'ignoring unknown options: {unknown}')
             self.options = options
-            self.opts_dict = options
-#             for key in discard_false:
-#                 try:
-#                     if self.opts_dict[key] is False:
-#                         logging.info(f'popping: {key}')
-#                         self.opts_dict.pop(key)
-#                 except KeyError as e:
-#                     logging.debug(f'{key} not found, ignoring')
-                    
-#             for key in discard_none:
-#                 try:
-#                     if self.opts_dict[key] is None:
-#                         logging.info(f'popping: {key}')
-#                         self.opts_dict.pop(key)                    
-#                 except KeyError as e:
-#                     logging.debug(f'{key} not found, ignoring')
-                    
+            self.opts_dict = options            
             self.nested_opts_dict = self.opts_dict
+            
+        if unknown:
+            logging.info(f'ignoring unknown options: {unknown}')
  
     
     @property
@@ -288,56 +274,7 @@ class Options():
 
 
 
-# In[10]:
-
-
-# sys.argv.append('-p')
-# sys.argv.append('slimpi')
-
-
-
-
-# In[ ]:
-
-
-
-
-
-
-
-# In[16]:
-
-
-# o = Options(sys.argv)
-
-# o.add_argument('-c', '--config-file', type=str, default=None, 
-#                         help='use the specified configuration file. Default is stored in ~/.config/myApp/config.ini')
-# o.add_argument('-l', '--log-level', ignore_none=True, 
-#                         type=str, dest='logging__log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR'], 
-#                         default = None,
-#                         help='set logging level: DEBUG, INFO, WARNING, ERROR')
-
-# o.add_argument('-p', '--player-id', type=str, required=False, default=False,
-#                      dest='lms_server__player_id', ignore_false=True,
-#                      help='set the name of the player to monitor')
-
-
-# o.parse_args()
-# print(o.opts_dict)
-# print(o.nested_opts_dict)
-
-
-
-
-# In[ ]:
-
-
-# o.ignore_none
-
-
-
-
-# In[ ]:
+# In[1]:
 
 
 class ConfigFile():
@@ -409,7 +346,7 @@ class ConfigFile():
             if file.exists():
                 self.parser.read(file)
             else:
-                logging.warning(f'{file} does not exist')
+                logging.info(f'{file} does not exist')
                 
         if self.parser.sections():
             self.config_dict = self._config_2dict(self.parser) 
@@ -431,123 +368,6 @@ class ConfigFile():
                 d[section][opt] = configuration.get(section, opt)
 
         return d    
-
-
-
-
-# In[ ]:
-
-
-# c = ConfigFile(['./slimpi.cfg', '/etc/slimpi.cfg', '~/.config/com.txoof.slimpi/slimpi.cfg'])
-
-
-
-
-# In[ ]:
-
-
-# class ConfigFile():
-#     def __init__(self, default=None, user=None):
-#         self.cfg_files = []
-# #         self.default = file(default)
-#         self.default = fullPath(default)
-# #         self.user = file(user)
-#         self.user = fullPath(user)
-#         self.parse_config()
-    
-#     def parse_config(self):
-#         '''parse the config file(s) overriding the default configuration 
-#             with the user configuration (if provided)
-            
-#         Sets:
-#             config(obj:`configparser.ConfigParser`): parser object
-#             config_dict(`dict` of `dict` of `str`): dictionary representation of 
-#                 merged configuration files'''
-#         def append(file):
-#             if file:
-#                 if file.exists:
-#                     self.cfg_files.append(file)
-#                 else:
-#                     logging.warning(f'configuration file does not exist: {file}')
-                    
-#         append(self.default)
-#         append(self.user)
-# #         if self.default.exists:
-# # #             self.cfg_files.append(self.default.file)
-# #             self.cfg_files.append(self.default)
-# #         if self.user.exists:
-# # #             self.cfg_files.append(self.user.file)
-# #             self.cfg_files.append(self.user)
-#         if self.cfg_files:
-#             self.config = configparser.ConfigParser()
-#             self.config.read(self.cfg_files)
-        
-#         if self.config.sections():
-#             self.config_dict = self._config_2dict(self.config)
-        
-        
-#     def _config_2dict(self, configuration):
-#         '''convert an argparse object into a dictionary
-
-#         Args:
-#             configuration(`configparser.ConfigParser`)
-
-#         Returns:
-#             `dict`'''
-#         d = {}
-#         for section in configuration.sections():
-#             d[section] = {}
-#             for opt in configuration.options(section):
-#                 d[section][opt] = configuration.get(section, opt)
-
-#         return d    
-
-
-
-
-# In[ ]:
-
-
-# c = ConfigFile(default='./slimpi.cfg', user='~/.config/com.txoof.slimpi/slimpi.cfg')
-
-# c.cfg_files
-
-# c.config.options('main')
-
-# c.config_dict
-
-
-
-# create a "Default" configuration object from the builtin config
-# Create a "user" configuration based on the user config
-# merge the default and the user overriding the default with the user version
-# merge the command line over the top of everything
-# 
-# finally creating a dictionary of options
-
-
-# In[ ]:
-
-
-# merge_dict(c.config_dict, o.nested_opts_dict)
-
-
-
-
-# In[ ]:
-
-
-# aa = dict(a)
-# bb = dict(b)
-
-# aa = {'a': {'cow': 'cynthia', 'bear': 'barney', 'horse': 'ed'}, 'b': 10, 'c': [1, 3, 5, 7, 9], 'foo': 'bar'}
-# bb = {'a': {'cow': 'Zed', 'bear': 'barney', 'zebra': 'yellow'}, 'b': 10, 'c': [2, 4, 6, 8, 10]}
-
-# print(aa)
-
-# print(bb)
-
-# merge_dict(aa, bb)
 
 
 

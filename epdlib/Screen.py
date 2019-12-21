@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[27]:
+# In[28]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Screen.ipynb')
@@ -102,6 +102,7 @@ class Screen:
         Properties:
             resolution (tuple): resolution of screen
             elements (:obj:`list` of :obj:`PIL.Image`: list of all image objects that form the larger image'''
+        logging.info('Screen created')
         self.resolution = resolution
         self.elements = elements
         self.image = self.clearScreen()

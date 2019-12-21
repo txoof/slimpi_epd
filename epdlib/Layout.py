@@ -146,12 +146,13 @@ class Layout:
             font (str): path to default font file if none is provided in layout
         Attributes:
             blocks (:obj:`dict` of :obj:`Block`): dictionary of ImageBlock and TextBlock objects"""
+        logging.info('Layout created')
         self.resolution = resolution
         if font:
-            logging.debug(f'font specified: {font}')
+            logging.debug(f'default font specified: {font}')
             self.font = str(Path(font).resolve())
         else:
-            logging.debug('no font specified yet')
+            logging.debug('no default font specified')
             self.font = None
         self.layout = copy.deepcopy(layout)
         self.images = None #FIXME not needed?
@@ -384,7 +385,7 @@ class Layout:
         
         Sets:
             blocks """
-        logging.debug('updating blocks')
+        logging.info('updating blocks')
         if not updates:
             logging.debug('nothing to do')
         
