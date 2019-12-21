@@ -1,25 +1,19 @@
-#!/usr/bin/env ipython
+#!/usr/bin/env python
 #!/usr/bin/env python
 # coding: utf-8
 
 
-# In[3]:
+# In[27]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Screen.ipynb')
-
-
-
-
-# In[ ]:
-
 
 #get_ipython().run_line_magic('nbconvert', '')
 
 
 
 
-# In[5]:
+# In[10]:
 
 
 import logging
@@ -29,11 +23,11 @@ import time
 
 
 
-# In[321]:
+# In[11]:
 
 
 class Update:
-    '''class for creating a montotonicly aware object that records passage of time
+    """Class for creating a montotonicly aware object that records passage of time
     
     create an update aware object:
         myObj = Update()
@@ -46,36 +40,40 @@ class Update:
         
     
     Update the object:
-        myObj.update = True
-
-    '''
+        myObj.update = True"""
     
     def __init__(self):
-        '''constructor for Update class'''
+        '''constructor for Update class
         
+        Properties:
+            start (float): floating point number in CLOCK_MONOTONIC time.
+                this is a fixed point in time the object was created
+            update (boolean): indicates that the object has been updated'''
+            
         self.start = self.now
         self.update = True
         
     @property
     def age(self):
-        '''age of the object in seconds since created'''
+        """age of the object in seconds since created"""
         return self.now - self.start
     
     @property
     def now(self):
+        """time in CLOCK_MONOTONIC time"""
         return time.clock_gettime(time.CLOCK_MONOTONIC)
     
     @property
     def last_updated(self):
-        '''seconds since object was last updated'''
+        """seconds since object was last updated"""
         return self.now - self._last_updated
     
     @last_updated.setter
     def update(self, update=True):
-        '''update the object
+        """update the object
         
         Args:
-            update(boolean): True updates object'''
+            update(boolean): True updates object"""
         if update:
             self._last_updated = self.now
     
@@ -87,25 +85,20 @@ class Update:
 
 
 class Screen:
-    '''Class for interfacting with WaveShare EPD screens.
+    """Class for interfacting with WaveShare EPD screens.
     
     `Screen` creates an object that provides methods for assembling images
-    and updating a WaveShare EPD.
-    
-    Attributes:
-        resolution (:obj:`tuple` of :obj: `int`): resolution of EPD
-        elements (:obj:`list` of :obj:`ImageBlock` or `TextBlock`): images to be assembled
-        image (:obj:`PIL.Image`): composite image to be written to screen
-        epd (:obj:`waveshare.epd`): waveshare EPD object 
-    '''
+    and updating a WaveShare EPD."""
+        
     def __init__(self, resolution=(600, 448), elements=[], epd=None):
         '''Constructor for Screen class.
         
         Args:
             resolution (:obj:`tuple` of :obj:`int`): resolution of EPD
-            elements (:obj:`list` of :obj:`ImageBlock` or `TextBlock`): images to be assembled
+            elements (:obj:`list` of :obj:`Block`): images to be assembled
             image (:obj:`PIL.Image`): composite image to be written to screen
             epd (:obj:`waveshare.epd`): waveshare EPD object
+            
         Properties:
             resolution (tuple): resolution of screen
             elements (:obj:`list` of :obj:`PIL.Image`: list of all image objects that form the larger image'''

@@ -1,9 +1,9 @@
-#!/usr/bin/env ipython
+#!/usr/bin/env python
 #!/usr/bin/env python
 # coding: utf-8
 
 
-# In[179]:
+# In[13]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[180]:
+# In[14]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[183]:
+# In[2]:
 
 
 import logging
@@ -36,28 +36,60 @@ except ImportError as e:
 
 
 
-# In[184]:
+# In[3]:
+
+
+logger = logging.getLogger(__name__)
+logger.root.setLevel('DEBUG')
+
+
+
+
+# In[4]:
 
 
 class Block:
+    """Base constructor for Block class.
+    
+    Individual image block used in assembling composite epdlib.Screen images 
+    when writing to a WaveShare ePaper display
+    
+    Block objects are aware of their dimensions, absolute coordinates, and 
+    contain an grayscale PIL.Image object of the specified area.
+    """
     def __init__(self, area=(600, 448), hcenter=False, vcenter=False, rand=False, 
                  abs_coordinates=(0,0), padding=0, inverse=False):
-        '''Base constructor for Block Class.
+        """initialize the Block object
         
         Args:
-            image (PIL.Image): Image to be formatted and resized to fit within
-                area
-            area (:obj:`tuple` of :obj: `int`): x, y integer dimensions of 
+            area (:obj:`tuple` of :obj:`int`): x, y integer dimensions of 
                 maximum area in pixles
-            abs_coordinates (:obj:`tuple` of `int`): x, y integer coordinates of image area
-                within a larger image
             hcenter (boolean, optional): True - horizontal-align image within the area, 
-                False - left-align image
+                False - left-align image                
             vcenter (boolean, optional): True - vertical-align image within the area,
-                False - top-align image\
+                False - top-align image        
             rand (boolean, optional): True - ignore vcenter, hcenter choose random position for
                 image within area
-            padding (int, optional): amount of padding between resized image and edge of area'''
+            padding(int) number of pixles to pad around edge of block
+            abs_coordinates (:obj:`tuple` of `int`, optional): x, y integer coordinates of image area
+                within a larger image 
+            inverse (boolean, optional): True - invert black and white from default of black text
+            on white background
+            
+        Properties:
+            fill (int): fill color integer of 0 (black) or 255 (white)
+            bkground (int): bkground integer of 0 (black) or 255 (white)
+            img_coordinates(:obj:`tuple` of :obj:`int`): coordinates of image within the block 
+                (legacy, no longer used)
+            image (None): None in base class 
+            dimensions (:obj:`tuple` of :obj:`int`): dimensions of image in pixels"""
+        
+        # default to black on white background
+        self.fill = 0
+        self.bkground = 255
+        self.dimensions = (0, 0)
+        # declare img_coordinates - none until defined
+        self.img_coordinates = None
         
         self.area = area
         self.padding = padding
@@ -66,9 +98,18 @@ class Block:
         self.rand = rand
         self.inverse = inverse
         self.abs_coordinates = abs_coordinates
+
+        # init the property
+        self.image = None
+
     
     @property
     def inverse(self):
+        """:obj:`boolean`: True - invert black and white pixles
+        
+        Sets properties:
+            fill (int): fill color (0: black, 255: white)
+            bkground (int): background color (0: black, 255: white)"""
         return self._inverse
     
     @inverse.setter
@@ -87,58 +128,61 @@ class Block:
     
     @property
     def area(self):
-        ''':obj:`tuple` of :obj:`int`: maximum area of imageblock'''        
+        """:obj:`tuple` of :obj:`int`: area in pixles of imageblock
+        
+        Raises:
+            TypeError: if not a tuple of int
+            ValueError: if ints are not positive"""
         return self._area
 
     @area.setter
     def area(self, area):
         if self._coordcheck(area):
             self._area = area
-            logging.debug(f'maximum area: {area}')
+            logging.debug(f'block area: {area}')
         else:
             raise ValueError(f'bad area value: {area}')    
     
     @property
     def abs_coordinates(self):
-        ''':obj:`tuple` of :obj:`int`: absolute_coordinates of area within larger image.
+        """:obj:`tuple` of :obj:`int`: absolute_coordinates of area within larger image.
         
-        Sets: 
-            abs_coordinates: atomatically sets `img_coordinates` to the same value.
-        '''
+        Raises:
+            TypeError: if not a tuple of int
+            ValueError: if ints are not positive"""
         return self._abs_coordinates
     
     @abs_coordinates.setter
     def abs_coordinates(self, abs_coordinates):
         if self._coordcheck(abs_coordinates):
             self._abs_coordinates = abs_coordinates
-            self.img_coordinates = abs_coordinates
+            self.img_coordinates = abs_coordinates #FIXME remove this in future version
             logging.debug(f'absolute coordinates: {abs_coordinates}')
         else:
             raise ValueError(f'bad absoluote coordinates: {abs_coordinates}')
     
     def update(self, update=None):
-        '''Update contents of object.
+        """Update contents of object.
         
-        Method is used to easily update image blocks
+        Placeholder method intended to be overridden by child classes
         
         Args:
             update (:obj:): data
             
         Returns:
-            bool: True upon success'''
+            bool: True upon success"""
         return True
     
     def _coordcheck(self, coordinates):
-        '''Check that coordinates are of type int and positive.
+        """Check that coordinates are of type int and positive.
 
         Args:
             coordinates (:obj:`tuple` of :obj: `int`)
 
         Raises:
-            TypeError: `coordinates` are not a list or tuple
-            TypeError: `coordinates` elements are not an integer
-            ValueError: `coordinates` are not >=0
-        '''
+            TypeError: if `coordinates` are not a list or tuple
+            TypeError: if `coordinates` elements are not an integer
+            ValueError: if `coordinates` are not >=0"""
         if not isinstance(coordinates, (tuple, list)):
             raise TypeError(f'must be type(list, tuple): {coordinates}')
         for i, c in enumerate(coordinates):
@@ -153,21 +197,47 @@ class Block:
 
 
 
-# In[221]:
+# In[5]:
 
 
 class ImageBlock(Block):
+    """Constructor for ImageBlock Class
+    
+    Child class of Block
+    
+    Individual image block used in assembling composite epdlib.Screen images 
+    when writing to a WaveShare ePaper display.
+    
+    ImageBlock objects are aware of their dimensions, absolute coordinates, and 
+    contain an grayscale PIL.Image object of the specified area.
+    
+    ImageBlock objects can format PIL.Image objects or jpeg/png or other supported
+    image types.
+    
+    Format options include scaling, inverting and horizontal/vertical centering
+    
+    Overrides:
+        image (:obj:`PIL.Image` or str): PIL image object or string path to image file
+        upate (method): update contents of ImageBlock"""
     def __init__(self, image=None, *args, **kwargs):
+        """Initializes ImageBlock"""
         super().__init__(*args, **kwargs)
         self.image = image
         
+        
     @property
     def image(self):
+        """:obj:`PIL.Image`: grayscale formatted image object
+        
+        property accepts a PIL image object or string path to image file
+            
+        Sets:
+            dimension (:obj:`tuple` of :obj:`int`): dimension in pixles of image"""
         return self._image
     
     @image.setter
     def image(self, image):
-        image_area = Image.new('1', self.area, self.bkground)
+        image_area = Image.new('L', self.area, self.bkground)
         
         if not image:
             logging.debug(f'no image provided - setting to blank image: {self.area}')
@@ -180,7 +250,7 @@ class ImageBlock(Block):
        
         # handle image path
         if isinstance(image, str):
-            logging.debug(f'using image: {image}')
+            logging.debug(f'using image file: {image}')
             try:
                 im = Image.open(image)
                 im.thumbnail(size)
@@ -195,8 +265,11 @@ class ImageBlock(Block):
             if im.size != size:
                 logging.debug(f'resizing image to {size}')
                 im.resize(size)
-                
+
         self.dimensions = im.size
+        logging.debug(f'dimensions: {self.dimensions}')   
+        logging.debug(f'area: {self.area}')
+        
         
         x_pos = 0
         y_pos = 0
@@ -206,6 +279,7 @@ class ImageBlock(Block):
             logging.debug(f'using random coordinates')
             x_range = self.area[0] - self.dimensions[0]
             y_range = self.area[1] - self.dimensions[1] 
+            logging.debug(f'x range: {x_range}, y range: {y_range}')
             x_pos = randrange(x_range)
             y_pos = randrange(y_range)
             
@@ -231,18 +305,20 @@ class ImageBlock(Block):
         
 
     def update(self, update=None):
-        '''Update image data including coordinates
+        """Update image data including coordinates (overrides base class)
         
         Args:
-            update (:obj:`PIL.Image`): image
-        '''
+            update (:obj:`PIL.Image` or str): image or string containing path to image file"""
         if update:
             try:
                 self.image = update
             except Exception as e:
                 logging.error(f'failed to update: {e}')
                 return False
-            return True                
+            return True
+        else:
+            logging.warn('update called with no arguments')
+            return False
 
             
     
@@ -251,97 +327,60 @@ class ImageBlock(Block):
 
 
 
-# In[185]:
-
-
-# class xImageBlock(Block):
-#     def __init__(self, image=None, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         logging.debug(f'create ImageBlock')
-#         self.image = image
-        
-#     @property
-#     def image(self):
-#         ''':obj:`PIL.Image`: resizes, and centers image to fit within the `area`
-        
-#         Setting/Updating `image` recalculates `img_coordinates`'''
-#         return self._image
-    
-#     @image.setter
-#     def image(self, image):
-#         if not image:
-#             logging.debug(f'no image object provided, setting empty 1x1 image')
-#             self._image = Image.new('1', (1, 1), self.bkground)
-#             return self._image
-        
-#         logging.debug(f'formatting image: {image}')
-#         dim = min(self.area)-self.padding
-#         logging.debug(f'set image dimensions: {dim}')
-#         size = (dim, dim)
-#         if isinstance(image, str):
-#             try:
-#                 im = Image.open(image)
-#             except (PermissionError, FileNotFoundError, OSError) as e:
-#                 logging.warning(f'could not open image file: {image}')
-#                 logging.warning('setting to blank 1x1 image')
-#                 im = Image.new('1', (1, 1), self.bkground)
-#             im.thumbnail(size)
-#         if isinstance(image, Image.Image):
-#             logging.debug('using PIL.Image image')
-#             im = image
-#             if im.size != size:
-#                 logging.debug('resizing image')
-#                 im.resize(size)
-
-#         self.dimensions = im.size
-#         x_new, y_new = self.abs_coordinates
-        
-#         if self.rand:
-#             pass
-        
-#         if self.hcenter:
-#             x_new = self.abs_coordinates[0] + round(self.area[0]/2 - self.dimensions[0]/2)
-#         if self.vcenter:
-#             y_new = self.abs_coordinates[1] + round(self.area[1]/2 - self.dimensions[1]/2)
-        
-#         if self.hcenter or self.vcenter:
-#             self.img_coordinates = (x_new, y_new)
-#         logging.debug(f'set img_coordinates: {self.img_coordinates}')
-        
-#         # set the inverse of the image
-#         if self.inverse:
-#             im = ImageOps.invert(im)
-#         # convert to 1 bit
-#         im = im.convert(mode='L')
-            
-#         self._image = im
-#         return im        
-    
-#     def update(self, update=None):
-#         '''Update image data including coordinates
-        
-#         Args:
-#             update (:obj:`PIL.Image`): image
-#         '''
-#         if update:
-#             try:
-#                 self.image = update
-#             except Exception as e:
-#                 logging.error(f'failed to update: {e}')
-#                 return False
-#             return True        
-
-
-
-
-# In[151]:
+# In[11]:
 
 
 class TextBlock(Block):
+    """Constructor for TextBlock Class
+    
+    Child class of Block
+    
+    Individual image block used in assembling composite epdlib.Screen images 
+    when writing to a WaveShare ePaper display.
+    
+    TextBlock objects are aware of their dimensions, absolute coordinates, and 
+    contain an grayscale PIL.Image object of the specified area.
+    
+    TextBlock objects format strings into multi-line text using wordwrap to 
+    fit the maximum number of characters on each line given a particular font.
+    
+    TextBlock objects will calculate the maximum number of characters that will
+    reasonably fit per line based on the font face, font size, area provided and
+    the character distribution for a supported language. 
+    
+    TTF fonts (excluding monotype faces) render each character at a different width.
+    The letter i takes less space than the letter W on a line. Each language 
+    inherently has a different character distribution. In English, the lower-case
+    `e` appears most frequently; Portugese and Turkish use `a` most frequently. 
+    
+    TextBlock objects use the letter distribution from a selected language (default
+    is english) to calculate a random string and then size that string to fit the 
+    area. 
+    
+    Supported languages can be found in the constants.py file.
+    
+    Format options include scaling, inverting and horizontal/vertical centering.
+    
+    Overrides:
+        image (:obj:`PIL.Image` or str): PIL image object or string path to image file
+        upate (method): update contents of ImageBlock"""    
     def __init__(self, font, text='.', font_size=24, max_lines=1, maxchar=None,
                  chardist=None, *args, **kwargs):
+        """Intializes TextBlock object
+        
+        Args:
+            font (str): path to TTF font to use for rendering text
+            text (str): string to render
+            font_size (int): size of font in points
+            max_lines (int): maximum number of lines of text to use 
+            maxchar (int, optional): maximum number of characters to render
+                per line. If this is not specified, it will be calculated
+                using the fontface and a typical character distribution for 
+                a given language (see chardist below)
+            chardist (str, optional): string matching one of the character 
+                distributions in constants.py (default USA_CHARDIST)
+            """
         super().__init__(*args, **kwargs)
-        logging.debug(f'create TextBlock')
         self.font_size = font_size
         self.font = font
         
@@ -351,19 +390,14 @@ class TextBlock(Block):
             self._chardist = constants.USA_CHARDIST
         self.max_lines = max_lines
         self.maxchar = maxchar
-        self.image =None
+        self.image = None
         self.text = text
         
     def update(self, update=None):
-        '''update function the object with the incoming data.
-        
-        Method is used by other class objects to update all image blocks 
+        """Update image data including coordinates (overrides base class)
         
         Args:
-            update (str): path to image file
-                
-        Returns:
-            bool: True upon success'''
+            update (str): text to format and use"""
         if update:
             try:
                 self.text = update
@@ -374,6 +408,7 @@ class TextBlock(Block):
     
     @property
     def font_size(self):
+        """:obj:int: Size of font in points"""
         return self._font_size
     
     @font_size.setter
@@ -383,6 +418,7 @@ class TextBlock(Block):
     
     @property
     def font(self):
+        """:obj:Path: Path to TTF font file"""
         return self._font
     
     @font.setter
@@ -394,14 +430,11 @@ class TextBlock(Block):
     
     @property
     def maxchar(self):
-        '''int: maximum number of characters per line - if no value 
-                is provided, this will be calculated
+        """int: maximum number of characters per line
         
         If no value is provided, a random string of characters is generated based on the
         frequency tables: `chardist`. The default distribution is American English. 
-        Based on this string the maximum number of characters for a given font and font size.
-            
-        '''
+        Based on this string the maximum number of characters for a given font and font size."""
         return self._maxchar
     
     @maxchar.setter
@@ -423,14 +456,14 @@ class TextBlock(Block):
 
     @property
     def text(self):
-        ''':obj:`str`: raw text to be formatted.
+        """:obj:str: raw text to be formatted.
         
-        setting or resetting this property will also set the following attributes
+        Sets:
             text (str): unformatted raw text
             text_formatted (list): of (str): wrapped text
             image (:obj:`PIL.Image`): image based on wrapped and formatted text
             img_coordinates (:obj:`tuple` of :obj:`int`): coordinates of text image adjusted 
-                for size of textblock'''
+                for size of textblock"""
         return self._text
     
     @text.setter
@@ -440,7 +473,7 @@ class TextBlock(Block):
         self.image = self._text2image()
     
     def text_formatter(self, text=None, max_lines=None, maxchar=None):
-        '''format text using word-wrap strategies. 
+        """format text using word-wrap strategies. 
         
         Formatting is based on number of lines, area size and maximum characters per line
         
@@ -450,8 +483,7 @@ class TextBlock(Block):
             max_lines (int): maximum number of lines
             
         Returns:
-            :obj:`list` of :obj:`str`
-        '''
+            :obj:`list` of :obj:`str`"""
         if not text:
             text = self.text
         if not maxchar:
@@ -465,15 +497,22 @@ class TextBlock(Block):
         return(formatted)
     
     def _text2image(self):
+        """Converts text to grayscale image using
+        
+        Sets:
+            dimension (:obj:`tuple` of :obj:`int`): dimensions in pixles of image
+        
+        Returns:
+            :obj:`PIL.Image`: image of formatted text"""
         logging.debug(f'creating blank image area: {self.area} with inverse: {self.inverse}')
         
         # create image for holding text
-        text_image = Image.new('1', self.area, self.bkground)
+        text_image = Image.new('L', self.area, self.bkground)
         # get a drawing context
         draw = ImageDraw.Draw(text_image)
         
         # create an image to paste the text_image into
-        image = Image.new('1', self.area, self.bkground)
+        image = Image.new('L', self.area, self.bkground)
         
         # set the dimensions for the text portion of the block
         y_total = 0
@@ -529,6 +568,6 @@ class TextBlock(Block):
         image.paste(text_image, (x_pos, y_pos))
             
                 
-        return image#, text_image   
+        return image
 
 
