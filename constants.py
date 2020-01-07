@@ -20,7 +20,7 @@ app_long_name = '.'.join([devel_name, app_name])
 # logging configuration
 logging_cfg = 'logging.cfg'
 
-# default configuration
+# default configuration file name
 default_cfg_name = 'slimpi.cfg'
 
 # default configuration location
