@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[17]:
+# In[19]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[18]:
+# In[5]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -222,6 +222,7 @@ class ImageBlock(Block):
     def __init__(self, image=None, *args, **kwargs):
         """Initializes ImageBlock"""
         super().__init__(*args, **kwargs)
+        logging.info('ImageBlock created')
         self.image = image
         
         
@@ -256,6 +257,7 @@ class ImageBlock(Block):
                 im.thumbnail(size)
             except (PermissionError, FileNotFoundError, OSError) as e:
                 logging.warning(f'could not open image file: {image}')
+                logging.warning(f'error: {e}')
                 logging.warning(f'using empty image')
                 self._image = image_area
                 return
@@ -381,6 +383,7 @@ class TextBlock(Block):
                 distributions in constants.py (default USA_CHARDIST)
             """
         super().__init__(*args, **kwargs)
+        logging.info('TextBlock created')
         self.font_size = font_size
         self.font = font
         
