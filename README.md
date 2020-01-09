@@ -1,7 +1,3 @@
-# Table of Contents
-* [Introduction] (#Introduction)
-* [Setup Python Environment] (#Setup Python Environment)
-
 ## Introduction
 Stuff, things
 
