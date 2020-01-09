@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # SlimPi - Logitech Media Player Display
-![alt text](./docs/SlimPi_splash.png "SlimPi Splash Screen")
+![alt text](./docs/SlimPi_playing.png "SlimPi Now Playing Screen")
 
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
