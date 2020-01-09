@@ -2,7 +2,6 @@
 Stuff, things
 
 
-
 ## Configure HiFi Berry
 See [HiFi Berry guide](https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/)
 - disable onboard sound in /boot/config.txt
