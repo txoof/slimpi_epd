@@ -1,3 +1,15 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Introduction](#introduction)
+- [Configure HiFi Berry](#configure-hifi-berry)
+- [Setup Python Environment](#setup-python-environment)
+  - [Requirements](#requirements)
+- [Notes & Useful Links](#notes--useful-links)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Introduction
 Stuff, things
 
