@@ -14,7 +14,7 @@ ratelimiter = "*"
 dynaconf = "*"
 spidev = "*"
 humanfriendly = "*"
-pyinstaller = "*"
+pyinstaller = {editable = true,git = "https://github.com/pyinstaller/pyinstaller.git",ref = "develop"}
 
 [dev-packages]
 
