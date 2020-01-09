@@ -1,5 +1,8 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+# SlimPi - Logitech Media Player Display
+![alt text](./docs/SlimPi_splash.png "SlimPi Splash Screen")
+
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Introduction](#introduction)
@@ -11,7 +14,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
-Stuff, things
+SlimPi is a Logitech Media Player ePaper display
+
 
 
 ## Configure HiFi Berry
