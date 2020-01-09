@@ -218,7 +218,7 @@
         "pyinstaller": {
             "editable": true,
             "git": "https://github.com/pyinstaller/pyinstaller.git",
-            "ref": "a97628fba995a287fc6256b26e0bbb8fec9c38e8"
+            "ref": "3d331fda4daa5231ef4e747fc38cd5babe1eb610"
         },
         "python-box": {
             "hashes": [
