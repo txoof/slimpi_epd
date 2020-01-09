@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[28]:
+# In[29]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Screen.ipynb')
@@ -91,7 +91,7 @@ class Screen:
     and updating a WaveShare EPD."""
         
     def __init__(self, resolution=(600, 448), elements=[], epd=None):
-        '''Constructor for Screen class.
+        """Constructor for Screen class.
         
         Args:
             resolution (:obj:`tuple` of :obj:`int`): resolution of EPD
@@ -101,7 +101,32 @@ class Screen:
             
         Properties:
             resolution (tuple): resolution of screen
-            elements (:obj:`list` of :obj:`PIL.Image`: list of all image objects that form the larger image'''
+            elements (:obj:`list` of :obj:`PIL.Image`: list of all image objects that form the larger image
+            
+            
+        Examples:
+        * Create a screen object:
+            ```
+            import waveshare_epd
+            s = Screen()
+            s.epd = wavehsare_epd.epd5in83
+            ```
+        * Create and write a composite image from a layout object
+            ```
+            # create layout object using a predefined layout
+            l = Layout(resolution=(s.epd.EPD_WIDTH, s.epd.EPD_HEIGHT), layout=layouts.splash)
+            # update the layout information
+            u = {'version': 'version 0.2.1', 'url': 'https://github.com/txoof/slimpi_epd', 'app_name': 'slimpi'}\
+            l.update_contents(u)
+            # update the screen object with the layout block values
+            s.elements = l.blocks.values()
+            # create a composite imate from all the blocks
+            s.concat()
+            # init and write the composite to the EPD
+            s.initEPD()
+            s.writeEPD()
+            ```
+            """
         logging.info('Screen created')
         self.resolution = resolution
         self.elements = elements
