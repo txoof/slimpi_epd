@@ -1,7 +1,7 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-# SlimPi - Logitech Media Player Display
-![alt text](./docs/SlimPi_playing.png "SlimPi Now Playing Screen" | width = 100)
+# SlimPi - ePaper based Logitech Media Player Display
+![alt text](./docs/SlimPi_splash.png "SlimPi Splash Screen")
 
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
@@ -14,8 +14,14 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
-SlimPi is a Logitech Media Player ePaper display
+SlimPi provides a Logitech Media Player display using a [WaveShare](https://www.waveshare.com/product/oleds-lcds/e-paper.htm)
 
+
+
+### Supported WaveShare ePaper Displays
+All WaveShare ePaper displays should work with SlimPi, but only in 1 bit (black/white) mode. Only landscape mode is suported currently.
+**Tested Displays**
+* epd5in83
 
 
 ## Configure HiFi Berry
