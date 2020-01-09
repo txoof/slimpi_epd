@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[29]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Screen.ipynb')
@@ -81,7 +81,7 @@ class Update:
 
 
 
-# In[8]:
+# In[2]:
 
 
 class Screen:
@@ -112,8 +112,11 @@ class Screen:
             s.epd = wavehsare_epd.epd5in83
             ```
         * Create and write a composite image from a layout object
+            - See `help(Layout)` for more information
             ```
             # create layout object using a predefined layout
+            import Layout
+            import layouts
             l = Layout(resolution=(s.epd.EPD_WIDTH, s.epd.EPD_HEIGHT), layout=layouts.splash)
             # update the layout information
             u = {'version': 'version 0.2.1', 'url': 'https://github.com/txoof/slimpi_epd', 'app_name': 'slimpi'}\
