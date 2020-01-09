@@ -5,7 +5,7 @@ version = 'version 0.2.1'
 url = 'https://github.com/txoof/slimpi_epd'
 
 # short name of application
-app_name = 'slimpi'
+app_name = 'SlimPi'
 
 # developer's name in reverse DNS format
 devel_name = 'com.txoof'
