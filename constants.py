@@ -1,3 +1,4 @@
+from pathlib import Path
 # application version number
 version = 'version 0.2.1'
 
@@ -30,7 +31,8 @@ default_cfg = f'./{default_cfg_name}'
 system_cfg = f'/etc/{default_cfg_name}'
 
 # default user configuration
-user_cfg = '/'.join(['~/.config', app_long_name, default_cfg_name])
+#user_cfg = '/'.join(['~/.config', app_long_name, default_cfg_name])
+user_cfg = Path(f'~/.config/{app_long_name}/{default_cfg_name}').expanduser()
 
 # location of default image for albums that fail to return ablum art
 noartwork = './images/No-album-art.png'
