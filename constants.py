@@ -18,10 +18,10 @@ app_long_name = '.'.join([devel_name, app_name])
 ##### configuration files
 
 # logging configuration
-logging_cfg = 'logging.cfg'
+logging_cfg = './logging.cfg'
 
 # default configuration file name
-default_cfg_name = 'slimpi.cfg'
+default_cfg_name = './slimpi.cfg'
 
 # default configuration location
 default_cfg = f'./{default_cfg_name}'
@@ -47,3 +47,6 @@ plugins = 'plugins'
 
 # defualt clock module to use if no other is specified
 clock = 'clock'
+
+from pathlib import Path
+absPath = Path(__file__).absolute().parent
