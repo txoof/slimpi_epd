@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f55cd6f677a7af0af81c2306d1a6a8e9f5cc38bb9bc1e31fecf62d7008cdf593"
+            "sha256": "d83f4299e96a66778fc3833fa8d7ecdab4698b1836cf8d7e6710146ba1757013"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -335,12 +335,6 @@
                 "sha256:f3c5fd51747d450d4dcf6f923c81f78f811aab8205fda64b0aba34a4e48b0745"
             ],
             "version": "==1.25.7"
-        },
-        "waveshare-epd": {
-            "editable": true,
-            "git": "https://github.com/txoof/e-Paper.git",
-            "ref": "b66ce0c5922ef110b3e4526bea8ccbbe24062363",
-            "subdirectory": "RaspberryPi_and_JetsonNano/python/"
         },
         "wcwidth": {
             "hashes": [
