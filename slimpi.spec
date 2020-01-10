@@ -33,7 +33,7 @@ a = Analysis(['slimpi.py'],
              binaries=includeBin,
              datas=[('constants.py', '.'),
                     ('layouts.py', '.',
-                    ('logging.cfg', '.')
+                    ('logging.cfg', '.'),
                     ('slimpi.cfg', '.')],
              hiddenimports=[],
              hookspath=[],
