@@ -267,7 +267,7 @@ test = {
           'rand': False,
           'inverse': False,
           'relative': False,
-          'font': '../fonts/Open_Sans/OpenSans-SemiBold.ttf',
+          'font': './fonts/Open_Sans/OpenSans-SemiBold.ttf',
           'font_size': None},
   'wb':
          {'image': None,
@@ -281,7 +281,7 @@ test = {
           'rand': False,
           'inverse': True,
           'relative': ['wb', 'a'],
-          'font': '../fonts/Open_Sans/OpenSans-SemiBold.ttf',
+          'font': './fonts/Open_Sans/OpenSans-SemiBold.ttf',
           'font_size': None},
   'c1':
          {'image': None,
@@ -295,7 +295,7 @@ test = {
           'rand': False,
           'inverse': False,
           'relative': ['c1', 'wb'],
-          'font': '../fonts/Ubuntu/Ubuntu-Regular.ttf',
+          'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'font_size': None},
   'c2':
          {'image': None,
@@ -309,6 +309,6 @@ test = {
           'rand': False,
           'inverse': True,
           'relative': ['c1', 'wb'],
-          'font': '../fonts/Ubuntu/Ubuntu-Regular.ttf',
+          'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'font_size': None},
 }
