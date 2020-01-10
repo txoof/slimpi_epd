@@ -1,41 +1,37 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-import os
-def getListOfFiles(dirName):
-    # create a list of file and sub directories 
-    # names in the given directory 
-    listOfFile = os.listdir(dirName)
-    allFiles = list()
-    # Iterate over all the entries
-    for entry in listOfFile:
-        # Create full path
-        fullPath = os.path.join(dirName, entry)
-        # If entry is a directory then get the list of files in this directory 
-        if os.path.isdir(fullPath):
-            allFiles = allFiles + getListOfFiles(fullPath)
+from pathlib import Path
+
+
+def getPathTuples(path):
+    myPath = Path(path)
+    allEntries = list()
+    for entry in list(myPath.glob('*')):
+        if Path.is_dir(entry):
+            allEntries = allEntries + getPathTuples(entry)
         else:
-            allFiles.append(fullPath)
-    return allFiles
-binPaths = ['./fonts', './images']
-includeBin = []
+            allEntries.append((str(entry), str(entry.parent)))
+    return allEntries
 
-for eachPath in binPaths:
-    allPaths = getListOfFiles(eachPath)
-    for files in allPaths:
-        includeBin.append((files, files))
-
+binDirs = ['./fonts', './images']
+binTuples = []
+for each in binDirs:
+    tuples =(getPathTuples(each))
+    for tup in tuples: 
+        binTuples.append(tup)
+binTuples
 
 block_cipher = None
 
 
 a = Analysis(['slimpi.py'],
              pathex=['/home/pi/src/slimpi_epd'],
-             binaries=includeBin,
+             binaries=binTuples,
              datas=[('constants.py', '.'),
                     ('layouts.py', '.'),
                     ('logging.cfg', '.'),
                     ('slimpi.cfg', '.')],
-             hiddenimports=[],
+             hiddenimports=['plugins'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
