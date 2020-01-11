@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[13]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[4]:
+# In[14]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[ ]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -30,7 +30,7 @@
 
 
 
-# In[ ]:
+# In[2]:
 
 
 import logging
@@ -41,7 +41,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# In[ ]:
+# In[3]:
 
 
 try:
@@ -57,7 +57,7 @@ except ImportError as e:
 
 
 
-# In[ ]:
+# In[10]:
 
 
 class Layout:
@@ -98,7 +98,7 @@ class Layout:
     a parameter that includes a dictionary containing a key/value pair that matches the names
     see the example below.
     Sample Laout:
-    myLaout = {
+    myLayout = {
         'title': {                       # text only block
             'image': None,               # do not expect an image
             'max_lines': 2,              # number of lines of text
@@ -127,15 +127,17 @@ class Layout:
     }
     
     
-    Example creating and updating:
+    Example creating and updating a layout:
     layouts.threeRow has the sections: 'title', 'album', 'artist', 'mode', 'coverart'
     # creates the object and calculates the positions based on the rules set 
     # in the layouts file and screen size
-    l = Layout(resolution=(600, 448), layout=layouts.threeRow)
+    l = Layout(resolution=(600, 448), layout=myLayout)
     # update/add content to the layout object, applying formatting from layout file
     l.update_contents({'title': 'Hannah Hunt', 'album': 'Modern Vampires of the City', 
-                       'artist': 'Vampire Weekend', 'mode': 'playing', 
-                       'coverart': '/temp/VampireWeekend_ModernVampires.jpg'})"""
+                       'artist': 'Vampire Weekend')
+                       
+    Example displaying layout:
+    """
        
     def __init__(self, resolution=(600, 448), layout=None, font=None):
         """  Initializes layout object
@@ -219,7 +221,12 @@ class Layout:
         y_fraction = .7
         xtarget = dimensions[0]*x_fraction
         ytarget = dimensions[1]/lines*y_fraction
-        testfont = ImageFont.truetype(font, fontsize)
+        try:
+            testfont = ImageFont.truetype(font, fontsize)
+        except (IOError, OSError) as e:
+            logging.error(f'failed to load font: {font}')
+            logging.error(f'{e}')
+            raise(e)
         fontdim = testfont.getsize(text)
         
         logging.debug(f'target X font dimension {xtarget}')
@@ -395,5 +402,13 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
+
+
+
+
+# In[ ]:
+
+
+
 
 
