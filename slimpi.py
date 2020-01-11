@@ -14,7 +14,7 @@
 
 
 
-# In[12]:
+# In[8]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,59 +22,33 @@
 
 
 
-# In[13]:
+# In[9]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
 
 
 
-# # NOTES
-# * to properly run pyinstaller: 
-#     * `pipenv run python -m PyInstaller --clean slimpi.spec`
-# * Install PyInstaller
-#     * use the following to install the development branch of PyInstaller: 
-#         * `pipenv install -e git+https://github.com/pyinstaller/pyinstaller.git@develop#egg=PyInstaller`
-#     * build the bootloader for this platform: 
-#         * `python /home/pi/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/src/pyinstaller/bootloader/waf all`
-# * Ubuntu Regular Font appears to truncate the last few characters with long strings in some situations; this does not appear to occur with other fonts. 
 # 
-# * The release version of PyInstaller (v 3.5 July 9, 2019) has a [bug related to pipenv and distuitls] (https://github.com/pyinstaller/pyinstaller/issues/4064#issuecomment-568272182) that results in PIL being unable to open images properly.
-#     * PyInstaller does not appropriately find all of the paths and modules within the pipenv and therefore needs to be installed directly in the pipenv rather than a system-wide with pip
-#     * Resolve all of the above by installing the `develop` branch within the pipenv:
-#         * `pipenv install -e git+https://github.com/pyinstaller/pyinstaller.git@develop#egg=PyInstaller`
-#     * pipenv does not build all of the bootloaders needed for the Raspberry Pi architecture (ARMv6). Resolve this by [building for this plaform] (https://pyinstaller.readthedocs.io/en/stable/bootloader-building.html):
-#         * `python ~/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/src/pyinstaller/bootloader/waf all`
 # 
 # # TO DO
 # ## General
 # - [x] order parts at RS https://nl.rs-online.com/web/ca/overzichtwinkelwagen/
 # - [ ] document and publish case
 #     - [ ] move hole in front down thickness of two washers 
-# - [ ] create a runnable package that does not depend on pipenv
-#     - [ ] something is still broken in pyinstaller/PIL and jpg images are not loaded properly see: https://github.com/notifications/beta/MDE4Ok5vdGlmaWNhdGlvblRocmVhZDQ1MDMyMjU1NjoxNDI2MjUwNQ==?query=&show_full=true
-#     - [ ] switch to single file mode for pyinstaller 
-#     - pipenv and PyInstaller are not playing nice and have an issue with distutils not being added properly see this link for help: https://stackoverflow.com/questions/59444914/pyinstaller-failing-to-import-distuitls-when-used-with-pipenv/59444915#59444915 - this has already been patched in the PyInstaller hooks directory for *this* project 
-#   - see /home/pi/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/lib/python3.7/site-packages/PyInstaller/hooks/pre_find_module_path/hook-distutils.py
-#   
-# ```
-# from PyInstaller.utils.hooks import logger
-# 
-# 
-# def pre_find_module_path(api):
-#     # Absolute path of the system-wide "distutils" package when run from within
-#     # a venv or None otherwise.
-#     distutils_dir = getattr(distutils, 'distutils_path', None)
-#     if distutils_dir is not None:
-#         # workaround for https://github.com/pyinstaller/pyinstaller/issues/4064
-#         if distutils_dir.endswith('__init__.py'):
-#             distutils_dir = os.path.dirname(distutils_dir)
-# 
-#         # Find this package in its parent directory.
-#         api.search_dirs = [os.path.dirname(distutils_dir)]
-#         logger.info('distutils: retargeting to non-venv dir %r' % distutils_dir)  
-# ```
 # - [ ] create installation scripts for building, deploying
+# 
+# ## Packaging & Deployment
+# - [ ] create a runnable package that does not depend on pipenv
+#     - [x] something is still broken in pyinstaller/PIL and jpg images are not loaded properly see: https://github.com/notifications/beta/MDE4Ok5vdGlmaWNhdGlvblRocmVhZDQ1MDMyMjU1NjoxNDI2MjUwNQ==?query=&show_full=true
+#     - Resolved with develop branch of pyinstaller - possibly latest release resolves this issue as well
+#     - [ ] ~~switch to single file mode for pyinstaller ~~
+# - [ ] Script user install
+#     - [ ] config files
+# - [ ] Script system install
+#     - [ ] config files
+#     - [ ] Daemon
+#     
 # 
 # ## Building
 # - [ ] ~~move waveshare_epd as a static library into project? pyinstaller chokes on this - unclear why~~
@@ -83,11 +57,14 @@
 #         * Install needed pipenv modules
 #             * 
 #         * Build appropriate bootloaders
-#         * 
+# - [ ] test on other Pis, document install procedure
 # 
 # 
 # ## Structure
-# - [x] move classes out of main program structure
+# - [ ] trap for PermissionError on epd calls 
+#     - [Errno 13] Permission denied on self.SPI = spidev.SpiDev(0, 0) calls 
+#     - This should exit gracefully with a useful message:
+#         - User needs to be a member of the SPI group for r/w access to SPI devices
 # - [ ] Test with smaller screen
 # - [ ] speed up initialization - what takes so long?
 # - [ ] configuration module can probably be improved to ignore non-set commandline options -see notes in file
@@ -98,6 +75,7 @@
 #    from PyInstaller.utils.hooks import collect_submodules
 #    hidenimports = collect_submodules('waveshare_epd')
 #    ```
+# - [x] move classes out of main program structure   
 # 
 # ## Bugs
 # - [x] image does not appear to hcenter
@@ -144,9 +122,47 @@
 # - [ ] Repurpose the Pi lights to show heartbeat/activity/other https://raspberrypi.stackexchange.com/questions/697/how-do-i-control-the-system-leds-using-my-software
 # - [ ] add a decimal doted binary clock
 # 
+# # NOTES
+# * to properly run pyinstaller: 
+#     * `pipenv run python -m PyInstaller --clean slimpi.spec`
+# * Install PyInstaller
+#     * use the following to install the development branch of PyInstaller: 
+#         * `pipenv install -e git+https://github.com/pyinstaller/pyinstaller.git@develop#egg=PyInstaller`
+#     * build the bootloader for this platform: 
+#         * `python /home/pi/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/src/pyinstaller/bootloader/waf all`
+# * Ubuntu Regular Font appears to truncate the last few characters with long strings in some situations; this does not appear to occur with other fonts. 
+# 
+# * The release version of PyInstaller (v 3.5 July 9, 2019) has a [bug related to pipenv and distuitls] (https://github.com/pyinstaller/pyinstaller/issues/4064#issuecomment-568272182) that results in PIL being unable to open images properly.
+#     * PyInstaller does not appropriately find all of the paths and modules within the pipenv and therefore needs to be installed directly in the pipenv rather than a system-wide with pip
+#     * Resolve all of the above by installing the `develop` branch within the pipenv:
+#         * `pipenv install -e git+https://github.com/pyinstaller/pyinstaller.git@develop#egg=PyInstaller`
+#     * pipenv does not build all of the bootloaders needed for the Raspberry Pi architecture (ARMv6). Resolve this by [building for this plaform] (https://pyinstaller.readthedocs.io/en/stable/bootloader-building.html):
+#         * `python ~/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/src/pyinstaller/bootloader/waf all`
+#         
+#         
+#    - pipenv and PyInstaller are not playing nice and have an issue with distutils not being added properly see this link for help: https://stackoverflow.com/questions/59444914/pyinstaller-failing-to-import-distuitls-when-used-with-pipenv/59444915#59444915 - this has already been patched in the PyInstaller hooks directory for *this* project 
+#   - see /home/pi/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/lib/python3.7/site-packages/PyInstaller/hooks/pre_find_module_path/hook-distutils.py
+#   
+# ```
+# from PyInstaller.utils.hooks import logger
+# 
+# 
+# def pre_find_module_path(api):
+#     # Absolute path of the system-wide "distutils" package when run from within
+#     # a venv or None otherwise.
+#     distutils_dir = getattr(distutils, 'distutils_path', None)
+#     if distutils_dir is not None:
+#         # workaround for https://github.com/pyinstaller/pyinstaller/issues/4064
+#         if distutils_dir.endswith('__init__.py'):
+#             distutils_dir = os.path.dirname(distutils_dir)
+# 
+#         # Find this package in its parent directory.
+#         api.search_dirs = [os.path.dirname(distutils_dir)]
+#         logger.info('distutils: retargeting to non-venv dir %r' % distutils_dir)  
+# ```        
 
 
-# In[19]:
+# In[2]:
 
 
 import logging
@@ -181,7 +197,7 @@ import lmsquery
 
 
 
-# In[20]:
+# In[3]:
 
 
 import constants
@@ -195,7 +211,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[7]:
+# In[4]:
 
 
 def test_epd():
@@ -222,7 +238,7 @@ def test_epd():
 
 
 
-# In[8]:
+# In[5]:
 
 
 def do_exit(status=0):
@@ -235,7 +251,7 @@ def do_exit(status=0):
 
 
 
-# In[9]:
+# In[6]:
 
 
 def scan_servers():
@@ -262,7 +278,7 @@ def scan_servers():
 
 
 
-# In[23]:
+# In[7]:
 
 
 def main():
@@ -473,9 +489,14 @@ def main():
     
     # scren objects for managing writing to screen
     screen = epdlib.Screen()
-    screen.epd = epd.EPD()
+    try:
+        screen.epd = epd.EPD()
+    except PermisisonError as e:
+        logging.critical(f'Error initializing EPD display: {e}')
+        print('Error initializing EPD display.\nCheck that the user running this program is a member of the spi group')
+        print('This can typically be resolved by running:\n$ sudo groupadd <username> spi')
+        do_exit(1)
     screen.initEPD()
-    
     
     ########## EXECUTION ##########
     # Show splash screen
@@ -582,13 +603,14 @@ def main():
         
         screen.initEPD()
         screen.clearEPD()
+        print('Exiting')
         
     return config
 
 
 
 
-# In[ ]:
+# In[24]:
 
 
 # TESTING = True
