@@ -1,5 +1,6 @@
 import logging
 import requests
+from os import chmod, stat
 from cachepath import CachePath, TempPath, Path
 from shutil import copyfile, copyfileobj
 
@@ -30,7 +31,14 @@ class CacheArt():
     def app_name(self, app_name):
         self._app_name = app_name
         self.cache_path = CachePath(app_name, dir=True)
-    
+        try:
+            logging.debug(f'setting permissions on cache path {self.cache_path}')
+            chmod(self.cache_path.absolute(), 0x777)
+        except PermissionError as e:
+            logging.warning(f'could not change permission of {self.cache_path.absolute()} to 0x777')
+            logging.warning(f'cache path {self.cache_path} is owned by userid {stat(self.cache_path).st_uid
+}')
+
     def cache_artwork(self, artwork_url=None, album_id=None):
         '''download and cache artwork as needed from lms server
         
