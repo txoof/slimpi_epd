@@ -36,8 +36,7 @@ class CacheArt():
             chmod(self.cache_path.absolute(), 0x777)
         except PermissionError as e:
             logging.warning(f'could not change permission of {self.cache_path.absolute()} to 0x777')
-            logging.warning(f'cache path {self.cache_path} is owned by userid {stat(self.cache_path).st_uid
-}')
+            logging.warning(f'cache path {self.cache_path} is owned by userid {stat(self.cache_path).st_uid}')
 
     def cache_artwork(self, artwork_url=None, album_id=None):
         '''download and cache artwork as needed from lms server

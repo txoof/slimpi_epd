@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -14,7 +14,7 @@
 
 
 
-# In[8]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[9]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -34,6 +34,7 @@
 # # TO DO
 # ## General
 # - [x] order parts at RS https://nl.rs-online.com/web/ca/overzichtwinkelwagen/
+# - [ ] detect when running as a daemon
 # - [ ] document and publish case
 #     - [ ] move hole in front down thickness of two washers 
 # - [ ] create installation scripts for building, deploying
@@ -48,6 +49,7 @@
 # - [ ] Script system install
 #     - [ ] config files
 #     - [ ] Daemon
+#     - [ ] add daemon user to SPI group `usermod -a -G spi <username>`
 #     
 # 
 # ## Building
@@ -80,9 +82,10 @@
 # ## Bugs
 # - [x] image does not appear to hcenter
 # - [ ] TextBlock does not use padding
+# - [x] set permissions on temporary directory so anyone can write
 # - [X] configuration always kicks error for "unknown options" even when none are specified
 # - [x] Compiled version cannot use images that are downloaded - add more verbose debugging around this to figure out why
-#   - [x] Due to issue with distutil, virtual env and pyInstaller (see notes above)
+#   - Due to issue with distutil, virtual env and pyInstaller (see notes)
 # - [ ] splash_screen = False does not work
 # 
 # ## Logging
@@ -94,6 +97,7 @@
 # 
 # 
 # ## Configuration
+# - [ ] Ignore the ~/.config/com.txoof.slimpi/slimpi.cfg when running as a daemon
 # - [ ] method for installing user config?
 # - [ ] script for installing as daemon
 # 
@@ -162,7 +166,7 @@
 # ```        
 
 
-# In[2]:
+# In[4]:
 
 
 import logging
@@ -197,7 +201,7 @@ import lmsquery
 
 
 
-# In[3]:
+# In[7]:
 
 
 import constants
@@ -211,7 +215,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[4]:
+# In[8]:
 
 
 def test_epd():
@@ -238,7 +242,7 @@ def test_epd():
 
 
 
-# In[5]:
+# In[9]:
 
 
 def do_exit(status=0):
@@ -251,7 +255,7 @@ def do_exit(status=0):
 
 
 
-# In[6]:
+# In[10]:
 
 
 def scan_servers():
@@ -278,7 +282,7 @@ def scan_servers():
 
 
 
-# In[7]:
+# In[ ]:
 
 
 def main():
@@ -348,6 +352,11 @@ def main():
                          dest='user_cfg', ignore_none=True, default=user_cfg,
                          help=f'use the specified configuration file; default user config: {user_cfg}')
     
+    # daemon mode
+    options.add_argument('-d', '--daemon', ignore_false=True, required=False,
+                         default=False, dest='main__daemon', action='store_true', 
+                         help='run in daemon mode (ignore user configuration)')
+    
     # list servers - 
     options.add_argument('-s', '--list-servers', action='store_true', 
                          dest='list_servers',
@@ -361,6 +370,7 @@ def main():
     options.add_argument('-V', '--version', action='store_true', required=False,
                          dest='version', default=False, 
                          help='display version nubmer and exit')
+    
 
     
     # parse the command line options-
@@ -376,9 +386,18 @@ def main():
         user_cfg = options.opts_dict['user_cfg']
         logging.info(f'using configuration file: {user_cfg}')
     
-    # read the configuration right most values overwrite left values
+    # read the configuration -- right most values overwrite left values
     # system overwrites default; user overwrites system
-    config_file = configuration.ConfigFile(config_files=[default_cfg, system_cfg, user_cfg])    
+    
+    # use only these two when in daemon mode
+    config_files = [default_cfg, system_cfg]
+    if not options.main__daemon:
+        # add the user_cfg when in 
+        config_files.append(user_cfg)
+    else:
+        logging.info(f'daemon mode (-d, --daemon) selected, ignoring user configuration {user_cfg}')
+        
+    config_file = configuration.ConfigFile(config_files=config_files)    
     
     # merge the configuration files and the command line options
     config = configuration.merge_dict(config_file.config_dict, options.nested_opts_dict)
@@ -610,12 +629,28 @@ def main():
 
 
 
-# In[24]:
+# In[19]:
 
 
 # TESTING = True
 if __name__ == '__main__':
     o = main()
+
+
+
+
+# In[13]:
+
+
+o
+
+
+
+
+# In[24]:
+
+
+o.options.main__daemona
 
 
 
