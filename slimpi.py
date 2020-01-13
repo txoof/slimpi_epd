@@ -14,7 +14,7 @@
 
 
 
-# In[2]:
+# In[33]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[3]:
+# In[35]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -282,7 +282,7 @@ def scan_servers():
 
 
 
-# In[ ]:
+# In[25]:
 
 
 def main():
@@ -353,7 +353,7 @@ def main():
                          help=f'use the specified configuration file; default user config: {user_cfg}')
     
     # daemon mode
-    options.add_argument('-d', '--daemon', ignore_false=True, required=False,
+    options.add_argument('-d', '--daemon', required=False,
                          default=False, dest='main__daemon', action='store_true', 
                          help='run in daemon mode (ignore user configuration)')
     
@@ -384,20 +384,17 @@ def main():
     # use an alternative user configuration file
     if 'user_cfg' in options.opts_dict:
         user_cfg = options.opts_dict['user_cfg']
-        logging.info(f'using configuration file: {user_cfg}')
     
     # read the configuration -- right most values overwrite left values
     # system overwrites default; user overwrites system
     
-    # use only these two when in daemon mode
-    config_files = [default_cfg, system_cfg]
-    if not options.main__daemon:
-        # add the user_cfg when in 
-        config_files.append(user_cfg)
-    else:
-        logging.info(f'daemon mode (-d, --daemon) selected, ignoring user configuration {user_cfg}')
-        
-    config_file = configuration.ConfigFile(config_files=config_files)    
+    # always try to use thes two configuration files
+    config_file_list = [default_cfg, system_cfg]
+    if not options.options.main__daemon:
+        # add the user_cfg when not in daemon mode
+        config_file_list.append(user_cfg)
+            
+    config_file = configuration.ConfigFile(config_files=config_file_list)    
     
     # merge the configuration files and the command line options
     config = configuration.merge_dict(config_file.config_dict, options.nested_opts_dict)
@@ -407,7 +404,11 @@ def main():
     logging.root.setLevel(ll)
     logging.debug(f'log level: {ll}')
 
-    
+    if options.options.main__daemon:
+        logging.info(f'daemon mode (-d, --daemon) selected, ignoring user configuration {user_cfg}')
+    else:
+        logging.info(f'user configuration file: {user_cfg}')
+    logging.debug(f'using configuration files: {config_file_list}')    
     ##### OBJECTS #####
     # Signal handler for gracefully handling HUP/KILL signals
     sigHandler = signalhandler.SignalHandler()
@@ -629,35 +630,11 @@ def main():
 
 
 
-# In[19]:
+# In[26]:
 
 
 # TESTING = True
 if __name__ == '__main__':
     o = main()
-
-
-
-
-# In[13]:
-
-
-o
-
-
-
-
-# In[24]:
-
-
-o.options.main__daemona
-
-
-
-
-# In[ ]:
-
-
-
 
 
