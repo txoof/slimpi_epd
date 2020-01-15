@@ -1,0 +1,10 @@
+[Unit]
+# https://www.shellhacks.com/systemd-service-file-example/
+Description=The SlimPi daemon service to run a WaveShare e-Paper Display
+
+[Service]
+# adding arguments https://superuser.com/questions/728951/systemd-giving-my-service-multiple-arguments
+ExecStart=
+
+[Install]
+WantedBy=multi-user.target
