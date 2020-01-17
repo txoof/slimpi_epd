@@ -5,13 +5,15 @@ Description=The SlimPi daemon service to run a WaveShare e-Paper Display
 [Service]
 # adding arguments https://superuser.com/questions/728951/systemd-giving-my-service-multiple-arguments
 
-# wait until everything else is started
 # Type=simple
+# wait until everything else is started
 Type=idle
 PIDFile=/run/slimpi.pid
 ExecStart=/user/bin/slimpi/slimpi -d
 ExecStop=/bin/kill -s QUIT $MAINPID
 KillSignal=SIGINT
+User=slimpi
+Group=slimpi
 
 [Install]
 WantedBy=multi-user.target
