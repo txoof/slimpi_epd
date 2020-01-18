@@ -1,6 +1,8 @@
 [Unit]
 # https://www.shellhacks.com/systemd-service-file-example/
 Description=SlimPi LMS Display
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 # adding arguments https://superuser.com/questions/728951/systemd-giving-my-service-multiple-arguments
