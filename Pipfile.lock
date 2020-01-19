@@ -16,10 +16,10 @@
     "default": {
         "altgraph": {
             "hashes": [
-                "sha256:d6814989f242b2b43025cba7161fc1b8fb487a62cd49c49245d6fd01c18ac997",
-                "sha256:ddf5320017147ba7b810198e0b6619bd7b5563aa034da388cea8546b877f9b0c"
+                "sha256:1f05a47122542f97028caf78775a095fbe6a2699b5089de8477eb583167d69aa",
+                "sha256:c623e5f3408ca61d4016f23a681b9adb100802ca3e3da5e718915a9e4052cebe"
             ],
-            "version": "==0.16.1"
+            "version": "==0.17"
         },
         "backcall": {
             "hashes": [
@@ -139,10 +139,11 @@
         },
         "lmsquery-fork": {
             "hashes": [
-                "sha256:e1616bf5b74f8b3af8f74eed9eaaf1608bcab940c51fccad4035e8b281fbc3c0"
+                "sha256:d752a04c149e95aa5038c14ede54d085d9529ac12ea84c8336d78819e0ef60aa",
+                "sha256:f07a383841eff8f253d1fe6c3e1a64c9b73365e3b6806b2bc3e95a6293098b2a"
             ],
             "index": "pypi",
-            "version": "==0.5.0"
+            "version": "==0.5.11"
         },
         "parso": {
             "hashes": [
@@ -218,7 +219,7 @@
         "pyinstaller": {
             "editable": true,
             "git": "https://github.com/pyinstaller/pyinstaller.git",
-            "ref": "3d331fda4daa5231ef4e747fc38cd5babe1eb610"
+            "ref": "555c5e81639091caa629a87c5ffd9b0dd9585a73"
         },
         "python-box": {
             "hashes": [
@@ -291,10 +292,10 @@
         },
         "six": {
             "hashes": [
-                "sha256:1f1b7d42e254082a9db6279deae68afb421ceba6158efa6131de7b3003ee93fd",
-                "sha256:30f610279e8b2578cab6db20741130331735c781b56053c59c4076da27f06b66"
+                "sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a",
+                "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"
             ],
-            "version": "==1.13.0"
+            "version": "==1.14.0"
         },
         "spidev": {
             "hashes": [
