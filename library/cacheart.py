@@ -30,10 +30,11 @@ class CacheArt():
     @app_name.setter
     def app_name(self, app_name):
         self._app_name = app_name
+        logging.debug(f'setting cache path: {app_name}')
         self.cache_path = CachePath(app_name, dir=True)
         try:
-            logging.debug(f'setting permissions on cache path {self.cache_path}')
-            chmod(self.cache_path.absolute(), 0x777)
+            logging.debug(f'setting permissions to 777 on cache path {self.cache_path}')
+            chmod(self.cache_path.absolute(), 0o777)
         except PermissionError as e:
             logging.warning(f'could not change permission of {self.cache_path.absolute()} to 0x777')
             logging.warning(f'cache path {self.cache_path} is owned by userid {stat(self.cache_path).st_uid}')
@@ -47,6 +48,7 @@ class CacheArt():
             
         Returns:
             (obj:`pathlib.Path`): path to album artwork'''
+        logging.debug('attempting to cache artwork')
         if not artwork_url or not album_id:
             raise TypeError(f'missing required value: artwork_url: {artwork_url}, album_id: {album_id}')
                 
@@ -60,17 +62,20 @@ class CacheArt():
         
         r = False
         try:
+            logging.debug(f'artwork url: {artwork_url}')
             r = requests.get(artwork_url, stream=True)
         except requests.exceptions.RequestException as e:
             logging.error(f'failed to fetch artwork at: {artwork_url}: {e}')
         
         if r:
+            logging.debug(f'writing artwork file: {artwork_path}')
             try:
                 with open(artwork_path, 'wb') as outFile:
                     copyfileobj(r.raw, outFile)
                     logging.debug(f'wrote ablum artwork to: {artwork_path}')
             except (OSError, FileExistsError, ValueError) as e:
                 logging.error(f'failed to write {artwork_path}')
+                logging.error(f'error type: {type(e)} - {e}')
         else:
             logging.error('failed to download album art due to previous errors')
             return None
