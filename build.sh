@@ -1,11 +1,13 @@
 #!/bin/bash
 pipenvExec=`which pipenv`
 
+# check if libopen and libtiff are installed
+# apt -qq list libopenjp2-7-dev
+# apt -qq list `libbtiff5-dev
+
 if [[ -x ${pipenvExec} ]]; then
-  echo "sync pipenv"
-  # may need to manually install the following packages due to ????
-  #pipenv install Pillow
-  #pipenv install RPi.GPIO
+  echo "pipenv --three; pipenv sync"
+  #pipenv --three
   #pipenv sync
 else
   echo "building requires pipenv use:
