@@ -13,6 +13,7 @@ ratelimiter = "*"
 dynaconf = "*"
 spidev = "*"
 pyinstaller = "*"
+"RPi.GPIO" = "*"
 
 [dev-packages]
 
