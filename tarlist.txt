@@ -1,0 +1,5 @@
+./dist/slimpi
+./install.sh
+./install
+./LICENSE
+./README.md
