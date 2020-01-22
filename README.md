@@ -37,7 +37,9 @@ To limit the visual disturbance of a pulsing screen, the default refresh for the
 ## Quick Install
 1. Download the installable package from [git hub](https://github.com/txoof/slimpi_epd/raw/master/slimpi_latest.tgz)
 2. Decompress the tarball: `tar xvzf slimpi_latest.tgz`
-3. Run the installer: `install.sh` for a daemon that starts automatically at boot, or see below for running in user space
+3. Run the installer: 
+   * `install.sh` for a daemon that starts automatically at boot, or see below for running in user space
+   * `user_install.sh` to setup the configuration files
 4. Edit the appropriate configuation file `/etc/slimpi.cfg` for daemon or `~/.config/com.txoof.slimpi/slimpi.cfg` for user space
     * Required settings that must be set:
         - `display = waveShareEPDType`
