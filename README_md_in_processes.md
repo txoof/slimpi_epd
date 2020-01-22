@@ -11,6 +11,7 @@ SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper displ
 SlimPi provides a *now playing* display for a selected Logitech Media Player. When the player is paused, an alternative screen is displayed.
 
 The default configuration shows the following information:
+
 <img width="300" src="./docs/SlimPi_playing.png"></img>
 
 * Track Title
@@ -22,12 +23,13 @@ The default configuration shows the following information:
 When the music is paused, the display shows an alternative screen.
 
 **Word Clock** (default)
+
 <img width="200" src="./docs/SlimPi_wordclock.png">
 
 
 **Clock**
-<img width="200" src="./docs/SlimPi_clock.png">
 
+<img width="200" src="./docs/SlimPi_clock.png">
 
 The refresh rate of HAT compatable waveshare displays is relatively slow (5-20 seconds) and does not support partial refreshes. This results in the display pulsing between an all-white and all-black state several times during each refresh. 
 
@@ -363,10 +365,12 @@ Slimpi supports plugin modules that will display when the music is paused.
 
 Two plugins are included:
 **Word Clock** (default)
+
 <img width="200" src="./docs/SlimPi_wordclock.png">
 
 
 **Clock**
+
 <img width="200" src="./docs/SlimPi_clock.png">
 
 Plugins can be changed by specify the name of the plugin in `slimpi.cfg` under the `clock = ` heading. The plugin will be updated at the rate of `clock_update` seconds. The update rate should be at least double the refresh rete of the e-Paper pannel to prevent constant flickering refreshes.
