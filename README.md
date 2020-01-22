@@ -1,5 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # SlimPi - ePaper based Logitech Media Player Display
 <img width="300" src="./docs/SlimPi_splash.png">
 
@@ -37,7 +35,7 @@ To limit the visual disturbance of a pulsing screen, the default refresh for the
 
 
 ## Quick Install
-1. Download the installable package from [git hub]()
+1. Download the installable package from [git hub](https://github.com/txoof/slimpi_epd/raw/master/slimpi_latest.tgz)
 2. Decompress the tarball: `tar xvzf slimpi_latest.tgz`
 3. Run the installer: `install.sh` for a daemon that starts automatically at boot, or see below for running in user space
 4. Edit the appropriate configuation file `/etc/slimpi.cfg` for daemon or `~/.config/com.txoof.slimpi/slimpi.cfg` for user space
@@ -168,9 +166,9 @@ The SlimPi configuration is managed through the following three files which are 
 ### Configure as a System Process
 SlimPi can run as a system process that starts at boot and runs in the background. 
 
-1. Download and decompress [`slimpi_latest.tgz`](https://github.com/txoof/slimpi_epd/raw/master/slimpi_latest.tgz) for
+1. Download and decompress [`slimpi_latest.tgz`](https://github.com/txoof/slimpi_epd/raw/master/slimpi_latest.tgz)
 2. Run the included `install.sh` script
-    * This script will attempt to install slimpi as a daemon process that starts at boot (`less install.sh` to check the contents)
+    * This script will attempt to install slimpi as a daemon process that starts at boot
         * `sudo install.sh`
 3. Configure slimpi for your Logitech Media Server and e-Paper display
     * Set `player_name = ` and `display = ` settings in /etc/slimpi.cfg (see [Configuration Files](# Configuration_Files) above
