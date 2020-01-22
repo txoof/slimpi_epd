@@ -1,5 +1,6 @@
 ./dist/slimpi
 ./install.sh
+./user_install.sh
 ./install
 ./LICENSE
 ./README.md
