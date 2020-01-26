@@ -97,9 +97,10 @@ To limit the visual disturbance of a pulsing screen, the default refresh for the
     * Squeezelite, in combination with a HiFiBerry, allows the Pi to be usded as LMS client player
 
 ## System Setup
-SlimPi requries that SPI is enabled on the Raspberry Pi.
+SlimPi requries that SPI is enabled on the Raspberry Pi and the user running SlimPi is a member of the GPIO and SPI groups
 * Enable SPI
     * `sudo raspi-config` Interfacing Options > SPI > Would you Like the SPI interface to be enabled > Yes
+* sermod -a -G spi,gpio <current user>
 
 ### Configure HiFiBerry *(optional)*
 A HiFiBerry DAC+ or similar can be used for audio output. HiFiBerry has a [great guide for configuring Linux 4 kernels](https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/)
