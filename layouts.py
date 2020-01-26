@@ -68,7 +68,7 @@ twoColumn = {
 twoRowSmall = {
     'title': 
             {'image': None,
-             'max_lines': 3,
+             'max_lines': 2,
              'padding': 10,
              'width': 1,
              'height': 2/3,
@@ -81,12 +81,12 @@ twoRowSmall = {
 
     'artist':
             {'image': None,
-             'max_lines': 2,
+             'max_lines': 1,
              'padding': 10,
              'width': 1,
              'height': 1/3,
              'abs_coordinates': (0, None),
-             'hcenter': False,
+             'hcenter': True,
              'vcenter': True,
              'relative': ['artist', 'title'],
              'font': './fonts/Anton/Anton-Regular.ttf',
