@@ -6,15 +6,17 @@ echo version number is $version
 filename=$appName\_$version.tgz
 latestName=$appName\_latest.tgz
 
-release=0
-
 case $1 in
   -r|--release)
     release=1
     ;;
+  -p|--package)
+    release=0
+    ;;
   *)
-    echo "use: $0 [--release|-r]
-      --release|-r will push the build to github"
+    echo "useage: $0 [OPTION...]
+      --package, -p build and package only
+      --release, -r build, package and push the build to github"
     exit
     ;;
 esac
