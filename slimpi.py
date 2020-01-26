@@ -34,7 +34,7 @@
 # # TO DO
 # ## General
 # - [x] switch to latest stable version of pyinstaller
-#     - [ ] test stable pyinstaller
+#     - [X] test stable pyinstaller
 # - [x] order parts at RS https://nl.rs-online.com/web/ca/overzichtwinkelwagen/
 # - [x] detect when running as a daemon
 # - [ ] document and publish case
@@ -46,8 +46,8 @@
 #     - [x] something is still broken in pyinstaller/PIL and jpg images are not loaded properly see: https://github.com/notifications/beta/MDE4Ok5vdGlmaWNhdGlvblRocmVhZDQ1MDMyMjU1NjoxNDI2MjUwNQ==?query=&show_full=true
 #     - Resolved with develop branch of pyinstaller - possibly latest release resolves this issue as well
 #     - [ ] ~~switch to single file mode for pyinstaller ~~
-# - [ ] Script user install
-#     - [ ] create config files
+# - [X] Script user install
+#     - [X] create config files
 # - [X] Script system install
 #     - [X] create config files
 #     - [X] Daemon
@@ -57,9 +57,8 @@
 #     
 # 
 # ## Building
-# - [ ] ~~move waveshare_epd as a static library into project? pyinstaller chokes on this - unclear why~~
-# - [ ] write script that does the following build steps:
-#     - [ ] check build environment:
+# - [X] write script that does the following build steps:
+#     - check build environment:
 #         * Install needed pipenv modules
 #             * 
 #         * Build appropriate bootloaders
@@ -67,20 +66,16 @@
 # 
 # 
 # ## Structure
-# - [ ] trap for PermissionError on epd calls 
+# - [X] trap for PermissionError on epd calls 
 #     - [Errno 13] Permission denied on self.SPI = spidev.SpiDev(0, 0) calls 
 #     - This should exit gracefully with a useful message:
 #         - User needs to be a member of the SPI group for r/w access to SPI devices
 # - [ ] Test with smaller screen
 # - [ ] speed up initialization - what takes so long?
 # - [ ] configuration module can probably be improved to ignore non-set commandline options -see notes in file
-# - [ ] move all the support files into the library folder or something similar???
+# - [X] move all the support files into the library folder or something similar???
 # - [x] *THIS MAY NOT BE NEEDED* add hook-waveshare_epd file to assist pyinstaller in finding the waveshare libraries for the module load in the main function
 #    - [x] solved by explicitly including waveshare_epd in slimpi.py 
-#    ```
-#    from PyInstaller.utils.hooks import collect_submodules
-#    hidenimports = collect_submodules('waveshare_epd')
-#    ```
 # - [x] move classes out of main program structure   
 # 
 # ## Bugs
@@ -118,7 +113,7 @@
 # - [X] implement daemon start/stop/~~restart~~ features
 # - [X] https://www.python.org/dev/peps/pep-3143 - instructions: https://dpbl.wordpress.com/2017/02/12/a-tutorial-on-python-daemon/
 # - [ ] restart on crash
-# - [ ] **This** is likely the best way forward: https://stackoverflow.com/questions/13069634/python-daemon-and-systemd-service
+# 
 # 
 # ## Documentation
 # - [ ] README.md in epdlib module
@@ -206,7 +201,7 @@ import lmsquery
 
 
 
-# In[9]:
+# In[3]:
 
 
 import constants
@@ -220,15 +215,25 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[4]:
+# In[10]:
 
 
-def test_epd():
+def test_epd(epd_type=None):
+    '''
+    Test epd display with a layout
+    
+    Paramaters:
+        epd_type(`str`): name of epd module (eg: `waveshare_epd.epd5in83`)
+    '''
+    if not epd_type:
+        do_exit(1, 'no module specified')
+        
     import layouts
-    epd = importlib.import_module('waveshare_epd.epd5in83')
+    epd = importlib.import_module(epd_type)
     s = epdlib.Screen()
-    s.epd = epd.EPD()
-    l = epdlib.Layout(layout=layouts.test)
+#     s.epd = epd.EPD()
+    s.epd = epd
+    l = epdlib.Layout(layout=layouts.test, resolution=s.resolution)
     u = {'a': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse laoreet mauris vel felis convallis, id maximus felis tincidunt.', 
          'wb': 'Donec consequat felis ut sem aliquam, in consectetur dolor pellentesque. Donec nec velit faucibus, dignissim mauris congue, eleifend tellus.', 
          'c1': 'Donec vitae leo sed nibh pulvinar tristique. Interdum et malesuada fames ac ante ipsum primis in faucibus. ',
@@ -247,7 +252,15 @@ def test_epd():
 
 
 
-# In[5]:
+# In[11]:
+
+
+# test_epd('waveshare_epd.epd2in7')
+
+
+
+
+# In[ ]:
 
 
 def do_exit(status=0, message=None):
@@ -263,7 +276,7 @@ def do_exit(status=0, message=None):
 
 
 
-# In[6]:
+# In[ ]:
 
 
 def scan_servers():
@@ -290,7 +303,7 @@ def scan_servers():
 
 
 
-# In[7]:
+# In[12]:
 
 
 def main():
@@ -510,32 +523,47 @@ def main():
         logging.fatal(e)
         do_exit(0, message=f'bad or missing layouts file in {config_file_list}')
     
-    # set resolution for screen
-    resolution = [epd.EPD_HEIGHT, epd.EPD_WIDTH]
-    # sort to put longest dimension first for landscape layout
-    resolution.sort(reverse=True)
+#     # set resolution for screen
+#     resolution = [epd.EPD_HEIGHT, epd.EPD_WIDTH]
+#     # sort to put longest dimension first for landscape layout
+#     resolution.sort(reverse=True)
     
-    playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=resolution)
+#     playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=resolution)
     
     
-    splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=resolution)
-    splash_layout.update_contents({'app_name': app_name,
-                                   'version': version,
-                                   'url': url})
+#     splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=resolution)
+#     splash_layout.update_contents({'app_name': app_name,
+#                                    'version': version,
+#                                    'url': url})
     
-    playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=resolution)
-    stopped_layout = epdlib.Layout(layout=stopped_layout_format, resolution=resolution)
+#     playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=resolution)
+#     stopped_layout = epdlib.Layout(layout=stopped_layout_format, resolution=resolution)
     
     # scren objects for managing writing to screen
     screen = epdlib.Screen()
     try:
-        screen.epd = epd.EPD()
+#         screen.epd = epd.EPD()
+        screen.epd = epd
     except PermisisonError as e:
         logging.critical(f'Error initializing EPD display: {e}')
         print('Error initializing EPD display.\nCheck that the user running this program is a member of the spi group')
         print('This can typically be resolved by running:\n$ sudo groupadd <username> spi')
         do_exit(0)
     screen.initEPD()
+    
+    playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=screen.resolution)
+    
+    
+    splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=screen.resolution)
+    splash_layout.update_contents({'app_name': app_name,
+                                   'version': version,
+                                   'url': url})
+    
+    playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=screen.resolution)
+    stopped_layout = epdlib.Layout(layout=stopped_layout_format, resolution=screen.resolution)    
+    
+    
+    
     
     ########## EXECUTION ##########
     # Show splash screen
@@ -672,7 +700,7 @@ def main():
 
 
 
-# In[ ]:
+# In[14]:
 
 
 # TESTING = True
