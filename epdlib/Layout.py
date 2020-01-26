@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[13]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[14]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -57,7 +57,7 @@ except ImportError as e:
 
 
 
-# In[10]:
+# In[4]:
 
 
 class Layout:
@@ -139,7 +139,7 @@ class Layout:
     Example displaying layout:
     """
        
-    def __init__(self, resolution=(600, 448), layout=None, font=None):
+    def __init__(self, resolution=None, layout=None, font=None):
         """  Initializes layout object
         
         Args:
@@ -156,7 +156,8 @@ class Layout:
         else:
             logging.debug('no default font specified')
             self.font = None
-        self.layout = copy.deepcopy(layout)
+        if layout:
+            self.layout = layout
         self.images = None #FIXME not needed?
 
     def _check_keys(self, dictionary={}, values={}):
@@ -263,18 +264,16 @@ class Layout:
         return self._layout
     
     @layout.setter
-    def layout(self, layout):
+    def layout(self, layout):        
+        if not ((isinstance(self.resolution, tuple) or isinstance(self.resolution, list))and len(self.resolution)==2):
+            raise ValueError(f'resolution must be a list-like object of length 2: resolution = {self.resolution}')
         logging.debug(f'calculating values from layout for resolution {self.resolution}')
         if not layout:
             logging.info('no layout provided')
             self._layout = None
         else:
             self._layout = self._calculate_layout(layout)
-            if self._layout:
-                self._set_images()
-            else:
-                logging.debug('no layout provided')
-    
+            self._set_images()
     
     def _calculate_layout(self, layout):
         """Calculate the size and position of each text block based on rules in layout
@@ -402,13 +401,5 @@ class Layout:
                 self.blocks[key].update(val)
             else:
                 logging.debug(f'ignoring block {key}')
-
-
-
-
-# In[ ]:
-
-
-
 
 

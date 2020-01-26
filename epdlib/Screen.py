@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Screen.ipynb')
@@ -13,7 +13,7 @@
 
 
 
-# In[10]:
+# In[4]:
 
 
 import logging
@@ -23,7 +23,7 @@ import time
 
 
 
-# In[11]:
+# In[5]:
 
 
 class Update:
@@ -81,7 +81,7 @@ class Update:
 
 
 
-# In[2]:
+# In[8]:
 
 
 class Screen:
@@ -90,7 +90,7 @@ class Screen:
     `Screen` creates an object that provides methods for assembling images
     and updating a WaveShare EPD."""
         
-    def __init__(self, resolution=(600, 448), elements=[], epd=None):
+    def __init__(self, resolution=None, elements=[], epd=None):
         """Constructor for Screen class.
         
         Args:
@@ -131,12 +131,29 @@ class Screen:
             ```
             """
         logging.info('Screen created')
-        self.resolution = resolution
+#         self.resolution = resolution
         self.elements = elements
-        self.image = self.clearScreen()
-        self.epd = epd
+
+        if epd:
+            self.epd = epd
+            self.image = self.clearScreen()
+            
         self.update = Update()
-        
+    
+    @property
+    def epd(self):
+        return self._epd
+    
+    @epd.setter
+    def epd(self, epd):
+        self._epd = epd.EPD()
+        # set resolution for screen
+        resolution = [epd.EPD_HEIGHT, epd.EPD_WIDTH]
+        # sort to put longest dimension first for landscape layout
+        resolution.sort(reverse=True)
+        self.resolution = resolution
+        self.image = self.clearScreen()
+    
     def clearScreen(self):
         '''Sets a clean base image for building screen layout.
         
