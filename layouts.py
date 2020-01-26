@@ -65,6 +65,34 @@ twoColumn = {
     }
 }
 
+twoRowSmall = {
+    'title': 
+            {'image': None,
+             'max_lines': 3,
+             'padding': 10,
+             'width': 1,
+             'height': 2/3,
+             'abs_coordinates': (0, 0),
+             'hcenter': True,
+             'vcenter': True,
+             'relative': False,
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+
+    'artist':
+            {'image': None,
+             'max_lines': 2,
+             'padding': 10,
+             'width': 1,
+             'height': 1/3,
+             'abs_coordinates': (0, None),
+             'hcenter': False,
+             'vcenter': True,
+             'relative': ['artist', 'title'],
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+}
+
 threeRow = {
     'title':
             {'image': None,
