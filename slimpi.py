@@ -14,7 +14,7 @@
 
 
 
-# In[ ]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[ ]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -33,12 +33,15 @@
 # 
 # # TO DO
 # ## General
+# - [ ] pass resolution to clock; helpful for image manipulation
+# - [x] installer should not overwrite configuration files
+# - [ ] 
 # - [x] switch to latest stable version of pyinstaller
 #     - [X] test stable pyinstaller
 # - [x] order parts at RS https://nl.rs-online.com/web/ca/overzichtwinkelwagen/
 # - [x] detect when running as a daemon
-# - [ ] document and publish case
-#     - [ ] move hole in front down thickness of two washers 
+# - [x] document and publish case
+#     - [x] move hole in front down thickness of two washers 
 # - [x] create installation scripts for building, deploying
 # 
 # ## Packaging & Deployment
@@ -62,7 +65,7 @@
 #         * Install needed pipenv modules
 #             * 
 #         * Build appropriate bootloaders
-# - [ ] test on other Pis, document install procedure
+# - [X] test on other Pis, document install procedure
 # 
 # 
 # ## Structure
@@ -70,7 +73,7 @@
 #     - [Errno 13] Permission denied on self.SPI = spidev.SpiDev(0, 0) calls 
 #     - This should exit gracefully with a useful message:
 #         - User needs to be a member of the SPI group for r/w access to SPI devices
-# - [ ] Test with smaller screen
+# - [x] Test with smaller screen
 # - [ ] speed up initialization - what takes so long?
 # - [ ] configuration module can probably be improved to ignore non-set commandline options -see notes in file
 # - [X] move all the support files into the library folder or something similar???
@@ -97,7 +100,7 @@
 # 
 # ## Configuration
 # - [x] Ignore the ~/.config/com.txoof.slimpi/slimpi.cfg when running as a daemon
-# - [ ] method for installing user config?
+# - [x] method for installing user config?
 # - [X] script for installing as daemon
 # 
 # ## Testing
@@ -117,7 +120,7 @@
 # 
 # ## Documentation
 # - [ ] README.md in epdlib module
-# - [ ] comsistently document attributes, methods 
+# - [ ] consistently document attributes, methods 
 # 
 # ## Feature Creep
 # - [x] Clock that tells time as 'Quarter to Eight' or 'Half past Nine' or 'Ten after Seven'
@@ -129,44 +132,10 @@
 # # NOTES
 # * to properly run pyinstaller: 
 #     * `pipenv run python -m PyInstaller --clean slimpi.spec`
-# * Install PyInstaller
-#     * use the following to install the development branch of PyInstaller: 
-#         * `pipenv install -e git+https://github.com/pyinstaller/pyinstaller.git@develop#egg=PyInstaller`
-#     * build the bootloader for this platform: 
-#         * `python /home/pi/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/src/pyinstaller/bootloader/waf all`
 # * Ubuntu Regular Font appears to truncate the last few characters with long strings in some situations; this does not appear to occur with other fonts. 
-# 
-# * The release version of PyInstaller (v 3.5 July 9, 2019) has a [bug related to pipenv and distuitls] (https://github.com/pyinstaller/pyinstaller/issues/4064#issuecomment-568272182) that results in PIL being unable to open images properly.
-#     * PyInstaller does not appropriately find all of the paths and modules within the pipenv and therefore needs to be installed directly in the pipenv rather than a system-wide with pip
-#     * Resolve all of the above by installing the `develop` branch within the pipenv:
-#         * `pipenv install -e git+https://github.com/pyinstaller/pyinstaller.git@develop#egg=PyInstaller`
-#     * pipenv does not build all of the bootloaders needed for the Raspberry Pi architecture (ARMv6). Resolve this by [building for this plaform] (https://pyinstaller.readthedocs.io/en/stable/bootloader-building.html):
-#         * `python ~/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/src/pyinstaller/bootloader/waf all`
-#         
-#         
-#    - pipenv and PyInstaller are not playing nice and have an issue with distutils not being added properly see this link for help: https://stackoverflow.com/questions/59444914/pyinstaller-failing-to-import-distuitls-when-used-with-pipenv/59444915#59444915 - this has already been patched in the PyInstaller hooks directory for *this* project 
-#   - see /home/pi/.local/share/virtualenvs/slimpi_epd-b1Rf9la8/lib/python3.7/site-packages/PyInstaller/hooks/pre_find_module_path/hook-distutils.py
-#   
-# ```
-# from PyInstaller.utils.hooks import logger
-# 
-# 
-# def pre_find_module_path(api):
-#     # Absolute path of the system-wide "distutils" package when run from within
-#     # a venv or None otherwise.
-#     distutils_dir = getattr(distutils, 'distutils_path', None)
-#     if distutils_dir is not None:
-#         # workaround for https://github.com/pyinstaller/pyinstaller/issues/4064
-#         if distutils_dir.endswith('__init__.py'):
-#             distutils_dir = os.path.dirname(distutils_dir)
-# 
-#         # Find this package in its parent directory.
-#         api.search_dirs = [os.path.dirname(distutils_dir)]
-#         logger.info('distutils: retargeting to non-venv dir %r' % distutils_dir)  
-# ```        
 
 
-# In[2]:
+# In[4]:
 
 
 import logging
@@ -201,7 +170,7 @@ import lmsquery
 
 
 
-# In[3]:
+# In[5]:
 
 
 import constants
@@ -215,7 +184,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[10]:
+# In[6]:
 
 
 def test_epd(epd_type=None):
@@ -252,7 +221,7 @@ def test_epd(epd_type=None):
 
 
 
-# In[11]:
+# In[7]:
 
 
 # test_epd('waveshare_epd.epd2in7')
@@ -260,7 +229,7 @@ def test_epd(epd_type=None):
 
 
 
-# In[ ]:
+# In[8]:
 
 
 def do_exit(status=0, message=None):
@@ -276,7 +245,7 @@ def do_exit(status=0, message=None):
 
 
 
-# In[ ]:
+# In[9]:
 
 
 def scan_servers():
@@ -303,7 +272,7 @@ def scan_servers():
 
 
 
-# In[12]:
+# In[10]:
 
 
 def main():
@@ -331,13 +300,6 @@ def main():
 
     # always try to use thes two configuration files
     config_file_list = [default_cfg, system_cfg]    
-   
-    print('*'*20)
-    print(f'abspath {absPath}')
-    print(f'logging_cfg {logging_cfg}')
-    print(f'default_cfg {default_cfg}')
-    print(f'noartwork {noartwork}')
-    print('*'*20)
     
     waveshare = constants.waveshare
     plugins = constants.plugins
@@ -700,19 +662,11 @@ def main():
 
 
 
-# In[14]:
+# In[11]:
 
 
 # TESTING = True
 if __name__ == '__main__':
     o = main()
-
-
-
-
-# In[ ]:
-
-
-
 
 
