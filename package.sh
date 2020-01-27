@@ -41,9 +41,6 @@ if [[ $package -eq 1 ]]; then
 
   tar cvzf $filename --transform 's,^,slimpi/,' -T tarlist.txt
   cp $filename $latestName
-
-else
-  echo "error creating executable see output above for errors"
 fi
 
 
