@@ -67,7 +67,7 @@ def map_val(a, b, s):
 
 
 
-# In[9]:
+# In[93]:
 
 
 def get_time(time=None):    
@@ -104,7 +104,7 @@ def get_time(time=None):
                '4': ["twenty 'til"],
                '5': ["ten 'til"]}
 
-    stems = ['The time is', "It is about", "It is around", "It is almost"]
+    stems = ['The time is nearly', "It is about", "It is around", "It is almost"]
 
 
     if time:
@@ -119,8 +119,8 @@ def get_time(time=None):
     # this range shifts the period of the list so times around the 'tens' round nicely up and down        
     minute = map_val((1, 59), (0, 6), t_list[1])
 
-    # set the hour appropriately
-    if t_list[1] <= 40:
+    # set the hour appropriately - from 'after' to 'til'
+    if t_list[1] <= 34:
         hour_str = hours[str(t_list[0])]
     else:
         try:
