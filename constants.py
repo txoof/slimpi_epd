@@ -1,6 +1,6 @@
 from pathlib import Path
 # application version number
-version = '0.3.3'
+version = '0.3.4'
 
 # url of github project
 url = 'https://github.com/txoof/slimpi_epd'
