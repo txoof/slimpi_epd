@@ -1,9 +1,12 @@
 #!/bin/bash
 appName="slimpi"
 installPath="/usr/bin/slimpi/"
-sysConfig="./$appName.cfg"
+sysConfig="$appName.cfg"
+sysConfigPath="./dist/$appName/$sysConfig"
 serviceName=$appName-daemon
 sysdService="./install/$serviceName.service"
+
+systemctl stop $serviceName
 
 if [ "$EUID" -ne 0 ]
   then 
@@ -35,10 +38,14 @@ install () {
   usermod -a -G spi,gpio $appName
 
   # copy program files to $installPath
-  cp -r ./dist/$appName $installPath
+  cp -r ./dist/$appName/* $installPath
 
   # copy the system configuration into /etc/
-  cp $sysConfig /etc/
+  if [[ ! -f /etc/$sysConfig ]]; then
+    cp $sysConfigPath /etc/
+  else
+    echo 'leaving existing configuration file intact'
+  fi
 
   # install the systemd unit file
   cp $sysdService /etc/systemd/system/

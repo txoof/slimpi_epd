@@ -9,25 +9,37 @@ latestName=$appName\_latest.tgz
 case $1 in
   -r|--release)
     release=1
+    build=1
+    package=1
     ;;
   -p|--package)
     release=0
+    build=0
+    package=1
+    ;;
+  -b|--build)
+    release=0
+    build=1
+    package=0
     ;;
   *)
     echo "useage: $0 [OPTION...]
-      --package, -p build and package only
-      --release, -r build, package and push the build to github"
+      --package, -p: package only
+      --build, -b: build only
+      --release, -r: build, package and push the build to github"
     exit
     ;;
 esac
 
 echo $filename
 
-pipenv run pyinstaller --clean --noconfirm slimpi.spec
+if [[ $build -eq 1 ]]; then
+  pipenv run pyinstaller --clean --noconfirm slimpi.spec
+fi
 
-if [[ $? -eq 0 ]]; then
+if [[ $package -eq 1 ]]; then
 
-  tar cvzf $filename --transform 's,^,$appName/,' -T tarlist.txt
+  tar cvzf $filename --transform 's,^,slimpi/,' -T tarlist.txt
   cp $filename $latestName
 
 else
