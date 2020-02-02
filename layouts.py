@@ -93,6 +93,70 @@ twoRowSmall = {
              'font_size': None},
 }
 
+threeRowAlt = {
+    'title':
+            {'image': None,
+             'max_lines': 2,
+             'padding': 10,
+             'width': 1,
+             'height': 1/2,
+             'abs_coordinates': (0, 0),
+             'hcenter': True,
+             'vcenter': True,
+             'relative': False,
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+    'coverart':
+            {'image': True,
+             'max_lines': None,
+             'padding': 2,
+             'width': 2/5,
+             'height': 1/2,
+             'abs_coordinates': (0, None),
+             'hcenter': True,
+             'vcenter': True,
+             'relative': ['coverart', 'title'],
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+
+    'artist':
+            {'image': None,
+             'max_lines': 2,
+             'padding': 10,
+             'width': 3/5,
+             'height': 1/4,
+             'abs_coordinates': (None, None),
+             'hcenter': False,
+             'vcenter': True,
+             'relative': ['coverart', 'title'],
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+    'album':
+            {'image': None,
+             'max_lines': 2,
+             'padding': 10,
+             'width': 3/5,
+             'height': 3/16,
+             'abs_coordinates': (None, None),
+             'hcenter': False,
+             'vcenter': True,
+             'relative': ['coverart', 'artist'],
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+    'mode':
+            {'image': False,
+             'max_lines': 1,
+             'width': 3/5,
+             'height': 1/16,
+             'abs_coordinates': (None, None),
+             'hcenter': False,
+             'vcenter': True,
+             'rand': True,
+             'relative': ['coverart', 'album'],
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None}
+}
+
 threeRow = {
     'title':
             {'image': None,
