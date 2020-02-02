@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -14,7 +14,7 @@
 
 
 
-# In[1]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[2]:
+# In[12]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -668,5 +668,13 @@ def main():
 # TESTING = True
 if __name__ == '__main__':
     o = main()
+
+
+
+
+# In[ ]:
+
+
+
 
 
