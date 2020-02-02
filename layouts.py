@@ -283,6 +283,38 @@ splash =  {
 
 }
 
+error = {
+  'message':
+          {'image': None,
+           'max_lines': 10,
+           'padding': 10,
+           'width': 1,
+           'height': 9/10,
+           'abs_coordinates': (0, 0),
+           'hcenter': False,
+           'vcenter': False,
+           'rand': True,
+           'inverse': False,
+           'relative': False,
+           'font': './fonts/Dosis/static/Dosis-SemiBold.ttf',
+           'font_size': None},
+  'time':
+          {'image': None,
+           'max_lines': 1,
+           'padding': 10,
+           'width': 1,
+           'height': 1/10,
+           'abs_coordinates': (0, None),
+           'hcenter': False,
+           'vcenter': False,
+           'rand': True,
+           'inverse': False,
+           'relative': ['time', 'message'],
+           'font': './fonts/Dosis/static/Dosis-SemiBold.ttf',
+           'font_size': None},
+}
+
+
 test = {
   'a':
          {'image': None,
