@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[6]:
+# In[12]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./configuration.ipynb')
@@ -13,7 +13,7 @@
 
 
 
-# In[4]:
+# In[1]:
 
 
 import sys
@@ -27,7 +27,7 @@ import logging
 
 
 
-# In[5]:
+# In[2]:
 
 
 logging.basicConfig(level=logging.DEBUG, format='%(name)s:%(funcName)s %(levelname)s: %(message)s')
@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 
-# In[6]:
+# In[3]:
 
 
 def merge_dict(a, b):
@@ -65,7 +65,7 @@ def merge_dict(a, b):
 
 
 
-# In[7]:
+# In[4]:
 
 
 def fullPath(path):
@@ -86,7 +86,7 @@ def fullPath(path):
 
 
 
-# In[4]:
+# In[5]:
 
 
 class Options():
@@ -244,10 +244,12 @@ class Options():
             commandline arguments
         
         Args:
-            ignore_none(`bool`): ignore this when building 
-            ignore_false(`bool`):
+            ignore_none(`bool`): ignore this option if set to `None` when building configuration dictionary
+            ignore_false(`bool`): ignore this option if set to `False` when building configuation dictionary
             *args, **kwargs'''
-        # pop out these keys to avoid sending to the dictionary
+        # pop out these keys from the dictionary  to avoid sending to the dictionary; if not found
+        # set to `False`
+
         # this can probably be fixed by using the following:
         # parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
         
@@ -277,7 +279,7 @@ class Options():
 
 
 
-# In[1]:
+# In[6]:
 
 
 class ConfigFile():
@@ -331,12 +333,27 @@ class ConfigFile():
     @config_files.setter
     def config_files(self, config_files):
         if not isinstance(config_files, list):
-            raise TypeError(f'Type mismatch: expected {list}, but received {type(config_files)}: {config_files}')
+            raise TypeError(f'Type mismatch: expected list, but received {type(config_files)}: {config_files}')
+        self._config_files = []
+        bad_files = []
         
-        self._config_files = [Path(i).expanduser().resolve() for i in config_files]
+        for i in config_files:
+#             logging.debug(f'adding {f}')
+            f = fullPath(i)
+            if f.exists():
+                self._config_files.append(f)
+            else:
+                bad_files.append(f)
+            
+            if len(bad_files) > 0:
+                logging.error(FileNotFoundError(f'config files not found: {bad_files}'))
+            
+#         self._config_files = [Path(i).expanduser().resolve() for i in config_files]
         
+        logging.info(f'processing config files: {self._config_files}')
         if len(self.config_files) > 0:
             self.parse_config()
+        
     
     def parse_config(self):
         '''reads and stores configuration values from `config_files` in left-to-right order
@@ -349,7 +366,8 @@ class ConfigFile():
             if file.exists():
                 self.parser.read(file)
             else:
-                logging.info(f'{file} does not exist')
+                raise FileNotFoundError(f'file not found: {file}')
+#                 logging.info(f'{file} does not exist')
                 
         if self.parser.sections():
             self.config_dict = self._config_2dict(self.parser) 
@@ -371,13 +389,5 @@ class ConfigFile():
                 d[section][opt] = configuration.get(section, opt)
 
         return d    
-
-
-
-
-# In[ ]:
-
-
-
 
 
