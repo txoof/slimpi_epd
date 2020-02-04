@@ -13,7 +13,7 @@
 
 
 
-# In[349]:
+# In[353]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi_graceful.ipynb')
@@ -21,7 +21,7 @@
 
 
 
-# In[350]:
+# In[354]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -430,12 +430,13 @@ def main():
                 try:
                     resp_id = response['id']
                     resp_mode = response['mode']
+                    time = response['time']
                 except KeyError as e:
                     logging.error('bad response from server: e')
                     resp_id = None
                     resp_mode = 'QUERY ERROR'
                 
-                logging.debug(f'got response from server: {response}')
+                logging.debug(f'got response from server: {resp_mode}, elapsed: {time:.2f}')
                 if resp_id != nowplaying_id or resp_mode != nowplaying_mode:
                     logging.info(f'track/mode change to: {resp_mode}')
                     nowplaying_id = resp_id
