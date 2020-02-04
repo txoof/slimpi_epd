@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[12]:
+# In[13]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./configuration.ipynb')
@@ -30,8 +30,8 @@ import logging
 # In[2]:
 
 
-logging.basicConfig(level=logging.DEBUG, format='%(name)s:%(funcName)s %(levelname)s: %(message)s')
-logger = logging.getLogger(__name__)
+# logging.basicConfig(level=logging.DEBUG, format='%(name)s:%(funcName)s %(levelname)s: %(message)s')
+# logger = logging.getLogger(__name__)
 
 
 
