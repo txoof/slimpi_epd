@@ -13,7 +13,7 @@
 
 
 
-# In[346]:
+# In[349]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi_graceful.ipynb')
@@ -21,7 +21,7 @@
 
 
 
-# In[348]:
+# In[350]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -138,6 +138,9 @@ def main():
     default_cfg = constants.default_cfg
     system_cfg = configuration.fullPath(constants.system_cfg)
     user_cfg = configuration.fullPath(constants.user_cfg)
+    
+    # file for no artwork
+    noartwork = constants.noartwork
     
     # set the waveshare library
     waveshare = constants.waveshare
@@ -424,8 +427,15 @@ def main():
                         
 
             if response:
-                resp_id = response['id']
-                resp_mode = response['mode']
+                try:
+                    resp_id = response['id']
+                    resp_mode = response['mode']
+                except KeyError as e:
+                    logging.error('bad response from server: e')
+                    resp_id = None
+                    resp_mode = 'QUERY ERROR'
+                
+                logging.debug(f'got response from server: {response}')
                 if resp_id != nowplaying_id or resp_mode != nowplaying_mode:
                     logging.info(f'track/mode change to: {resp_mode}')
                     nowplaying_id = resp_id
