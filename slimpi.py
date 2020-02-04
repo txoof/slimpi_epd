@@ -3,136 +3,30 @@
 # coding: utf-8
 
 
-# In[3]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
 #get_ipython().run_line_magic('autoreload', '2')
-
 #get_ipython().run_line_magic('reload_ext', 'autoreload')
 
 
 
 
-# In[3]:
+# In[357]:
 
 
-#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
+#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi_graceful.ipynb')
 
 
 
 
-# In[12]:
+# In[358]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
 
 
-
-# 
-# 
-# # TO DO
-# ## General
-# - [ ] pass resolution to clock; helpful for image manipulation
-# - [x] installer should not overwrite configuration files
-# - [ ] 
-# - [x] switch to latest stable version of pyinstaller
-#     - [X] test stable pyinstaller
-# - [x] order parts at RS https://nl.rs-online.com/web/ca/overzichtwinkelwagen/
-# - [x] detect when running as a daemon
-# - [x] document and publish case
-#     - [x] move hole in front down thickness of two washers 
-# - [x] create installation scripts for building, deploying
-# 
-# ## Packaging & Deployment
-# - [X] create a runnable package that does not depend on pipenv
-#     - [x] something is still broken in pyinstaller/PIL and jpg images are not loaded properly see: https://github.com/notifications/beta/MDE4Ok5vdGlmaWNhdGlvblRocmVhZDQ1MDMyMjU1NjoxNDI2MjUwNQ==?query=&show_full=true
-#     - Resolved with develop branch of pyinstaller - possibly latest release resolves this issue as well
-#     - [ ] ~~switch to single file mode for pyinstaller ~~
-# - [X] Script user install
-#     - [X] create config files
-# - [X] Script system install
-#     - [X] create config files
-#     - [X] Daemon
-#         - [X] add daemon user to SPI group `usermod -a -G spi <username>`
-#         - [X] add daemon user to GPIO group `usermod -a G gpio <username>`
-#     
-#     
-# 
-# ## Building
-# - [X] write script that does the following build steps:
-#     - check build environment:
-#         * Install needed pipenv modules
-#             * 
-#         * Build appropriate bootloaders
-# - [X] test on other Pis, document install procedure
-# 
-# 
-# ## Structure
-# - [X] trap for PermissionError on epd calls 
-#     - [Errno 13] Permission denied on self.SPI = spidev.SpiDev(0, 0) calls 
-#     - This should exit gracefully with a useful message:
-#         - User needs to be a member of the SPI group for r/w access to SPI devices
-# - [x] Test with smaller screen
-# - [ ] speed up initialization - what takes so long?
-# - [ ] configuration module can probably be improved to ignore non-set commandline options -see notes in file
-# - [X] move all the support files into the library folder or something similar???
-# - [x] *THIS MAY NOT BE NEEDED* add hook-waveshare_epd file to assist pyinstaller in finding the waveshare libraries for the module load in the main function
-#    - [x] solved by explicitly including waveshare_epd in slimpi.py 
-# - [x] move classes out of main program structure   
-# 
-# ## Bugs
-# - [x] image does not appear to hcenter
-# - [ ] TextBlock does not use padding
-# - [x] set permissions on temporary directory so anyone can write
-# - [X] configuration always kicks error for "unknown options" even when none are specified
-# - [x] Compiled version cannot use images that are downloaded - add more verbose debugging around this to figure out why
-#   - Due to issue with distutil, virtual env and pyInstaller (see notes)
-# - [ ] splash_screen = False does not work
-# 
-# ## Logging
-# - [x] change destination for log files - /var/log? - this may be handled by moving to a daemon model and allowing the system to manage logging
-# - [ ] filtering of log files filter based on source module?
-# - [X] WARNING with log level is uneeded
-# - [X] some "DEBUG" level messages still slip through even when set to "WARNING"
-# - [X] should /etc/slimpi.cfg missing be a warn level event? - probably not
-# 
-# 
-# ## Configuration
-# - [x] Ignore the ~/.config/com.txoof.slimpi/slimpi.cfg when running as a daemon
-# - [x] method for installing user config?
-# - [X] script for installing as daemon
-# 
-# ## Testing
-# - [x] Test and confirm command line switches
-#   - [x] -p --player-name
-#   - [X] -l --log-level
-#   - [x] -c --config
-#   - [X] -s --list-servers
-#   - [x] -V --version 
-# - [x] Meta/help strings are a mess in command line switches
-# 
-# ## Daemon
-# - [X] implement daemon start/stop/~~restart~~ features
-# - [X] https://www.python.org/dev/peps/pep-3143 - instructions: https://dpbl.wordpress.com/2017/02/12/a-tutorial-on-python-daemon/
-# - [ ] restart on crash
-# 
-# 
-# ## Documentation
-# - [ ] README.md in epdlib module
-# - [ ] consistently document attributes, methods 
-# 
-# ## Feature Creep
-# - [x] Clock that tells time as 'Quarter to Eight' or 'Half past Nine' or 'Ten after Seven'
-# - [ ] Rewrite test_epd module to accept and load EPD module from command line
-# - [ ] disable the Pi power/activity lights https://www.jeffgeerling.com/blogs/jeff-geerling/controlling-pwr-act-leds-raspberry-pi
-# - [ ] Repurpose the Pi lights to show heartbeat/activity/other https://raspberrypi.stackexchange.com/questions/697/how-do-i-control-the-system-leds-using-my-software
-# - [ ] add a decimal doted binary clock using emoji or something similar
-# 
-# # NOTES
-# * to properly run pyinstaller: 
-#     * `pipenv run python -m PyInstaller --clean slimpi.spec`
-# * Ubuntu Regular Font appears to truncate the last few characters with long strings in some situations; this does not appear to occur with other fonts. 
 
 
 # In[4]:
@@ -141,7 +35,6 @@
 import logging
 import logging.config
 
-# from pathlib import Path
 # change directory to the location where the script is running
 from os import chdir
 
@@ -167,12 +60,6 @@ from ratelimiter import RateLimiter
 # lmsquery-fork for managing communications with lms server
 import lmsquery
 
-
-
-
-# In[5]:
-
-
 import constants
 import epdlib
 from library import configuration
@@ -184,68 +71,24 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[6]:
-
-
-def test_epd(epd_type=None):
-    '''
-    Test epd display with a layout
-    
-    Paramaters:
-        epd_type(`str`): name of epd module (eg: `waveshare_epd.epd5in83`)
-    '''
-    if not epd_type:
-        do_exit(1, 'no module specified')
-        
-    import layouts
-    epd = importlib.import_module(epd_type)
-    s = epdlib.Screen()
-#     s.epd = epd.EPD()
-    s.epd = epd
-    l = epdlib.Layout(layout=layouts.test, resolution=s.resolution)
-    u = {'a': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse laoreet mauris vel felis convallis, id maximus felis tincidunt.', 
-         'wb': 'Donec consequat felis ut sem aliquam, in consectetur dolor pellentesque. Donec nec velit faucibus, dignissim mauris congue, eleifend tellus.', 
-         'c1': 'Donec vitae leo sed nibh pulvinar tristique. Interdum et malesuada fames ac ante ipsum primis in faucibus. ',
-         'c2': 'Aenean blandit, mi non iaculis placerat, libero urna elementum nisi, vel sodales eros odio non massa. '}
-    l.update_contents(u)
-    s.elements = l.blocks.values()
-    s.concat()
-    s.initEPD()
-    s.clearEPD()
-    s.initEPD()
-
-    s.writeEPD()
-    return s.concat()
-    
-
-
-
-
-# In[7]:
-
-
-# test_epd('waveshare_epd.epd2in7')
-
-
-
-
-# In[8]:
+# In[147]:
 
 
 def do_exit(status=0, message=None):
     if message:
+        border = '\n'+'#'*70 + '\n'
+        message = border + message + border + '\n***Exiting***'
         print(message)
         
-    if 'TESTING' in globals():
-        if TESTING:
-            logging.fatal(f'Exit called, but ignored due to global var `TESTING` = {TESTING}')
-    else:
+    try:
         sys.exit(status)
+    except Exception as e:
+        pass
 
 
 
 
-# In[9]:
+# In[6]:
 
 
 def scan_servers():
@@ -272,58 +115,66 @@ def scan_servers():
 
 
 
-# In[10]:
+# In[337]:
 
 
 def main():
-    
-    
-    ########## CONSTANTS #########
-    # pull the absolute path from the constants file that resides in 
-    # the root of this project
+    #### CONSTANTS ####
+    # pull the absolute path from the constants file that resides in the root of the project
     absPath = constants.absPath
+    # change the working directory - simplifies all the other path work later
     chdir(absPath)
     
     version = constants.version
     app_name = constants.app_name
     app_long_name = constants.app_long_name
     url = constants.url
-    # this is a bit of a kludge to fix the relative path issues associated with pyinstaller
-#     logging_cfg = Path(absPath) / Path(constants.logging_cfg)
+        
+    ## CONFIGURATION FILES ##
+    # logging configuration file
     logging_cfg = constants.logging_cfg
-#     default_cfg = Path(absPath) / Path(constants.default_cfg)
+    
+    # default base configuration file
     default_cfg = constants.default_cfg
     system_cfg = configuration.fullPath(constants.system_cfg)
     user_cfg = configuration.fullPath(constants.user_cfg)
-#     noartwork = Path(absPath) / Path(constants.noartwork)
-    noartwork = constants.noartwork
-
-    # always try to use thes two configuration files
-    config_file_list = [default_cfg, system_cfg]    
     
+    # file for no artwork
+    noartwork = constants.noartwork
+    
+    # set the waveshare library
     waveshare = constants.waveshare
+    
+    # set plugins library
     plugins = constants.plugins
+    
+    # file containing layouts
     layouts_file = constants.layouts
+    
     default_clock = constants.clock
     
-    # formatters for errors
-    keyError_fmt = 'KeyError: config file section [{}] is missing value: {}'
-    configError_fmt = 'configuration file error: see section [{}] in config file {}'
-    valError_fmt = ''
     
-    ######### CONFIGURATION #########
+    # FORMATTERS
+    keyError_fmt = 'KeyError: configuration file section [{}] bad/missing value: "{}"'
+    configError_fmt = 'configuration file error: see section [{}] in config file: {}'
+    moduleError_fmt = 'failed to load module "{}" {}'
     
-    ##### SETUP LOGGING #####
+    
+    #### CONFIGURATION ####
+    
+    ## LOGGING INIT
     logging.config.fileConfig(logging_cfg)
     
-    ##### PARSE COMMAND LINE ARGUMENTS #####
+    #### COMMANDLINE ARGS ####
     options = configuration.Options(sys.argv)
     # add options to the configuration object
-    # for options that override the configuration file options, add in the format: 
+    # options that override the configuration file options, add in the format: 
     # dest=[[ConfigFileSectionName]]__[[Option_Name]]
+    #                               ^^ <-- TWO underscores `__`
     # specifying arguments with #ignore_none=True and ignore_false=True will exclude
     # these arguments entirely from the nested dictionary making it easier to merge
     # the command line arguments into the configuration file without adding unwanted options
+    # with default values that potentially conflict or overwrite the config files
     
     # set logging level
     options.add_argument('-l', '--log-level', ignore_none=True, metavar='LOG_LEVEL',
@@ -331,7 +182,7 @@ def main():
                          dest='main__log_level', 
                          help='set logging level: DEBUG, INFO, WARNING, ERROR')
 
-    # alternative user_cfg file
+    # alternative user_cfg file -- do not add this to the options dictionary if NONE
     options.add_argument('-c', '--config', type=str, required=False, metavar='/path/to/cfg/file.cfg',
                          dest='user_cfg', ignore_none=True, default=user_cfg,
                          help=f'use the specified configuration file; default user config: {user_cfg}')
@@ -341,262 +192,252 @@ def main():
                          default=False, dest='main__daemon', action='store_true', 
                          help='run in daemon mode (ignore user configuration)')
     
-    # list servers - 
+    # list servers 
     options.add_argument('-s', '--list-servers', action='store_true', 
                          dest='list_servers',
                          default=False, 
                          help='list servers and any players found on local network and exit')
     
-    options.add_argument('-p', '--player-id', type=str, required=False, metavar='playerName',
-                         default=False, dest='lms_server__player_id', ignore_none=True,
+    # set the player-id on the command line -- do not add if set to NONE
+    options.add_argument('-p', '--player-name', type=str, required=False, metavar='playerName',
+                         default=False, dest='lms_server__player_name', ignore_none=True,
                          help='set the name of the player to monitor')
     
+    # display the version and exit
     options.add_argument('-V', '--version', action='store_true', required=False,
                          dest='version', default=False, 
-                         help='display version nubmer and exit')
-    
+                         help='display version nubmer and exit')    
 
     
-    # parse the command line options-
+    # parse the command line options
     options.parse_args()
-#     return(options)
-    ##### ACTION COMMANDLINE ARGS #####
+    
+    #### ACTION COMMAND LINE ARGUMENTS ####
+    # print version and exit
     if options.options.version:
-        print(f'{version}')
+        print(f'version: {version}')
         do_exit(0)
     
+    # scan for local LMS servers and players, then exit
     if options.options.list_servers:
         scan_servers()
         do_exit(0)
     
-    # use an alternative user configuration file
+    # user a user specified configuration file
     if 'user_cfg' in options.opts_dict:
         user_cfg = options.opts_dict['user_cfg']
     
-    # read the configuration -- right most values overwrite left values
-    # system overwrites default; user overwrites system
+    # always try to use these two configuration files at launch
+    config_file_list = [default_cfg, system_cfg]
     
+    # check if running in daemon mode; append user config file
     if not options.options.main__daemon:
-        # add the user_cfg when not in daemon mode
         config_file_list.append(user_cfg)
-            
-    config_file = configuration.ConfigFile(config_files=config_file_list)    
     
-    # merge the configuration files and the command line options
+    # read all the configuration files in the list - values in left most file is default
+    # values in each file to the right override previous values
+    try:
+        config_file = configuration.ConfigFile(config_files=config_file_list)
+    except FileNotFoundError as e:
+        logging.error(f'could not open one or more config files: {e}')
+        logging.error('attempting to continue without above files')
+        
+    # merge the configuration file(s) values with command line options
+    # command line options override config files
     config = configuration.merge_dict(config_file.config_dict, options.nested_opts_dict)
     
-    # set root log level now
+    # kludge to work around f-strings with quotes in Jupyter
     ll = config['main']['log_level']
     logging.root.setLevel(ll)
-    logging.debug(f'log level: {ll}')
+    logging.debug(f'log level set: {ll}')    
+    
+    #### HARDWARE INIT ####
+    ## EPD INIT ##
+    try:
+        epd_module = '.'.join([waveshare, config['layouts']['display']])
+        epd = importlib.import_module(epd_module)
+#         epd = importlib.import_module('.'.join([waveshare, 'foo']))
+    except KeyError as e:
+        myE = keyError_fmt.format('layouts', 'display')
+        logging.fatal(myE)
+#         do_exit(1, message=f'Bad or missing "display" type in section [layouts] in {config_file_list}')
+        do_exit(1, message=myE)
 
-    if options.options.main__daemon:
-        logging.info(f'daemon mode (-d, --daemon) selected, ignoring user configuration {user_cfg}')
-    else:
-        logging.info(f'user configuration file: {user_cfg}')
-    logging.debug(f'using configuration files: {config_file_list}')    
-    ##### OBJECTS #####
-    # Signal handler for gracefully handling HUP/KILL signals
+    except ModuleNotFoundError as e:
+        myE = configError_fmt.format('layouts', config_file_list)
+        logging.fatal(myE)
+#         do_exit(1, message=f'Bad or missing "display" in section [layouts] in {config_file_list}')
+        do_exit(1, message=moduleError_fmt.format(epd_module, myE))
+        
+    ## SCREEN INIT ##
+    screen = epdlib.Screen()
+    try:
+        screen.epd = epd
+        
+    except PermissionError as e:
+        logging.critical(f'Error initializing EPD interface: {e}')
+        logging.critical('The user executing this program does not have access to the SPI devices.')
+        do_exit(0, 'This user does not have access to the SPI group\nThis can typically be resolved by running:\n$ sudo groupadd <username> spi')
+    
+    screen.initEPD()
+      
+    
+    ## LAYOUT INIT ##
+    
+    # import layouts
+    logging.debug(f'importing layouts from file: {layouts_file}')
+    try:
+        layouts = importlib.import_module(layouts_file)
+        playing_layout_format = getattr(layouts, config['layouts']['now_playing'])
+        plugin_layout_format = getattr(layouts, config['layouts']['plugin'])
+        splash_layout_format = getattr(layouts, config['layouts']['splash'])
+        error_layout_format = getattr(layouts, config['layouts']['error'])
+    except ModuleNotFoundError as e: 
+        myE = f'- could not load layouts from module {config_file}'
+        logging.fatal(moduleError_fmt.format('layouts', myE))
+        do_exit(1, message=moduleError_fmt.format('layouts', myE))
+    
+    except (KeyError, AttributeError) as e:
+        logging.fatal(keyError_fmt.format('layouts', e.args[0]))
+        logging.fatal(configError_fmt.format('layotus', config_file_list))
+        do_exit(1, message=keyError_fmt.format('layouts', e.args[0]))
+    
+    
+    playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=screen.resolution)
+    plugin_layout = epdlib.Layout(layout=plugin_layout_format, resolution=screen.resolution)
+    error_layout = epdlib.Layout(layout=error_layout_format, resolution=screen.resolution)
+        
+    
+    ## PLUGIN INIT ##
+    try:
+        plugin = importlib.import_module('.'.join([plugins, config['modules']['plugin']]))
+    except KeyError as e:
+        logging.error(keyError_fmt.format('modules', config['modules']['plugin']))
+    except ModuleNotFoundError as e:
+        logging.error(moduleError_fmt.format(config['modules']['plugin'], e.args[0]))
+        logging.error('falling back to default')
+        try:
+            plugin = importlib.import_module('.'.join([plugins, default_clock]))
+            plugin_layout_format = getattr(layouts, default_clock)
+        except ModuleNotFoundError as e:
+            myE = moduleError_fmt.format(default_clock, e.args[0])
+            logging.fatal(myE)
+            do_exit(1, myE)
+    
+    try:
+        plugin_update = int(config['modules']['plugin_update'])
+    except KeyError as e:
+        myE = keyError_fmt.format('modules', 'plugin_update')
+        logging.error(myE)
+        logging.error('setting plugin update to 60 seconds')
+        pluggin_update = 60
+    
+    
+    #### EXECUTION ####
+    logging.debug(f'starting with configuration: {config}')
+    
+    ## EXEC VARIABLES ##
+    # signal handler for catching and handling HUP/KILL signals
     sigHandler = signalhandler.SignalHandler()
     
     # LMS Query rate limiter wrapper - allow max of `max_calls` per `period` (seconds)
     lmsQuery_ratelimit = RateLimiter(max_calls=1, period=3)
     
-    # LMS Query Object creation
+    # LMS Query Object creation - rate limit to once/30 seconds
     lmsDelay_ratelimit = RateLimiter(max_calls=1, period=30)
     
-    # create lms query object - place holder for LMS query object to be created later
-    lms = None 
-#     try:
-#         lms = lmsquery.LMSQuery(**config['lms_server'])
-        
-#         if options.options.list_servers:
-#             scan_servers()
-#             do_exit(0)
-        
-#         if not lms.player_id:
-#             raise ValueError(keyError_fmt.format('lms_server', 'player_id'))
-            
-#     except TypeError as e:
-#         logging.fatal(configError_fmt.format('lms_server', config_file_list))
-#         logging.fatal(f'Error: {e}')
-#         do_exit(0, message=f'lms_server setting missing in {config_file_list}')
-
-#     except ValueError as e:
-#         logging.fatal(e)
-#         do_exit(0, message=f'bad lms_server setting in {config_file_list}; try:\n$ {app_name} --list-servers')
-
-#     except OSerror as e:
-#         logging.warning('could not find LMS servers due to network error')
-#         logging.warning('delaying start of lms connection')
-#         lms = None
-
-    # setup EPD Display
-    try:
-        epd = importlib.import_module('.'.join([waveshare, config['layouts']['display']]))
-        
-    except (KeyError) as e:
-        logging.fatal(keyError_fmt.format('layouts', 'display'))
-        logging.fatal(configError_fmt.format('layouts', config_file_list))
-        logging.fatal(e)
-        do_exit(0, message=f'bad or missing layouts setting in {config_file_list}')
-    except (ModuleNotFoundError) as e:
-        logging.fatal(keyError_fmt.format('layouts', 'display'))
-        logging.fatal(configError_fmt.format('layouts', config_file_list))
-        logging.fatal(e)
-        do_exit(0, message=f'could not load layouts modules specified in {config_file_list}')
+    # logitech media server interface object
+    lms = None
     
-    # import additonal modules
-    try:
-        clock = importlib.import_module('.'.join([plugins, config['modules']['clock']]))
-    except KeyError as e:
-            logging.error(keyError_fmt.format('modules', 'clock'))
-    except (ModuleNotFoundError) as e:
-        mod = config['modules']['clock']
-        logging.error(keyError_fmt.format('modules', 'clock'))
-        logging.error(f'could not load module: {mod} due to error: {e}')
-        logging.error('falling back to default')
-        try:
-            clock = importlib.import_module(default_clock)
-        except ModuleNotFoundError as e:
-            logging.fatal(f'failed to load module with error: {e}')
-            do_exit(0, message=f'could not load default clock module: {default_clock}')
-            
-    try:
-        clock_update = int(config['modules']['clock_update'])
-    except KeyError as e:
-        logging.error(keyError_fmt.format('modules', 'clock_update'))
-        logging.error(f'setting clock update to 60 seconds')
-        clock_update = 60
-    
-    # setup layouts for displaying content
-    try:
-        layouts = importlib.import_module(layouts_file)
-        playing_layout_format = getattr(layouts, config['layouts']['now_playing'])
-        stopped_layout_format = getattr(layouts, config['layouts']['stopped'])
-        splash_layout_format = getattr(layouts, config['layouts']['splash'])
-    except (ModuleNotFoundError) as e:
-        logging.fatal(f'could not import layouts file: {layouts_file}')
-        logging.fatal(e)
-        do_exit(0, message=f'bad or missing layouts file in {config_file_list}')
-    except (KeyError, AttributeError) as e:
-        logging.fatal(keyError_fmt.format('layouts', e.args[0]))
-        logging.fatal(configError_fmt.format('layouts', config_file_list))
-        logging.fatal(e)
-        do_exit(0, message=f'bad or missing layouts file in {config_file_list}')
-    
-#     # set resolution for screen
-#     resolution = [epd.EPD_HEIGHT, epd.EPD_WIDTH]
-#     # sort to put longest dimension first for landscape layout
-#     resolution.sort(reverse=True)
-    
-#     playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=resolution)
-    
-    
-#     splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=resolution)
-#     splash_layout.update_contents({'app_name': app_name,
-#                                    'version': version,
-#                                    'url': url})
-    
-#     playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=resolution)
-#     stopped_layout = epdlib.Layout(layout=stopped_layout_format, resolution=resolution)
-    
-    # scren objects for managing writing to screen
-    screen = epdlib.Screen()
-    try:
-#         screen.epd = epd.EPD()
-        screen.epd = epd
-    except PermisisonError as e:
-        logging.critical(f'Error initializing EPD display: {e}')
-        print('Error initializing EPD display.\nCheck that the user running this program is a member of the spi group')
-        print('This can typically be resolved by running:\n$ sudo groupadd <username> spi')
-        do_exit(0)
-    screen.initEPD()
-    
-    playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=screen.resolution)
-    
-    
-    splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=screen.resolution)
-    splash_layout.update_contents({'app_name': app_name,
-                                   'version': version,
-                                   'url': url})
-    
-    playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=screen.resolution)
-    stopped_layout = epdlib.Layout(layout=stopped_layout_format, resolution=screen.resolution)    
-    
-    
-    
-    
-    ########## EXECUTION ##########
-    # Show splash screen
-    logging.debug(f'starting up with this configuration: {config}')
-    if config['main']['splash_screen']:
-        # push the images in the layout to the screen
-        screen.elements = splash_layout.blocks.values()
-        # concat all the individual images
-        screen.concat()
-        # write the image
-        screen.writeEPD()
-    
-    # refresh the screen when true
+    # refresh when true
     refresh = False
-    # maximum amount of time to wait before refreshing display
     refresh_delay = 60
     
     # vars for managing track ID, mode, album art
     nowplaying_id = None
-    nowplaying_mode = "No LMS Server"
+    nowplaying_mode = "Pause"
     artwork_cache = cacheart.CacheArt(app_long_name)
     
-    # loop forever waiting for a kill/interrupt signal
+    # check for the word `true` - config file is all stored as type `str`
+    if config['main']['splash_screen'].lower() == 'true':
+        splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=screen.resolution)
+        splash_layout.update_contents({'app_name': app_name,
+                                       'version': f'version: {version}',
+                                       'url': url})
+        refresh = splash_layout
+#         screen.elements = splash_layout.blocks.values()
+#         screen.concat()
+#         screen.writeEPD()
+    else:
+        pass
+        
+    
     try:
         while not sigHandler.kill_now:
-            # clear the lms server response 
             response = None
-            
-            if lms: # if no LMS query object exists, continue to try to create one and connect
-                # use the ratelimiter to throttle requests
+        
+            # check of LMS query object is configured
+            if lms:
                 with lmsQuery_ratelimit:
                     try:
-                        logging.debug(f'querying lms server for status of player: {lms.player_id}')
+                        myE = f'query lms server for status of player {config["lms_server"]["player_name"]}: {lms.player_id}'
+                        logging.debug(myE)
                         response = lms.now_playing()
                     except requests.exceptions.ConnectionError as e:
-                        logging.warning(f'Server could not find active player_id: {lms.player_id}')
-                        logging.warning('is the specified player active?')
-                        response = {'title': f'Could not connect player: {lms.player_id}',
-                                    'album': 'is player_id valid?',
-                                    'artist': 'see logs for more info',
-                                    'id': 'NONE', 'mode': 'ERROR - SEE LOGS'}
-                        nowplaying_mode = response['mode']
-
+                        logging.warning(f'server could not find active player_id: {lms.player_id}')
+                        logging.warning(f'is the specified player active?')
+                        error_layout.update_contents({'message': f'{config["lms_server"]["player_name"]} does not appear to be available. Is it on?', 'time': 'NO PLAYER'})
+                        refresh = error_layout
+                        response = None
+                        
                     except KeyError as e:
-                        logging.info(f'No playlist is active on player_id: {lms.player_id}')
-                        response = {'title': 'No music is queued', 'id': 'NONE', 'mode': 'No Playlist'}
-                        nowplaying_mode = response['mode']
+                        myE = f'No playlist is active on {config["lms_server"]["player_name"]}'
+                        logging.info(myE)
+                        response =  {'title': 'No music is queued', 'id': 'NONE', 'mode': 'No Playlist'}
+                        nowplaying_mode = response['mode']                 
+    
             else: # try to create an lms query object
                 with lmsDelay_ratelimit:
                     try:
+                        logging.debug('setting up lms query connection')
                         lms = lmsquery.LMSQuery(**config['lms_server'])
                         if not lms.player_id:
-                            raise ValueError(keyError_fmt.format('lms_server', 'player_id'))
+                            raise ValueError(keyError_fmt.format('lms_server', 'player_name'))
+                        logging.info('lms query connection created')
 
                     except TypeError as e:
-                        logging.fatal(configError_fmt.format('lms_server', config_file_list))
-                        logging.fatal(f'Error: {e}')
-                        do_exit(0, message=f'lms_server setting missing in {config_file_list}')
+                        logging.critical(configError_fmt.format('lms_server', config_file_list))
+                        error_layout.update_contents({'message': configError_fmt.format('lms_server', config_file_list)})
+                        refresh = error_layout
 
                     except ValueError as e:
-                        logging.fatal(e)
-                        do_exit(0, message=f'bad lms_server setting in {config_file_list}; try:\n$ {app_name} --list-servers')
-
+                        myE = keyError_fmt.format('lms_server', 'player_name')
+                        logging.critical(myE)
+                        myE = 'LMS QUERY ERROR: \n' + myE
+                        error_layout.update_contents({'message': myE, 'time': 'LMS ERROR'})
+                        refresh = error_layout
+                        
                     except OSError as e:
-                        logging.warning('could not find LMS servers due to network error')
-                        logging.warning('delaying start of lms connection')
-                        lms = None                    
-                    
+                        myE = 'could not find LMS servers due to network error '
+                        logging.warning(myE)
+                        logging.warning('delaying start of LMS query connection')
+                        myE = 'LMS QUERY ERROR: ' + myE + e.args[0]
+                        error_layout.update_contents({'message': myE, 'time': 'LMS ERROR'})
+                        refresh = error_layout
+                        
+
             if response:
-                resp_id = response['id']
-                resp_mode = response['mode']
+                try:
+                    resp_id = response['id']
+                    resp_mode = response['mode']
+                    time = response['time']
+                except KeyError as e:
+                    logging.error('bad response from server: e')
+                    resp_id = None
+                    resp_mode = 'QUERY ERROR'
+                    time = 0.0001
+                
+                logging.debug(f'got response from server: {resp_mode}, elapsed: {time:.2f}')
                 if resp_id != nowplaying_id or resp_mode != nowplaying_mode:
                     logging.info(f'track/mode change to: {resp_mode}')
                     nowplaying_id = resp_id
@@ -627,45 +468,41 @@ def main():
                 
             if nowplaying_mode != "play" and screen.update.last_updated > refresh_delay:
                 logging.debug(f'next update will be in {refresh_delay} seconds')
-                logging.info('music appears to be paused, switching to clock display')
-                update = clock.get_time()
+                logging.info('music appears to be paused, switching to plugin display')
+                update = plugin.get_time()
                 update['mode'] = nowplaying_mode
-                stopped_layout.update_contents(update)
-                refresh = stopped_layout
-                refresh_delay = clock_update
-
-
-        
-            # only refresh if needed
-            if refresh:
-                logging.debug('refreshing display')
+                plugin_layout.update_contents(update)
+                refresh = plugin_layout
+                refresh_delay = plugin_update                
+            
+            
+            # check if `refresh` has been updated 
+            if refresh and isinstance(refresh, epdlib.Layout):
+                logging.debug('refresh display')
                 screen.initEPD()
-                screen.elements=refresh.blocks.values()
+                screen.elements = refresh.blocks.values()
                 screen.concat()
-                screen.writeEPD()   
-                # set refresh to False; this will be updated as needed
-                refresh = False                            
-                    
-    
+                screen.writeEPD()
+                # set response to 
+                refresh = False
+            
+            # sleep for half a second every cycle
             sleep(0.5)
+            
     finally:
-        print('Caught exit signal - exiting')
-        logging.info('cleaning up and wiping screen')
-        artwork_cache.clear_cache()
+        print('Received exit signal - cleaning up')
         
         screen.initEPD()
         screen.clearEPD()
-        print('Exiting')
         
     return config
 
 
 
 
-# In[11]:
+# In[324]:
 
 
-# TESTING = True
 if __name__ == '__main__':
     o = main()
 
