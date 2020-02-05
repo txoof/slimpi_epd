@@ -1,6 +1,6 @@
 def __init__():
     pass
-# the sections MUST be ordered logically so relative calculations can be made!
+# the sections within each layout MUST be ordered logically so relative calculations can be made!
 # if section 'artist' depends on section 'title' for relative positioning,
 # 'artist' MUST be listed AFTER 'title'
 
@@ -372,4 +372,33 @@ test = {
           'relative': ['c1', 'wb'],
           'font': './fonts/Ubuntu/Ubuntu-Regular.ttf',
           'font_size': None},
+}
+
+decimal_binary = {
+    'bin_img':
+            {'image': True,
+             'max_lines': None,
+             'padding': 2,
+             'width': 1,
+             'height': 8/9,
+             'abs_coordinates': (0, 0),
+             'hcenter': False,
+             'vcenter': False,
+             'rand': True,
+             'relative': ['coverart', 'title'],
+            },
+    'time':
+          {'image': None,
+           'max_lines': 1,
+           'padding': 10,
+           'width': 1,
+           'height': 1/9,
+           'abs_coordinates': (0, None),
+           'hcenter': False,
+           'vcenter': False,
+           'rand': True,
+           'inverse': False,
+           'relative': ['time', 'bin_img'],
+           'font': './fonts/Dosis/static/Dosis-SemiBold.ttf',
+           'font_size': None},    
 }
