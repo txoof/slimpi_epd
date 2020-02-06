@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[38]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert Layout.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[ ]:
+# In[39]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -377,10 +377,14 @@ class Layout:
                                               abs_coordinates=section['abs_coordinates'])
             if section['image']:
                 logging.debug('set image block')
-                blocks[sec] = Block.ImageBlock(image=None, abs_coordinates=section['abs_coordinates'], 
-                                         area=section['dimensions'], hcenter=section['hcenter'],
-                                         inverse=section['inverse'], 
-                                         vcenter=section['vcenter'], padding=section['padding'])
+                blocks[sec] = Block.ImageBlock(image=None, 
+                                               abs_coordinates=section['abs_coordinates'], 
+                                               area=section['dimensions'], 
+                                               hcenter=section['hcenter'],
+                                               inverse=section['inverse'], 
+                                               vcenter=section['vcenter'], 
+                                               padding=section['padding'], 
+                                               rand=section['rand'])
         self.blocks = blocks
                               
     def update_contents(self, updates=None):
