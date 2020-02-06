@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./decimal_binary_clock.ipynb')
@@ -13,7 +13,7 @@
 
 
 
-# In[1]:
+# In[4]:
 
 
 from datetime import datetime
@@ -23,7 +23,7 @@ import re
 
 
 
-# In[2]:
+# In[5]:
 
 
 def check_num(func):
@@ -47,7 +47,7 @@ def check_num(func):
 
 
 
-# In[3]:
+# In[6]:
 
 
 @check_num
@@ -59,7 +59,7 @@ def split_place_value(d):
 
 
 
-# In[4]:
+# In[7]:
 
 
 def time_now():
@@ -68,7 +68,7 @@ def time_now():
 
 
 
-# In[5]:
+# In[8]:
 
 
 def split_by_place(d):
@@ -81,7 +81,7 @@ def split_by_place(d):
 
 
 
-# In[6]:
+# In[9]:
 
 
 @check_num
@@ -102,7 +102,7 @@ def dec2bin(d, min_bits=4):
 
 
 
-# In[7]:
+# In[10]:
 
 
 def dot_array(r, border, array, padding):
@@ -123,7 +123,7 @@ def dot_array(r, border, array, padding):
 
 
 
-# In[8]:
+# In[11]:
 
 
 def separator(dim, padding):
@@ -139,11 +139,11 @@ def separator(dim, padding):
 
 
 
-# In[9]:
+# In[14]:
 
 
-def get_time(time=None):
-    r = 30
+def update(time=None):
+    r = 80
     border = 10
     padding = 10
     time_array = []
@@ -205,5 +205,13 @@ def get_time(time=None):
         x_pos = x_pos + j.width
     
     return {'bin_img': img, 'time': return_time, 'mode': None}     
+
+
+
+
+# In[ ]:
+
+
+
 
 

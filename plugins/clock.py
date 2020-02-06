@@ -1,9 +1,9 @@
-#!/usr/bin/env ipython
+#!/usr/bin/env python
 #!/usr/bin/env python
 # coding: utf-8
 
 
-# In[5]:
+# In[7]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./clock.ipynb')
@@ -33,7 +33,7 @@ def time_now():
 # In[6]:
 
 
-def get_time():
+def update():
     myTime = {'time': time_now(),
               'mode': None}
     return  myTime

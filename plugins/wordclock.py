@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[ ]:
+# In[26]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./wordclock.ipynb')
@@ -13,7 +13,7 @@
 
 
 
-# In[1]:
+# In[14]:
 
 
 import logging
@@ -23,7 +23,7 @@ from random import choice
 
 
 
-# In[2]:
+# In[15]:
 
 
 def time_list(time):
@@ -36,7 +36,7 @@ def time_list(time):
 
 
 
-# In[3]:
+# In[16]:
 
 
 def time_now():
@@ -45,7 +45,7 @@ def time_now():
 
 
 
-# In[4]:
+# In[28]:
 
 
 def map_val(a, b, s):
@@ -67,10 +67,10 @@ def map_val(a, b, s):
 
 
 
-# In[93]:
+# In[18]:
 
 
-def get_time(time=None):    
+def update(time=None):    
     hours = {'1':  ['one', 'late'],
              '2':  ['two', 'really late', 'go to bed'],
              '3':  ['three', 'too late', "why aren't you in bed"],
