@@ -374,23 +374,23 @@ test = {
           'font_size': None},
 }
 
-decimal_binary = {
+decimal_binary_clock = {
     'bin_img':
             {'image': True,
              'max_lines': None,
-             'padding': 2,
+             'padding': 5,
              'width': 1,
              'height': 8/9,
              'abs_coordinates': (0, 0),
              'hcenter': False,
              'vcenter': False,
              'rand': True,
-             'relative': ['coverart', 'title'],
+             'relative': False
             },
     'time':
           {'image': None,
            'max_lines': 1,
-           'padding': 10,
+           'padding': 5,
            'width': 1,
            'height': 1/9,
            'abs_coordinates': (0, None),
