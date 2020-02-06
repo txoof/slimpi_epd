@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[2]:
+# In[5]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[3]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[2]:
+# In[ ]:
 
 
 import logging
@@ -36,7 +36,7 @@ except ImportError as e:
 
 
 
-# In[3]:
+# In[ ]:
 
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ logger.root.setLevel('DEBUG')
 
 
 
-# In[4]:
+# In[ ]:
 
 
 class Block:
@@ -197,7 +197,7 @@ class Block:
 
 
 
-# In[5]:
+# In[ ]:
 
 
 class ImageBlock(Block):
@@ -266,7 +266,9 @@ class ImageBlock(Block):
             im = image
             if im.size != size:
                 logging.debug(f'resizing image to {size}')
-                im.resize(size)
+                
+#                 im = im.resize(size)
+                im.thumbnail(size)
 
         self.dimensions = im.size
         logging.debug(f'dimensions: {self.dimensions}')   
@@ -329,7 +331,7 @@ class ImageBlock(Block):
 
 
 
-# In[11]:
+# In[ ]:
 
 
 class TextBlock(Block):
