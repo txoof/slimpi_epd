@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[5]:
+# In[8]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./Block.ipynb')
@@ -11,7 +11,7 @@
 
 
 
-# In[ ]:
+# In[9]:
 
 
 #get_ipython().run_line_magic('nbconvert', '')
@@ -19,7 +19,7 @@
 
 
 
-# In[ ]:
+# In[1]:
 
 
 import logging
@@ -36,16 +36,16 @@ except ImportError as e:
 
 
 
-# In[ ]:
+# In[2]:
 
 
-logger = logging.getLogger(__name__)
-logger.root.setLevel('DEBUG')
+# logger = logging.getLogger(__name__)
+# logger.root.setLevel('DEBUG')
 
 
 
 
-# In[ ]:
+# In[4]:
 
 
 class Block:
@@ -102,6 +102,44 @@ class Block:
         # init the property
         self.image = None
 
+    @property
+    def hcenter(self):
+        """:obj:`bool`: horizontallly center contents of block"""
+        return self._hcenter
+    
+    @hcenter.setter
+    def hcenter(self, hcenter):
+        if not isinstance(hcenter, bool):
+            raise TypeError (f'hcenter must be of type `bool`')
+        else:
+            self._hcenter = hcenter
+                        
+    
+    @property
+    def vcenter(self):
+        """:obj:`bool`: vertically center contents of block"""
+        return self._vcenter
+    
+    @vcenter.setter
+    def vcenter(self, vcenter):
+        if not isinstance(vcenter, bool):
+            raise TypeError(f'vcenter must be of type `bool`')
+        else:
+            self._vcenter = vcenter
+    
+    @property
+    def padding(self):
+        """:obj:`int`: number of pixels to add around edge of block"""
+        return self._padding
+    
+    
+    @padding.setter
+    def padding(self, padding):
+        if not isinstance(padding, int):
+            raise TypeError (f'padding must be of type `int`: {padding}')
+        else:
+            self._padding = padding
+        
     
     @property
     def inverse(self):
@@ -114,6 +152,8 @@ class Block:
     
     @inverse.setter
     def inverse(self, inv):
+        if not isinstance(inv, bool):
+            raise Type
         logging.debug(f'set inverse: {inv}')
         self._inverse = inv
         if inv:
@@ -197,7 +237,7 @@ class Block:
 
 
 
-# In[ ]:
+# In[5]:
 
 
 class ImageBlock(Block):
