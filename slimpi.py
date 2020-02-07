@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[2]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,23 +13,16 @@
 
 
 
-# In[357]:
+# In[2]:
 
 
-#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi_graceful.ipynb')
-
-
-
-
-# In[358]:
-
-
+#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
 #get_ipython().run_line_magic('nbconvert', '')
 
 
 
 
-# In[4]:
+# In[2]:
 
 
 import logging
@@ -71,7 +64,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[147]:
+# In[3]:
 
 
 def do_exit(status=0, message=None):
@@ -88,7 +81,7 @@ def do_exit(status=0, message=None):
 
 
 
-# In[6]:
+# In[4]:
 
 
 def scan_servers():
@@ -115,7 +108,7 @@ def scan_servers():
 
 
 
-# In[337]:
+# In[5]:
 
 
 def main():
@@ -421,7 +414,7 @@ def main():
                         myE = 'could not find LMS servers due to network error '
                         logging.warning(myE)
                         logging.warning('delaying start of LMS query connection')
-                        myE = 'LMS QUERY ERROR: ' + myE + e.args[0]
+                        myE = 'LMS QUERY ERROR: ' + myE + str(e.args[0])
                         error_layout.update_contents({'message': myE, 'time': 'LMS ERROR'})
                         refresh = error_layout
                         
@@ -469,7 +462,7 @@ def main():
             if nowplaying_mode != "play" and screen.update.last_updated > refresh_delay:
                 logging.debug(f'next update will be in {refresh_delay} seconds')
                 logging.info('music appears to be paused, switching to plugin display')
-                update = plugin.get_time()
+                update = plugin.update()
                 update['mode'] = nowplaying_mode
                 plugin_layout.update_contents(update)
                 refresh = plugin_layout
@@ -500,7 +493,7 @@ def main():
 
 
 
-# In[324]:
+# In[16]:
 
 
 if __name__ == '__main__':
