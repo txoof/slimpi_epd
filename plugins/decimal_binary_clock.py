@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[16]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./decimal_binary_clock.ipynb')
@@ -13,7 +13,7 @@
 
 
 
-# In[4]:
+# In[2]:
 
 
 from datetime import datetime
@@ -23,7 +23,7 @@ import re
 
 
 
-# In[5]:
+# In[3]:
 
 
 def check_num(func):
@@ -47,7 +47,7 @@ def check_num(func):
 
 
 
-# In[6]:
+# In[4]:
 
 
 @check_num
@@ -59,7 +59,7 @@ def split_place_value(d):
 
 
 
-# In[7]:
+# In[5]:
 
 
 def time_now():
@@ -68,7 +68,7 @@ def time_now():
 
 
 
-# In[8]:
+# In[6]:
 
 
 def split_by_place(d):
@@ -81,7 +81,7 @@ def split_by_place(d):
 
 
 
-# In[9]:
+# In[7]:
 
 
 @check_num
@@ -102,7 +102,7 @@ def dec2bin(d, min_bits=4):
 
 
 
-# In[10]:
+# In[8]:
 
 
 def dot_array(r, border, array, padding):
@@ -123,14 +123,14 @@ def dot_array(r, border, array, padding):
 
 
 
-# In[11]:
+# In[12]:
 
 
-def separator(dim, padding):
+def separator(dim, padding, fill=60):
     dim = [dim[0]+padding, dim[1]+padding]
     top = [padding, padding]
     bottom = dim
-    i = Image.new('1', dim, color=1)
+    i = Image.new('1', (dim[0], int(dim[1]*fill/60)), color=1)
     d = ImageDraw.Draw(i)
     d.rectangle(top+bottom, fill=0)
     
@@ -139,7 +139,7 @@ def separator(dim, padding):
 
 
 
-# In[14]:
+# In[20]:
 
 
 def update(time=None):
@@ -183,7 +183,7 @@ def update(time=None):
     for i in time_array:
         # separator is represented by a negative number
         if i < 0:
-            img_array.append(separator(dim=[r, 4*(r*2)+padding*5], padding=0))
+            img_array.append(separator(dim=[r, 4*(r*2)+padding*5], padding=0, fill=int(minute)))
         # create a dot array for each decimal place
         else:
             img_array.append(dot_array(r=r, border=border, padding=padding, array=dec2bin(i)))
@@ -205,13 +205,5 @@ def update(time=None):
         x_pos = x_pos + j.width
     
     return {'bin_img': img, 'time': return_time, 'mode': None}     
-
-
-
-
-# In[ ]:
-
-
-
 
 
