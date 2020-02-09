@@ -37,6 +37,7 @@ SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper displ
 SlimPi provides a *now playing* display for a selected Logitech Media Player. When the player is paused, an alternative screen is displayed.
 
 <img width="500" src="./docs/SlimPi_playing.png"></img>
+
 Display includes: 
 * Track Title
 * Artist Name
@@ -55,6 +56,7 @@ When the music is paused, the display shows an alternative screen.
 <img width="200" src="./docs/SlimPi_clock.png">
 
 **Binary Clock**
+
 <img width = "200" src="./docs/SlimPi_binary_clock.png">
 
 The refresh rate of HAT compatable waveshare displays is relatively slow (5-20 seconds) and does not support partial refreshes. This results in the display pulsing between an all-white and all-black state several times during each refresh. 
@@ -68,7 +70,7 @@ To limit the visual disturbance of a pulsing screen, the default clock is the Wo
 3. Run the installer: 
    * `install.sh` for a daemon that starts automatically at boot, or see below for running in user space
    * `user_install.sh` to setup the user space configuration files
-4. Edit the appropriate configuation file `/etc/slimpi.cfg` for daemon or `~/.config/com.txoof.slimpi/slimpi.cfg` for user space
+4. Edit the appropriate configuation file: `/etc/slimpi.cfg` for daemon or `~/.config/com.txoof.slimpi/slimpi.cfg` for user space
     * **Required** settings that must be set:
         - `display = waveShareEPDType`
         - example: `display = epd5in83`
@@ -102,7 +104,7 @@ To limit the visual disturbance of a pulsing screen, the default clock is the Wo
 * Raspberry Pi 4 Model B
     * RPI 3 Model A should work as well, but is untested
 * [WaveShare e-Paper display with e-Paper HAT](https://www.waveshare.com/product/oleds-lcds/e-paper.htm)
-    * Any waveshare display should work -- see [Supported WaveShare ePaper Displays](#supported-waveshare-epaper- displays)
+    * Any waveshare display should work -- see [Supported WaveShare ePaper Displays](https://www.waveshare.com/wiki/E-Paper_Driver_HAT#Resources)
 
 ### Optional Hardware
 * [HiFiBerry hat](https://www.hifiberry.com/shop/#boards) (*optional*) 
