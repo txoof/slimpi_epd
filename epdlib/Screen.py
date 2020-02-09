@@ -13,12 +13,92 @@
 
 
 
-# In[4]:
+# In[6]:
 
 
 import logging
 from PIL import Image, ImageDraw, ImageFont
 import time
+from datetime import datetime
+from pathlib import Path
+
+
+
+
+# In[ ]:
+
+
+
+
+
+
+
+# In[2]:
+
+
+class ScreenShot:
+    """capture a rolling set of `n` screenshots into specified directory"""
+    def __init__(self, path='./', n=2):
+        """constructor method 
+        Properties:
+            path (:str:): location to save screenshots - default: './'
+            n (:int:): number of screenshots to keep - default: 2
+            img_array (:obj:list of :obj: `Path`): list of existing files
+            """
+        self.total = n
+        self.path = Path(path).expanduser().resolve()
+        
+    
+    @property
+    def total(self):
+        """total number of screenshots to save
+        Attribute:
+            n (int): integer >= 1
+        Rasises:
+            TypeError - n must be integer
+            ValueError - n must be positive"""
+        return self._total
+    
+    @total.setter
+    def total(self, n):
+        if not isinstance(n, int):
+            raise TypeError(f'"{n}" must be a positive integer')
+        if n < 1:
+            raise ValueError(f'`n` must be >= 1')
+    
+        self._total = n
+        self.img_array = []
+
+    def time(self): 
+        """returns time string in the format YY-MM-DD_HHMM.SS - 70-12-31_1359.03"""
+        return datetime.now().strftime("%y-%m-%d_%H%M.%S")
+        
+    def delete(self, img):
+        """deletes `img`
+        Attributes:
+            img (:obj: `Path`): unilinks/deletes the path"""
+        logging.debug(f'removing image: {img}')
+        try:
+            img.unlink()
+        except Exception as e:
+            logging.error(e)
+        pass
+        
+    def save(self, img):
+        """saves the most recent `n` images, deleting n+1 older image
+        
+        Attributes:
+            img (:obj: PIL.Image.Image): image to save
+        Raises:
+            TypeError - img must be of type Image.Image"""
+        if not isinstance(img, Image.Image):
+            raise TypeError(f'`img` must be of type Image.Image')
+        filename = self.path / '.'.join([self.time(), 'png'])
+        logging.debug(f'writing image: {filename}')
+        img.save(filename)
+        self.img_array.insert(0, filename)
+        if len(self.img_array) > self.total:
+            self.delete(self.img_array.pop())
 
 
 
