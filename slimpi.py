@@ -13,7 +13,7 @@
 
 
 
-# In[2]:
+# In[3]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -108,7 +108,7 @@ def scan_servers():
 
 
 
-# In[5]:
+# In[19]:
 
 
 def main():
@@ -199,7 +199,12 @@ def main():
     # display the version and exit
     options.add_argument('-V', '--version', action='store_true', required=False,
                          dest='version', default=False, 
-                         help='display version nubmer and exit')    
+                         help='display version nubmer and exit')
+    
+    #output the current image displayed to a temporary directory - debugging, screenshoting
+    options.add_argument('-t', '--screenshot', metavar = 'INT', type=int, default=None,
+                         required=False, dest='main__screenshot', ignore_none=True,
+                         help='output the current screen image into the temporary folder for debugging')
 
     
     # parse the command line options
@@ -238,7 +243,7 @@ def main():
     # merge the configuration file(s) values with command line options
     # command line options override config files
     config = configuration.merge_dict(config_file.config_dict, options.nested_opts_dict)
-    
+        
     # kludge to work around f-strings with quotes in Jupyter
     ll = config['main']['log_level']
     logging.root.setLevel(ll)
@@ -329,6 +334,9 @@ def main():
     #### EXECUTION ####
     logging.debug(f'starting with configuration: {config}')
     
+    
+    
+    
     ## EXEC VARIABLES ##
     # signal handler for catching and handling HUP/KILL signals
     sigHandler = signalhandler.SignalHandler()
@@ -350,6 +358,14 @@ def main():
     nowplaying_id = None
     nowplaying_mode = "Pause"
     artwork_cache = cacheart.CacheArt(app_long_name)
+    
+    if int(config['main']['screenshot']) > 0:
+        store = config['main']['screenshot'] # f string kludge
+        logging.debug('creating screenshot object - storing {store} images in {artwork_cache.cache_path}')
+        screenshot = screen.ScreenShot(path=artwork_cache.cache_path, n=config['main']['screenshot'])
+    else:
+        logging.debug('not collecting screenshots')
+        screenshot = False
     
     # check for the word `true` - config file is all stored as type `str`
     if config['main']['splash_screen'].lower() == 'true':
@@ -474,9 +490,12 @@ def main():
                 logging.debug('refresh display')
                 screen.initEPD()
                 screen.elements = refresh.blocks.values()
-                screen.concat()
+                image = screen.concat()
                 screen.writeEPD()
-                # set response to 
+                
+                if screenshot:
+                    screenshot.save(image)
+                
                 refresh = False
             
             # sleep for half a second every cycle
@@ -493,11 +512,12 @@ def main():
 
 
 
-# In[16]:
+# In[ ]:
 
 
 if __name__ == '__main__':
     o = main()
+    print(o)
 
 
 
