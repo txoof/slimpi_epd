@@ -161,7 +161,7 @@ Squeezelite is a light-weight headless Squeezebox LMS player that works well wit
     * Change the hostname:
         1. `$ raspi-config` Network Options > Hostname
         2. Edit `/etc/default/squeezelite` and edit `SL_NAME=YOUR_NAME_HERE`
-    * Additional squeezelite arguments such as resampling rates can be passed here as well - for a complete list see `$man squeezelite`
+    * Additional squeezelite arguments such as resampling rates can be passed here as well - for a complete list see `man squeezelite`
 
 ## Software Configuration
 ### Configuration Files
