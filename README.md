@@ -1,3 +1,4 @@
+
 # SlimPi 
 ## ePaper based Logitech Media Player Display
 <img width="300" src="./docs/SlimPi_splash.png">
@@ -5,6 +6,35 @@
 SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper display](https://www.waveshare.com/product/oleds-lcds/e-paper.htm) and a Raspberry Pi.
 
 ***Include an image of the finished project here***
+
+
+- [SlimPi](#slimpi)
+  * [ePaper based Logitech Media Player Display](#epaper-based-logitech-media-player-display)
+  * [Features](#features)
+  * [Quick Install](#quick-install)
+  * [Requirements](#requirements)
+    + [Required Hardware](#required-hardware)
+    + [Optional Hardware](#optional-hardware)
+    + [Required Software](#required-software)
+    + [Opational Software](#opational-software)
+  * [System Setup](#system-setup)
+    + [Configure HiFiBerry *(optional)*](#configure-hifiberry---optional--)
+    + [Install and Configure Squeeze Lite *(optional)*](#install-and-configure-squeeze-lite---optional--)
+  * [Software Configuration](#software-configuration)
+    + [Configuration Files](#configuration-files)
+    + [Configure as a System Process](#configure-as-a-system-process)
+    + [Configure HiFiBerry *(optional)*](#configure-hifiberry---optional---1)
+    + [Install and Configure Squeeze Lite *(optional)*](#install-and-configure-squeeze-lite---optional---1)
+  * [Setup Python Environment for Building](#setup-python-environment-for-building)
+    + [Quick and Dirty Build](#quick-and-dirty-build)
+    + [Build Requirements](#build-requirements)
+    + [Building SlimPi](#building-slimpi)
+  * [Screen Layouts](#screen-layouts)
+  * [Plugin Modules](#plugin-modules)
+    + [Additional Plugins](#additional-plugins)
+      - [Example Module and Layout](#example-module-and-layout)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 ## Features
 
