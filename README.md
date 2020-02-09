@@ -1,4 +1,5 @@
-# SlimPi - ePaper based Logitech Media Player Display
+# SlimPi 
+## ePaper based Logitech Media Player Display
 <img width="300" src="./docs/SlimPi_splash.png">
 
 SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper display](https://www.waveshare.com/product/oleds-lcds/e-paper.htm) and a Raspberry Pi.
