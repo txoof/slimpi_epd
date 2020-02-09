@@ -6,12 +6,11 @@ SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper displ
 ***Include an image of the finished project here***
 
 ## Features
+
 SlimPi provides a *now playing* display for a selected Logitech Media Player. When the player is paused, an alternative screen is displayed.
 
-The default configuration shows the following information:
-
-<img width="300" src="./docs/SlimPi_playing.png"></img>
-
+<img width="500" src="./docs/SlimPi_playing.png"></img>
+Display includes: 
 * Track Title
 * Artist Name
 * Album Name
@@ -24,14 +23,16 @@ When the music is paused, the display shows an alternative screen.
 
 <img width="200" src="./docs/SlimPi_wordclock.png">
 
-
 **Clock**
 
 <img width="200" src="./docs/SlimPi_clock.png">
 
+**Binary Clock**
+<img width = "200" src="./docs/SlimPi_binary_clock.png">
+
 The refresh rate of HAT compatable waveshare displays is relatively slow (5-20 seconds) and does not support partial refreshes. This results in the display pulsing between an all-white and all-black state several times during each refresh. 
 
-To limit the visual disturbance of a pulsing screen, the default refresh for the Word Clock is 295 seconds (just under 5 minutes). This can be adjusted in the configuration file.
+To limit the visual disturbance of a pulsing screen, the default clock is the Word Clock with a refresh rate of around 5 minutes.
 
 
 ## Quick Install
@@ -39,7 +40,7 @@ To limit the visual disturbance of a pulsing screen, the default refresh for the
 2. Decompress the tarball: `tar xvzf slimpi_latest.tgz`
 3. Run the installer: 
    * `install.sh` for a daemon that starts automatically at boot, or see below for running in user space
-   * `user_install.sh` to setup the configuration files
+   * `user_install.sh` to setup the user space configuration files
 4. Edit the appropriate configuation file `/etc/slimpi.cfg` for daemon or `~/.config/com.txoof.slimpi/slimpi.cfg` for user space
     * Required settings that must be set:
         - `display = waveShareEPDType`
@@ -94,10 +95,10 @@ To limit the visual disturbance of a pulsing screen, the default refresh for the
 
 ### Opational Software
 * [squeezelite](http://wiki.slimdevices.com/index.php/Squeezelite) *(optional)*
-    * Squeezelite, in combination with a HiFiBerry, allows the Pi to be usded as LMS client player
+    * Squeezelite, in combination with a HiFiBerry, allows the Pi to be usded as LMS display **and** client player
 
 ## System Setup
-SlimPi requries that SPI is enabled on the Raspberry Pi and the user running SlimPi is a member of the GPIO and SPI groups
+SlimPi and the WaveShare display requries that SPI is enabled on the Raspberry Pi and the user running SlimPi is a member of the GPIO and SPI groups
 * Enable SPI
     * `sudo raspi-config` Interfacing Options > SPI > Would you Like the SPI interface to be enabled > Yes
 * sermod -a -G spi,gpio <current user>
@@ -378,13 +379,13 @@ Plugins can be changed by specify the name of the plugin in `slimpi.cfg` under t
 
 
 ### Additional Plugins
-Additional plugins can be added to the Pluins folder. Plugins must include a function `get_time()` which requires no parameters. `get_time()` must return a dictionary that may include strings, paths to image files or PIL.Image objects.
+Additional plugins can be added to the Pluins folder. Plugins must include a function `update()` which requires no parameters. `update()` must return a dictionary that may include strings, paths to image files or PIL.Image objects.
 
-Please add modules to the project with a pull request on Git Hub.
+Additional modules pulls on github are encouraged and welcome!
 
-A layout that uses the keys returned by `get_time()` must be added to the `layouts.py` (see layouts section above).
+A layout that uses the keys returned by the function `update()` must be added to the `layouts.py` (see layouts section above).
 
-Plugins that use any python modules other than those listed in `Pipfile`. Alternatively, use any modules desired and then rebuild SlimPi. 
+SlimPi must be rebuilt if plugins use any python modules other than those listed in `Pipfile`. 
 
 **Note**: PyInstlaler will likely fail to find any additional modules specified in a plugin; these will need to be specified using the `hiddenimports=[]` setting in `slimpi.spec` when building.
 
@@ -396,19 +397,19 @@ def get_weather_image()
     # fetch a weather image and cache locally
     
     ...
-    return '/path/to/image`
+    return "/path/to/image"
 
 def get_temperature()
     ...
-    # fetch temperature
+    # fetch temperature and store as temperature_as_string
     ...
-    return temperature
+    return temperature_as_string
 
-def get_time()
+def update()
     image = get_weather_image()
     temperature = get_temperature()
     return {'weather_image': image,
-            'weather_temp: temperature}
+            'weather_temp: temperature_as_string}
 ```
 
 ```
