@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[11]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[3]:
+# In[ ]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -64,7 +64,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[3]:
+# In[5]:
 
 
 def do_exit(status=0, message=None):
@@ -81,7 +81,7 @@ def do_exit(status=0, message=None):
 
 
 
-# In[4]:
+# In[6]:
 
 
 def scan_servers():
@@ -108,7 +108,7 @@ def scan_servers():
 
 
 
-# In[19]:
+# In[9]:
 
 
 def main():
@@ -360,9 +360,9 @@ def main():
     artwork_cache = cacheart.CacheArt(app_long_name)
     
     if int(config['main']['screenshot']) > 0:
-        store = config['main']['screenshot'] # f string kludge
-        logging.debug('creating screenshot object - storing {store} images in {artwork_cache.cache_path}')
-        screenshot = screen.ScreenShot(path=artwork_cache.cache_path, n=config['main']['screenshot'])
+        store = int(config['main']['screenshot']) # f string kludge
+        logging.debug(f'creating screenshot object - storing {store} images in {artwork_cache.cache_path}')
+        screenshot = epdlib.ScreenShot(path=artwork_cache.cache_path, n=store)
     else:
         logging.debug('not collecting screenshots')
         screenshot = False
@@ -506,18 +506,18 @@ def main():
         
         screen.initEPD()
         screen.clearEPD()
+        artwork_cache.clear_cache()
         
     return config
 
 
 
 
-# In[ ]:
+# In[16]:
 
 
 if __name__ == '__main__':
     o = main()
-    print(o)
 
 
 
