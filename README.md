@@ -136,7 +136,7 @@ SlimPi and the WaveShare display requries that SPI is enabled on the Raspberry P
 ### Configure HiFiBerry *(optional)*
 A HiFiBerry DAC+ or similar can be used for audio output. HiFiBerry has a [great guide for configuring Linux 4 kernels](https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/)
 
-####Quick and Dirty Configuration
+#### Quick and Dirty Configuration
 1. Disable onboard sound in `/boot/config.txt` 
     * `#dtparam=audio=on`
 2. Load deviced tree overlay for HiFiBerry in `/boot/config.txt`
