@@ -382,9 +382,10 @@ decimal_binary_clock = {
              'width': 1,
              'height': 8/9,
              'abs_coordinates': (0, 0),
-             'hcenter': False,
-             'vcenter': False,
-             'rand': True,
+             'hcenter': True,
+             'vcenter': True,
+             'rand': False,
+             'inverse': False,
              'relative': False
             },
     'time':

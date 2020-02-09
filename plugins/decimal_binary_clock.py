@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[29]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./decimal_binary_clock.ipynb')
@@ -34,9 +34,7 @@ def check_num(func):
             d(int): integer to check
         
         Raises:
-            ValueError - values that are negative, not integer or greater than 99"""
-#         if d > 99:
-#             raise ValueError (f'{d} is > 99')
+            ValueError - values that are negative, not integer"""
         if not isinstance(d, int):
             raise ValueError (f'{d} is not an integer')
         if d < 0:
@@ -139,7 +137,7 @@ def separator(dim, padding, fill=60):
 
 
 
-# In[20]:
+# In[47]:
 
 
 def update(time=None):
@@ -183,7 +181,7 @@ def update(time=None):
     for i in time_array:
         # separator is represented by a negative number
         if i < 0:
-            img_array.append(separator(dim=[r, 4*(r*2)+padding*5], padding=0, fill=int(minute)))
+            img_array.append(separator(dim=[int(r/2), 4*(r*2)+padding*5], padding=0))
         # create a dot array for each decimal place
         else:
             img_array.append(dot_array(r=r, border=border, padding=padding, array=dec2bin(i)))
