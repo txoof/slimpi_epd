@@ -42,10 +42,10 @@ To limit the visual disturbance of a pulsing screen, the default clock is the Wo
    * `install.sh` for a daemon that starts automatically at boot, or see below for running in user space
    * `user_install.sh` to setup the user space configuration files
 4. Edit the appropriate configuation file `/etc/slimpi.cfg` for daemon or `~/.config/com.txoof.slimpi/slimpi.cfg` for user space
-    * Required settings that must be set:
+    * **Required** settings that must be set:
         - `display = waveShareEPDType`
         - example: `display = epd5in83`
-            * The display type should match the model number of your e-Paper display
+            * The display type should match the model number of your HAT compatable e-Paper display
         - `player_name = "Name Of LMS Player on Local Network"` 
         - example: `player_name = slimpi`
             * The player name can be found by running `slimpi --list-servers`:
