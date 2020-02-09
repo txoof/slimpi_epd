@@ -104,7 +104,8 @@ To limit the visual disturbance of a pulsing screen, the default clock is the Wo
 * Raspberry Pi 4 Model B
     * RPI 3 Model A should work as well, but is untested
 * [WaveShare e-Paper display with e-Paper HAT](https://www.waveshare.com/product/oleds-lcds/e-paper.htm)
-    * Any waveshare display should work -- see [Supported WaveShare ePaper Displays](https://www.waveshare.com/wiki/E-Paper_Driver_HAT#Resources)
+    * Any waveshare display should work  
+    * [Supported WaveShare ePaper Displays](https://www.waveshare.com/wiki/E-Paper_Driver_HAT#Resources)
 
 ### Optional Hardware
 * [HiFiBerry hat](https://www.hifiberry.com/shop/#boards) (*optional*) 
@@ -130,7 +131,7 @@ To limit the visual disturbance of a pulsing screen, the default clock is the Wo
 SlimPi and the WaveShare display requries that SPI is enabled on the Raspberry Pi and the user running SlimPi is a member of the GPIO and SPI groups
 * Enable SPI
     * `sudo raspi-config` Interfacing Options > SPI > Would you Like the SPI interface to be enabled > Yes
-* sermod -a -G spi,gpio <current user>
+* `usermod -a -G spi,gpio <current user>`
 
 ### Configure HiFiBerry *(optional)*
 A HiFiBerry DAC+ or similar can be used for audio output. HiFiBerry has a [great guide for configuring Linux 4 kernels](https://www.hifiberry.com/docs/software/configuring-linux-3-18-x/)
