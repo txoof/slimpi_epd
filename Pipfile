@@ -8,12 +8,12 @@ pillow = "*"
 ipykernel = "*"
 docrep = "*"
 cachepath = "*"
-lmsquery-fork = "*"
 ratelimiter = "*"
 dynaconf = "*"
 spidev = "*"
 pyinstaller = "*"
 "RPi.GPIO" = "*"
+requests = "*"
 
 [dev-packages]
 

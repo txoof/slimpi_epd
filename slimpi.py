@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[11]:
+# In[18]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -22,7 +22,7 @@
 
 
 
-# In[2]:
+# In[19]:
 
 
 import logging
@@ -64,7 +64,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[5]:
+# In[20]:
 
 
 def do_exit(status=0, message=None):
@@ -81,7 +81,7 @@ def do_exit(status=0, message=None):
 
 
 
-# In[6]:
+# In[21]:
 
 
 def scan_servers():
@@ -108,7 +108,7 @@ def scan_servers():
 
 
 
-# In[9]:
+# In[22]:
 
 
 def main():
@@ -415,6 +415,7 @@ def main():
                         logging.info('lms query connection created')
 
                     except TypeError as e:
+                        logging.critical(f'TypeError: {e}')
                         logging.critical(configError_fmt.format('lms_server', config_file_list))
                         error_layout.update_contents({'message': configError_fmt.format('lms_server', config_file_list)})
                         refresh = error_layout
@@ -489,9 +490,10 @@ def main():
             if refresh and isinstance(refresh, epdlib.Layout):
                 logging.debug('refresh display')
                 screen.initEPD()
-                screen.elements = refresh.blocks.values()
-                image = screen.concat()
-                screen.writeEPD()
+                image = refresh.concat()
+#                 screen.elements = refresh.blocks.values()
+#                 image = screen.concat()
+                screen.writeEPD(image)
                 
                 if screenshot:
                     screenshot.save(image)
@@ -513,11 +515,27 @@ def main():
 
 
 
-# In[16]:
+# In[23]:
 
 
 if __name__ == '__main__':
     o = main()
+
+
+
+
+# In[16]:
+
+
+print(o)
+
+
+
+
+# In[17]:
+
+
+l = lmsquery.LMSQuery(host='', port='9000', player_id='', player_name='slimpi')
 
 
 
