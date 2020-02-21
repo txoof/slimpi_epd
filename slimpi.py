@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[18]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[ ]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[19]:
+# In[1]:
 
 
 import logging
@@ -64,7 +64,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[20]:
+# In[4]:
 
 
 def do_exit(status=0, message=None):
@@ -81,7 +81,7 @@ def do_exit(status=0, message=None):
 
 
 
-# In[21]:
+# In[5]:
 
 
 def scan_servers():
@@ -108,7 +108,7 @@ def scan_servers():
 
 
 
-# In[22]:
+# In[6]:
 
 
 def main():
@@ -395,6 +395,7 @@ def main():
                     except requests.exceptions.ConnectionError as e:
                         logging.warning(f'server could not find active player_id: {lms.player_id}')
                         logging.warning(f'is the specified player active?')
+                        logging.warning(f'error: {e}')
                         error_layout.update_contents({'message': f'{config["lms_server"]["player_name"]} does not appear to be available. Is it on?', 'time': 'NO PLAYER'})
                         refresh = error_layout
                         response = None
@@ -411,6 +412,7 @@ def main():
                         logging.debug('setting up lms query connection')
                         lms = lmsquery.LMSQuery(**config['lms_server'])
                         if not lms.player_id:
+                            
                             raise ValueError(keyError_fmt.format('lms_server', 'player_name'))
                         logging.info('lms query connection created')
 
@@ -419,6 +421,7 @@ def main():
                         logging.critical(configError_fmt.format('lms_server', config_file_list))
                         error_layout.update_contents({'message': configError_fmt.format('lms_server', config_file_list)})
                         refresh = error_layout
+                        resp_mode = 'Error'
 
                     except ValueError as e:
                         myE = keyError_fmt.format('lms_server', 'player_name')
@@ -426,6 +429,7 @@ def main():
                         myE = 'LMS QUERY ERROR: \n' + myE
                         error_layout.update_contents({'message': myE, 'time': 'LMS ERROR'})
                         refresh = error_layout
+                        resp_mode = 'Error'
                         
                     except OSError as e:
                         myE = 'could not find LMS servers due to network error '
@@ -434,6 +438,7 @@ def main():
                         myE = 'LMS QUERY ERROR: ' + myE + str(e.args[0])
                         error_layout.update_contents({'message': myE, 'time': 'LMS ERROR'})
                         refresh = error_layout
+                        resp_mode = 'Error'
                         
 
             if response:
@@ -499,7 +504,8 @@ def main():
                     screenshot.save(image)
                 
                 refresh = False
-            
+            else:
+                logging.warning(f'refresh called, but type: {type(refresh)}; skipping')
             # sleep for half a second every cycle
             sleep(0.5)
             
@@ -515,7 +521,7 @@ def main():
 
 
 
-# In[23]:
+# In[7]:
 
 
 if __name__ == '__main__':
@@ -524,18 +530,18 @@ if __name__ == '__main__':
 
 
 
-# In[16]:
+# In[ ]:
 
 
-print(o)
+dir(lmsquery)
 
 
 
 
-# In[17]:
+# In[ ]:
 
 
-l = lmsquery.LMSQuery(host='', port='9000', player_id='', player_name='slimpi')
+import lmsquery
 
 
 

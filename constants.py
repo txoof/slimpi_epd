@@ -50,5 +50,10 @@ plugins = 'plugins'
 # defualt clock module to use if no other is specified
 clock = 'clock'
 
+
+##### Runtime Constants #####
+max_startup_loops = 10
+
+
 from pathlib import Path
 absPath = Path(__file__).absolute().parent
