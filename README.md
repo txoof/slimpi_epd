@@ -252,11 +252,6 @@ To temporarily enable the LEDs (until next reboot) use:
 ```
 $ sudo systemctl stop led_ctl.service
 ```
-
-To permenantly re-enable the LEDs use:
-```
-$ sudo systemctl disable led_ctl.service 
-```
 or 
 ```
 # enable the LEDS
@@ -265,6 +260,11 @@ $ /usr/bin/led_ctl on
 $ /usr/bin/led_ctl off
 ```
 
+
+To permenantly re-enable the LEDs use:
+```
+$ sudo systemctl disable led_ctl.service 
+```
 To permenantly remove the service and the scripts:
 ```
 $ sudo systemctl disable led_ctl.service
