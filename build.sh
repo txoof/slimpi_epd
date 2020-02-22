@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "attempting to configure build environment and build SlimPi"
+
+
 reqPackages=("libtiff5-dev" "libopenjp*-dev")
 
 for i in "${reqPackages[@]}"
