@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[1]:
+# In[10]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[2]:
+# In[11]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[1]:
+# In[2]:
 
 
 import logging
@@ -64,7 +64,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[4]:
+# In[3]:
 
 
 def do_exit(status=0, message=None):
@@ -81,13 +81,13 @@ def do_exit(status=0, message=None):
 
 
 
-# In[5]:
+# In[4]:
 
 
 def scan_servers():
     """scan for and list all available LMS Servers and players"""
     print(f'Scanning for available LMS Server and players')
-    servers = lmsquery.scanLMS()
+    servers = lmsquery.LMSQuery.scanLMS()
     if not servers:
         print('Error: no LMS servers were found on the network. Is there one running?')
         do_exit(1)
@@ -104,6 +104,15 @@ def scan_servers():
             print('\n')
         except KeyError as e:
             pass 
+
+
+
+
+# In[5]:
+
+
+logger = logging.getLogger(__name__)
+logger.root.setLevel('DEBUG')
 
 
 
@@ -144,16 +153,14 @@ def main():
     # file containing layouts
     layouts_file = constants.layouts
     
-    default_clock = constants.clock
+#     default_clock = constants.clock
+    max_startup_loops = constants.max_startup_loops
     
-    
-    # FORMATTERS
-    keyError_fmt = 'KeyError: configuration file section [{}] bad/missing value: "{}"'
-    configError_fmt = 'configuration file error: see section [{}] in config file: {}'
-    moduleError_fmt = 'failed to load module "{}" {}'
-    
-    
-    #### CONFIGURATION ####
+    ## FORMATTERS
+    # configKeyError_fmt.format(`section name`, `key name`)
+    configKeyError_fmt = 'Configuration KeyError: section [{}], key {}'
+    # moduleNotFoundError_fmt.format(`module name`, `error message`)
+    moduleNotFoundError_fmt = 'could not load module: {} - error: {}'
     
     ## LOGGING INIT
     logging.config.fileConfig(logging_cfg)
@@ -247,42 +254,42 @@ def main():
     # kludge to work around f-strings with quotes in Jupyter
     ll = config['main']['log_level']
     logging.root.setLevel(ll)
-    logging.debug(f'log level set: {ll}')    
+    logging.debug(f'log level set: {ll}')
     
     #### HARDWARE INIT ####
     ## EPD INIT ##
     try:
+        # create the name of the module
         epd_module = '.'.join([waveshare, config['layouts']['display']])
+        # load the epd module
+        logging.debug(f'creating epd display object: {epd_module}')
         epd = importlib.import_module(epd_module)
-#         epd = importlib.import_module('.'.join([waveshare, 'foo']))
+        
     except KeyError as e:
-        myE = keyError_fmt.format('layouts', 'display')
+        myE = configKeyError_fmt.format('layouts', 'display')
         logging.fatal(myE)
-#         do_exit(1, message=f'Bad or missing "display" type in section [layouts] in {config_file_list}')
         do_exit(1, message=myE)
-
     except ModuleNotFoundError as e:
-        myE = configError_fmt.format('layouts', config_file_list)
+        myE = configKeyError_fmt.format('layouts', 'display')
         logging.fatal(myE)
-#         do_exit(1, message=f'Bad or missing "display" in section [layouts] in {config_file_list}')
-        do_exit(1, message=moduleError_fmt.format(epd_module, myE))
+        myE = moduleNotFoundError_fmt.format(epd_module, e)
+        logging.fatal(myE)
+        do_exit(1, message=myE)
         
     ## SCREEN INIT ##
     screen = epdlib.Screen()
     try:
         screen.epd = epd
-        
     except PermissionError as e:
         logging.critical(f'Error initializing EPD interface: {e}')
         logging.critical('The user executing this program does not have access to the SPI devices.')
         do_exit(0, 'This user does not have access to the SPI group\nThis can typically be resolved by running:\n$ sudo groupadd <username> spi')
-    
+        
     screen.initEPD()
-      
-    
+
+        
+
     ## LAYOUT INIT ##
-    
-    # import layouts
     logging.debug(f'importing layouts from file: {layouts_file}')
     try:
         layouts = importlib.import_module(layouts_file)
@@ -291,51 +298,42 @@ def main():
         splash_layout_format = getattr(layouts, config['layouts']['splash'])
         error_layout_format = getattr(layouts, config['layouts']['error'])
     except ModuleNotFoundError as e: 
-        myE = f'- could not load layouts from module {config_file}'
-        logging.fatal(moduleError_fmt.format('layouts', myE))
-        do_exit(1, message=moduleError_fmt.format('layouts', myE))
-    
-    except (KeyError, AttributeError) as e:
-        logging.fatal(keyError_fmt.format('layouts', e.args[0]))
-        logging.fatal(configError_fmt.format('layotus', config_file_list))
-        do_exit(1, message=keyError_fmt.format('layouts', e.args[0]))
-    
-    
+        myE = moduleNotFoundError_fmt.format(layouts_file, e)
+        logging.fatal(myE)
+        do_exit(1, myE)
+        
+    except KeyError as e:
+        myE = configKeyError.format('layouts', e.args[0])
+        logging.fatal(myE)
+        do_exit(1, myE)
+        
     playing_layout = epdlib.Layout(layout=playing_layout_format, resolution=screen.resolution)
     plugin_layout = epdlib.Layout(layout=plugin_layout_format, resolution=screen.resolution)
     error_layout = epdlib.Layout(layout=error_layout_format, resolution=screen.resolution)
-        
     
     ## PLUGIN INIT ##
     try:
         plugin = importlib.import_module('.'.join([plugins, config['modules']['plugin']]))
     except KeyError as e:
-        logging.error(keyError_fmt.format('modules', config['modules']['plugin']))
+        myE = configKeyError_fmt.format('modules', 'plugin')
+        logging.fatal(myE)
+        do_exit(1, myE)
     except ModuleNotFoundError as e:
-        logging.error(moduleError_fmt.format(config['modules']['plugin'], e.args[0]))
-        logging.error('falling back to default')
-        try:
-            plugin = importlib.import_module('.'.join([plugins, default_clock]))
-            plugin_layout_format = getattr(layouts, default_clock)
-        except ModuleNotFoundError as e:
-            myE = moduleError_fmt.format(default_clock, e.args[0])
-            logging.fatal(myE)
-            do_exit(1, myE)
+        myE = moduleNotFoundError_fmt.format(plugin, e)
+        logging.fatal(myE)
+        do_exit(1, myE)
     
     try:
         plugin_update = int(config['modules']['plugin_update'])
     except KeyError as e:
-        myE = keyError_fmt.format('modules', 'plugin_update')
+        myE = configKeyError_fmt.format('modules', 'plugin_update')
         logging.error(myE)
-        logging.error('setting plugin update to 60 seconds')
-        pluggin_update = 60
+        do_exit(1, myE)
+        
     
     
     #### EXECUTION ####
-    logging.debug(f'starting with configuration: {config}')
-    
-    
-    
+    logging.info('starting execution loop')
     
     ## EXEC VARIABLES ##
     # signal handler for catching and handling HUP/KILL signals
@@ -350,198 +348,176 @@ def main():
     # logitech media server interface object
     lms = None
     
-    # refresh when true
+    # refresh placeholder
     refresh = False
-    refresh_delay = 60
+    
+    # startup loop
+    startup_counter = 0
+    while not sigHandler.kill_now and not lms:
+        if startup_counter == 0 and config['main']['splash_screen'].lower() == 'true':
+            splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=screen.resolution)
+            splash_layout.update_contents({'app_name': app_name,
+                                       'version': f'version: {version}',
+                                       'url': url})
+        
+            refresh = splash_layout
+
+        # write to the display
+        if refresh and isinstance(refresh, epdlib.Layout):
+            logging.debug('refresh display')
+            screen.initEPD()
+            image = refresh.concat()
+#                 screen.elements = refresh.blocks.values()
+#                 image = screen.concat()
+            screen.writeEPD(image)        
+        
+        logging.info(f'{max_startup_loops - startup_counter} start up attempts reamain')
+        logging.info('setting up LMS query connection')
+        try:
+            lms = lmsquery.LMSQuery(**config["lms_server"])
+        except Exception as e:
+            logging.error(f'failed to setup connection: {e}')
+            error_layout.update_contents({'message': f'Could not find any LMS servers on network. Will try {max_startup_loops-startup_counter} more times', 'time': 'NO SERVER'})            
+            refresh = error_layout
+            
+        if startup_counter >= max_startup_loops:
+            sigHandler.kill_now = True
+            lms = None
+        
+        startup_counter += 1
+    if not lms:
+        do_exit(1, 'startup failed')
+        
+        
+    logging.info('startup complete')
     
     # vars for managing track ID, mode, album art
     nowplaying_id = None
     nowplaying_mode = "Pause"
     artwork_cache = cacheart.CacheArt(app_long_name)
+
     
-    if int(config['main']['screenshot']) > 0:
-        store = int(config['main']['screenshot']) # f string kludge
-        logging.debug(f'creating screenshot object - storing {store} images in {artwork_cache.cache_path}')
-        screenshot = epdlib.ScreenShot(path=artwork_cache.cache_path, n=store)
+    try:
+        screenshot_max = int(config['main']['screenshot'])
+    except KeyError as e:
+        myE = configKeyError_fmt.format('main', 'screenshot')
+        logging.error(myE)
+        logging.error('saving 0 screenshots')
+        screenshot_max = 0
+
+    if screenshot_max > 0:
+        screenshot_max
+        logging.info(f'creating screenshot object - storing {screenshot_max} images in {artwork_cache.cache_path}')
+        screenshot = epdlib.ScreenShot(path=artwork_cache.cache_path, n=screenshot_max)
     else:
         logging.debug('not collecting screenshots')
         screenshot = False
     
-    # check for the word `true` - config file is all stored as type `str`
-    if config['main']['splash_screen'].lower() == 'true':
-        splash_layout = epdlib.Layout(layout=splash_layout_format, resolution=screen.resolution)
-        splash_layout.update_contents({'app_name': app_name,
-                                       'version': f'version: {version}',
-                                       'url': url})
-        refresh = splash_layout
-#         screen.elements = splash_layout.blocks.values()
-#         screen.concat()
-#         screen.writeEPD()
-    else:
-        pass
-        
     
-    try:
-        while not sigHandler.kill_now:
-            response = None
+
+    while not sigHandler.kill_now:
+        response = None
         
-            # check of LMS query object is configured
-            if lms:
-                with lmsQuery_ratelimit:
-                    try:
-                        myE = f'query lms server for status of player {config["lms_server"]["player_name"]}: {lms.player_id}'
-                        logging.debug(myE)
-                        response = lms.now_playing()
-                    except requests.exceptions.ConnectionError as e:
-                        logging.warning(f'server could not find active player_id: {lms.player_id}')
-                        logging.warning(f'is the specified player active?')
-                        logging.warning(f'error: {e}')
-                        error_layout.update_contents({'message': f'{config["lms_server"]["player_name"]} does not appear to be available. Is it on?', 'time': 'NO PLAYER'})
-                        refresh = error_layout
-                        response = None
-                        
-                    except KeyError as e:
-                        myE = f'No playlist is active on {config["lms_server"]["player_name"]}'
-                        logging.info(myE)
-                        response =  {'title': 'No music is queued', 'id': 'NONE', 'mode': 'No Playlist'}
-                        nowplaying_mode = response['mode']                 
-    
-            else: # try to create an lms query object
-                with lmsDelay_ratelimit:
-                    try:
-                        logging.debug('setting up lms query connection')
-                        lms = lmsquery.LMSQuery(**config['lms_server'])
-                        if not lms.player_id:
-                            
-                            raise ValueError(keyError_fmt.format('lms_server', 'player_name'))
-                        logging.info('lms query connection created')
-
-                    except TypeError as e:
-                        logging.critical(f'TypeError: {e}')
-                        logging.critical(configError_fmt.format('lms_server', config_file_list))
-                        error_layout.update_contents({'message': configError_fmt.format('lms_server', config_file_list)})
-                        refresh = error_layout
-                        resp_mode = 'Error'
-
-                    except ValueError as e:
-                        myE = keyError_fmt.format('lms_server', 'player_name')
-                        logging.critical(myE)
-                        myE = 'LMS QUERY ERROR: \n' + myE
-                        error_layout.update_contents({'message': myE, 'time': 'LMS ERROR'})
-                        refresh = error_layout
-                        resp_mode = 'Error'
-                        
-                    except OSError as e:
-                        myE = 'could not find LMS servers due to network error '
-                        logging.warning(myE)
-                        logging.warning('delaying start of LMS query connection')
-                        myE = 'LMS QUERY ERROR: ' + myE + str(e.args[0])
-                        error_layout.update_contents({'message': myE, 'time': 'LMS ERROR'})
-                        refresh = error_layout
-                        resp_mode = 'Error'
-                        
-
-            if response:
+        if not lms:
+            myE = 'No LMS query object is available. Exiting.'
+            logging.fatal(myE)
+            do_exit(1, myE)
+            
+        with lmsQuery_ratelimit:
+            try:
+                logging.debug(f'query lms server for status of player {config["lms_server"]["player_name"]}: {lms.player_id}')
+                response = lms.now_playing()
+            except requests.exceptions.ConnectionError as e:
+                logging.warning(f'server could not find active player_id: {lms.player_id}')
+                logging.warning(f'is the specified player active?')
+                logging.warning(f'error: {e}')
+                error_layout.update_contents({'message': f'{config["lms_server"]["player_name"]} does not appear to be available. Is it on?', 'time': 'NO PLAYER'})
+                refresh = error_layout
+                response = None 
+                
+                
+        if response:
+            try:
+                resp_id = response['id']
+                resp_mode = response['mode']
+                time = response['time']
+            except KeyError as e:
+                logging.warning(f'bad or incomplete response from server: {e}')
+                resp_id = None
+                resp_mode = 'QUERY ERROR'
+                time = 0.001
+        
+            # if the track or now playing status have changed, prepare an update
+            if resp_id != nowplaying_id or resp_mode != nowplaying_mode:
+                logging.info('track/mode change detected')
+                nowplaying_id = resp_id
+                nowplaying_mode = resp_mode
+                
+                # fetch the artwork here                    
                 try:
-                    resp_id = response['id']
-                    resp_mode = response['mode']
-                    time = response['time']
+                    logging.debug('attempting to download artwork')
+                    artwork = artwork_cache.cache_artwork(response['artwork_url'], response['album_id'])
                 except KeyError as e:
-                    logging.error('bad response from server: e')
-                    resp_id = None
-                    resp_mode = 'QUERY ERROR'
-                    time = 0.0001
-                
-                logging.debug(f'got response from server: {resp_mode}, elapsed: {time:.2f}')
-                if resp_id != nowplaying_id or resp_mode != nowplaying_mode:
-                    logging.info(f'track/mode change to: {resp_mode}')
-                    nowplaying_id = resp_id
-                    nowplaying_mode = resp_mode
-                    
-                    # attempt to fetch artwork 
-                    try:
-                        logging.debug('attempting to download artwork')
-                        artwork = artwork_cache.cache_artwork(response['artwork_url'], response['album_id'])
-                    except KeyError as e:
-                        logging.warning('no artwork available')
-                        artwork = None
-                    if not artwork:
-                        logging.warning(f'using default artwork file: {noartwork}')
-                        artwork = noartwork
-                    # add the path to the downloaded album art into the response
-                    response['coverart'] = str(artwork)
-                             
-                    # update the layout with the values in the response
-                    playing_layout.update_contents(response)
-                    
-                    # refresh contains the current layout
-                    refresh = playing_layout
-                    #set delay to 60 seconds
-                    refresh_delay = 60
-                else:
-                    refresh = False
-                
-            if nowplaying_mode != "play" and screen.update.last_updated > refresh_delay:
-                logging.debug(f'next update will be in {refresh_delay} seconds')
-                logging.info('music appears to be paused, switching to plugin display')
-                update = plugin.update()
-                update['mode'] = nowplaying_mode
-                plugin_layout.update_contents(update)
-                refresh = plugin_layout
-                refresh_delay = plugin_update                
-            
-            
-            # check if `refresh` has been updated 
-            if refresh and isinstance(refresh, epdlib.Layout):
-                logging.debug('refresh display')
-                screen.initEPD()
-                image = refresh.concat()
-#                 screen.elements = refresh.blocks.values()
-#                 image = screen.concat()
-                screen.writeEPD(image)
-                
-                if screenshot:
-                    screenshot.save(image)
-                
-                refresh = False
+                    logging.warning('no artwork available')
+                    artwork = None
+                if not artwork:
+                    logging.warning(f'using default artwork file: {noartwork}')
+                    artwork = noartwork
+                # add the path to the downloaded album art into the response
+                response['coverart'] = str(artwork)
+
+                # update the layout with the values in the response            
+                playing_layout.update_contents(response)
+                refresh_delay = 60
+                refresh = playing_layout
             else:
-                logging.warning(f'refresh called, but type: {type(refresh)}; skipping')
-            # sleep for half a second every cycle
-            sleep(0.5)
-            
-    finally:
-        print('Received exit signal - cleaning up')
+                refresh = False
+
+        if nowplaying_mode != "play" and screen.update.last_updated > refresh_delay:
+            logging.debug(f'next update will be in {refresh_delay} seconds')
+            logging.info('music appears to be paused, switching to plugin display')
+            update = plugin.update()
+            update['mode'] = nowplaying_mode
+            plugin_layout.update_contents(update)
+            refresh = plugin_layout
+            refresh_delay = plugin_update            
+                
+        # check if refresh contains a Layout object; refresh the screen
+        if refresh and isinstance(refresh, epdlib.Layout):
+            logging.info('refresh display')
+            screen.initEPD()
+            image = refresh.concat()
+            screen.writeEPD(image)
+
+            if screenshot:
+                screenshot.save(image)
+
+            refresh = False
+
         
-        screen.initEPD()
-        screen.clearEPD()
-        artwork_cache.clear_cache()
         
+        # sleep for half a second every cycle
+        sleep(0.5)    
+    
+    print('Received exit signal - cleaning up')
+
+    screen.initEPD()
+    screen.clearEPD()
+    artwork_cache.clear_cache()    
+    
     return config
 
 
 
 
-# In[7]:
+
+
+
+# In[8]:
 
 
 if __name__ == '__main__':
     o = main()
-
-
-
-
-# In[ ]:
-
-
-dir(lmsquery)
-
-
-
-
-# In[ ]:
-
-
-import lmsquery
 
 
 
