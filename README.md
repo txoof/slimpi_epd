@@ -5,8 +5,7 @@
 
 SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper display](https://www.waveshare.com/product/oleds-lcds/e-paper.htm) and a Raspberry Pi.
 
-***Include an image of the finished project here***
-
+<img width="500" src="./docs/Slim_Pi-in_action.jpg">
 
 - [Features](#features)
 - [Quick Install](#quick-install)
