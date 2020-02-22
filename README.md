@@ -8,29 +8,34 @@ SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper displ
 ***Include an image of the finished project here***
 
 
-- [SlimPi](#slimpi)
-  * [ePaper based Logitech Media Player Display](#epaper-based-logitech-media-player-display)
-  * [Features](#features)
-  * [Quick Install](#quick-install)
-  * [Requirements](#requirements)
-  * [System Setup](#system-setup)
-    + [Configure HiFiBerry *(optional)*](#configure-hifiberry---optional--)
-    + [Install and Configure Squeeze Lite *(optional)*](#install-and-configure-squeeze-lite---optional--)
-  * [Software Configuration](#software-configuration)
-    + [Configuration Files](#configuration-files)
-    + [Configure as a System Process](#configure-as-a-system-process)
-    + [Configure HiFiBerry *(optional)*](#configure-hifiberry---optional---1)
-    + [Install and Configure Squeeze Lite *(optional)*](#install-and-configure-squeeze-lite---optional---1)
-  * [Setup Python Environment for Building](#setup-python-environment-for-building)
-    + [Quick and Dirty Build](#quick-and-dirty-build)
-    + [Build Requirements](#build-requirements)
-    + [Building SlimPi](#building-slimpi)
-  * [Screen Layouts](#screen-layouts)
-  * [Plugin Modules](#plugin-modules)
-    + [Additional Plugins](#additional-plugins)
-      - [Example Module and Layout](#example-module-and-layout)
+- [Features](#features)
+- [Quick Install](#quick-install)
+- [Requirements](#requirements)
+  * [Required Hardware](#required-hardware)
+  * [Optional Hardware](#optional-hardware)
+  * [Required Software](#required-software)
+  * [Opational Software](#opational-software)
+- [System Setup](#system-setup)
+  * [Configure HiFiBerry *(optional)*](#configure-hifiberry---optional--)
+    + [Quick and Dirty Configuration](#quick-and-dirty-configuration)
+  * [Install and Configure Squeeze Lite *(optional)*](#install-and-configure-squeeze-lite---optional--)
+- [Software Configuration](#software-configuration)
+  * [Configuration Files](#configuration-files)
+  * [Configure as a System Process](#configure-as-a-system-process)
+  * [Configure HiFiBerry *(optional)*](#configure-hifiberry---optional---1)
+  * [Install and Configure Squeeze Lite *(optional)*](#install-and-configure-squeeze-lite---optional---1)
+  * [Disable Raspberry Pi Lights *(optional)*](#disable-raspberry-pi-lights---optional--)
+- [Setup Python Environment for Building](#setup-python-environment-for-building)
+  * [Quick and Dirty Build](#quick-and-dirty-build)
+  * [Build Requirements](#build-requirements)
+  * [Building SlimPi](#building-slimpi)
+- [Screen Layouts](#screen-layouts)
+- [Plugin Modules](#plugin-modules)
+  * [Additional Plugins](#additional-plugins)
+    + [Example Module and Layout](#example-module-and-layout)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 
 ## Features
 
@@ -236,6 +241,37 @@ Squeezelite is a light-weight headless Squeezebox LMS player that works well wit
         1. `$ raspi-config` Network Options > Hostname
         2. Edit `/etc/default/squeezelite` and edit `SL_NAME=YOUR_NAME_HERE`
     * Additional squeezelite arguments such as resampling rates can be passed here as well - for a complete list see `$man squeezelite`
+
+### Disable Raspberry Pi Lights *(optional)*
+To disable the activity and power lights on Pi 3 and use the included systemd service and scripts to disable the lights. This will automatically disable the lights at boot. The LEDs will remain off as long as this service is active.
+```
+$ sudo ./install/install_led_ctl.sh
+```
+The `install_led_ctl.sh` script creates the systemd `led_ctl.service` and copies the `led_ctl` script to `/usr/bin/`.
+
+To temporarily enable the LEDs (until next reboot) use:
+```
+$ sudo systemctl stop led_ctl.service
+```
+
+To permenantly re-enable the LEDs use:
+```
+$ sudo systemctl disable led_ctl.service 
+```
+or 
+```
+# enable the LEDS
+$ /usr/bin/led_ctl on
+# disable the LEDS
+$ /usr/bin/led_ctl off
+```
+
+To permenantly remove the service and the scripts:
+```
+$ sudo systemctl disable led_ctl.service
+$ sudo rm /usr/bin/led_ctl
+$ sudo rm /etc/systemd/system/led_ctl.service
+```
 
 ## Setup Python Environment for Building
 To build an executable package suitable for installing SlimPi requires several Debian development packages as well as several python libraries. See below for specifics.
