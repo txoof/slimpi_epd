@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3a8e3023c0aed93ff6a9260d7c3097958c9b70c72068faa12fb1f9d882a0a889"
+            "sha256": "69bec1b9fb9148d6735b49ea70e19bd6a35c35cae75a935f3c59d04c802da7e6"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -79,6 +79,14 @@
             "index": "pypi",
             "version": "==2.2.2"
         },
+        "epdlib": {
+            "hashes": [
+                "sha256:05c0739760bd36a42d32f07fa82a2655353502cf71ba66cb18dc079cdce39e3f",
+                "sha256:b8069896cbf7b298910d89bc18e5257c7432af495e491df84b7eadc115bd8fa7"
+            ],
+            "index": "pypi",
+            "version": "==0.0.1.6"
+        },
         "idna": {
             "hashes": [
                 "sha256:7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb",
@@ -128,6 +136,14 @@
                 "sha256:a4ee613c060fe5697d913416fc9d553599c05e4492d58fac1192c9a6844abb21"
             ],
             "version": "==4.6.3"
+        },
+        "lmsquery-fork": {
+            "hashes": [
+                "sha256:e3c18d72c5a7923f4afbeb240c567456763943da772f91d050c7909691ab8037",
+                "sha256:f5b97ab1baf0287cd396e94cba4c1788563386535e49f0fb13f5e495b850bb65"
+            ],
+            "index": "pypi",
+            "version": "==0.5.25"
         },
         "parso": {
             "hashes": [
