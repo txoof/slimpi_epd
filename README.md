@@ -15,11 +15,11 @@ SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper displ
   * [Required Software](#required-software)
   * [Opational Software](#opational-software)
 - [System Setup](./docs/System_Setup.md)
-- [Software Configuration](./Software_Configuration.md)
-- [Hardware Setup](./Hardware_Setup.md)
-- [Building SlimPi](./Building.md)
-- [Screen Layouts](Screen_Layouts.md)
-- [Plugin Modules](Plugin_Modules.md)
+- [Software Configuration](./docs/Software_Configuration.md)
+- [Hardware Setup](./docs/Hardware_Setup.md)
+- [Building SlimPi](./docs/Building.md)
+- [Screen Layouts](./docs/Screen_Layouts.md)
+- [Plugin Modules](./docs/Plugin_Modules.md)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
