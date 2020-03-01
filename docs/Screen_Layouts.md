@@ -1,130 +1,161 @@
-This application is used to convert notebook files (*.ipynb) to various other
-formats.
+## Screen Layouts
+Layouts determine what content is displayed and where on the screen. The layouts are stored in `slimpi/layouts.py`. Layouts are designed to work on any sized screen as they will adapt to the number of pixels available.
 
-WARNING: THE COMMANDLINE INTERFACE MAY CHANGE IN FUTURE RELEASES.
+Some layouts are too with information to fit well on a small display, but they *will* work.
 
-Options
--------
+Any of the following information can be displayed on the "Now Playing" screen of slimpi. 
+```
+'field name': 'Data'
+====================
 
-Arguments that take values are actually convenience aliases to full
-Configurables, whose aliases are listed on the help line. For more information
-on full configurables, see '--help-all'.
+'id': 52005,
+'title': "Women's Realm",
+'artist': 'Belle and Sebastian',
+'coverid': 'd9b0a026',
+'duration': 275.513,
+'album_id': '5008',
+'genre': 'No Genre',
+'album': 'Fold Your Hands Child, You Walk Like a Peasant',
+'artwork_url': 'http://192.168.178.9:9000/music/d9b0a026/cover.jpg',
+'time': 12.4120923690796,
+'mode': 'play'
+'coverart': '/tmp/com.txoof.slimpi/5008.jpg'
+```
 
---debug
-    set log level to logging.DEBUG (maximize logging output)
---generate-config
-    generate default config file
--y
-    Answer yes to any questions instead of prompting.
---execute
-    Execute the notebook prior to export.
---allow-errors
-    Continue notebook execution even if one of the cells throws an error and include the error message in the cell output (the default behaviour is to abort conversion). This flag is only relevant if '--execute' was specified, too.
---stdin
-    read a single notebook file from stdin. Write the resulting notebook with default basename 'notebook.*'
---stdout
-    Write notebook output to stdout instead of files.
---inplace
-    Run nbconvert in place, overwriting the existing notebook (only 
-    relevant when converting to notebook format)
---clear-output
-    Clear output of current file and save in place, 
-    overwriting the existing notebook.
---no-prompt
-    Exclude input and output prompts from converted document.
---no-input
-    Exclude input cells and output prompts from converted document. 
-    This mode is ideal for generating code-free reports.
---log-level=<Enum> (Application.log_level)
-    Default: 30
-    Choices: (0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL')
-    Set the log level by value or name.
---config=<Unicode> (JupyterApp.config_file)
-    Default: ''
-    Full path of a config file.
---to=<Unicode> (NbConvertApp.export_format)
-    Default: 'html'
-    The export format to be used, either one of the built-in formats
-    ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf',
-    'python', 'rst', 'script', 'slides'] or a dotted object name that represents
-    the import path for an `Exporter` class
---template=<Unicode> (TemplateExporter.template_file)
-    Default: ''
-    Name of the template file to use
---writer=<DottedObjectName> (NbConvertApp.writer_class)
-    Default: 'FilesWriter'
-    Writer class used to write the  results of the conversion
---post=<DottedOrNone> (NbConvertApp.postprocessor_class)
-    Default: ''
-    PostProcessor class used to write the results of the conversion
---output=<Unicode> (NbConvertApp.output_base)
-    Default: ''
-    overwrite base name use for output files. can only be used when converting
-    one notebook at a time.
---output-dir=<Unicode> (FilesWriter.build_directory)
-    Default: ''
-    Directory to write output(s) to. Defaults to output to the directory of each
-    notebook. To recover previous default behaviour (outputting to the current
-    working directory) use . as the flag value.
---reveal-prefix=<Unicode> (SlidesExporter.reveal_url_prefix)
-    Default: ''
-    The URL prefix for reveal.js (version 3.x). This defaults to the reveal CDN,
-    but can be any url pointing to a copy  of reveal.js.
-    For speaker notes to work, this must be a relative path to a local  copy of
-    reveal.js: e.g., "reveal.js".
-    If a relative path is given, it must be a subdirectory of the current
-    directory (from which the server is run).
-    See the usage documentation
-    (https://nbconvert.readthedocs.io/en/latest/usage.html#reveal-js-html-
-    slideshow) for more details.
---nbformat=<Enum> (NotebookExporter.nbformat_version)
-    Default: 4
-    Choices: [1, 2, 3, 4]
-    The nbformat version to write. Use this to downgrade notebooks.
+Layout element dimensions are calculated based on a single absolute coordinate and must be organized with the absolute coordinate first and then proceed with each logical sub element.
 
-To see all available configurables, use `--help-all`
+New layouts can be added to `slimpi/layouts.py` by following the examples below. 
 
-Examples
---------
+Specify an alternative now playing layout in the configuartion file `now_playing = layout_name`.
 
-    The simplest way to use nbconvert is
-    
-    > jupyter nbconvert mynotebook.ipynb
-    
-    which will convert mynotebook.ipynb to the default format (probably HTML).
-    
-    You can specify the export format with `--to`.
-    Options include ['asciidoc', 'custom', 'html', 'latex', 'markdown', 'notebook', 'pdf', 'python', 'rst', 'script', 'slides'].
-    
-    > jupyter nbconvert --to latex mynotebook.ipynb
-    
-    Both HTML and LaTeX support multiple output templates. LaTeX includes
-    'base', 'article' and 'report'.  HTML includes 'basic' and 'full'. You
-    can specify the flavor of the format used.
-    
-    > jupyter nbconvert --to html --template basic mynotebook.ipynb
-    
-    You can also pipe the output to stdout, rather than a file
-    
-    > jupyter nbconvert mynotebook.ipynb --stdout
-    
-    PDF is generated via latex
-    
-    > jupyter nbconvert mynotebook.ipynb --to pdf
-    
-    You can get (and serve) a Reveal.js-powered slideshow
-    
-    > jupyter nbconvert myslides.ipynb --to slides --post serve
-    
-    Multiple notebooks can be given at the command line in a couple of 
-    different ways:
-    
-    > jupyter nbconvert notebook*.ipynb
-    > jupyter nbconvert notebook1.ipynb notebook2.ipynb
-    
-    or you can specify the notebooks list in a config file, containing::
-    
-        c.NbConvertApp.notebooks = ["my_notebook.ipynb"]
-    
-    > jupyter nbconvert --config mycfg.py
+Slimpi must be restarted for the changes to take effect (CTRL+C for user; `sudo systemctl restart slimpi-daemon`)
+```
+# Simple Two Row display of track title and artist
+twoRow = {
+    'title':
+        {'image': None,    # `None` for no image, `True` for an image block
+         'max_lines': 3,   # integer - maximum number of lines of text this block can contain
+         'padding': 10,    # integer - number of pixles to pad between edge of screen and text
+         'width': 1,       # real - percentage of width to use for this block (1 = 100%)
+         'height': 1/2,    # real - percentage of height to use for this block (1/2 = 50%)
+         'abs_coordinates': (0, 0), # tuple of integer - top left coordinate for this block
+         'hcenter': True,  # boolean - `True` to center text or image; `False` to left justify
+         'vcenter': True,  # boolean - `True` to vertically center text or image; `False` to left justify
+         'font': './fonts/Font/font-regular.ttf' # string for relative (or absolute) path to TTF font file
+         'font_size': None,# None/integer - None to calculate the font size based on screen size
+         'rand': False     # randomly position the text block within the area defined by width/height
+         
+   'artist':
+       {'image: None,
+        'max_lines': 2,
+        'padding': 10,
+        'width': 1,
+        'height': 1/2,
+        'abs_coordinates': (0, None), # use an X value of 0 (left side of screen), None indicates that the Y will be calculated 
+        'relative': ['artist', 'title'] # use the absolute X from 'artist' section and calculated Y value from 'title'
+        'hcenter': True,
+        'vcenter': True,
+        'font': ./font/Font/font-regular.ttf,
+        'font_size': None}
+}
 
+
+# Available layout directives 
+# directive_name: values - function
+# image: True/None - True: this is an image block, None: this is a text block
+# max_lines: int - maximum number of lines of text; overflow text will be shown with elipses (...)
+# padding: int - number of pixles to pad around the block on all sides
+# width: float - percentage of screen to use for width (1 = 100%)
+# height: float - percentage of screen to use for height (1 = 100%)
+# abs_coordinates: tuple of int (X, Y) - coordinates of top left corner of block; 
+#                  (0, 0): X=0, Y=0 - top left corner of screen
+#                  (0, None): = X=0, Y=calculated based on block above
+# relative: False, list of string ['name1', 'name2'] - calculate the top left coordinate based on block name1 and name 2
+#                  use the X value of 'name1' and the Y value of 'name2' to calculate the top left corner of this block
+#                  this should reference the block its self if there is an absolute value (see 'artist' above)
+# hcenter: True/False - horizontally center contents of block
+# vcenter: True/False - vertically center contents of block
+# font: string - path to TTF font
+# font_size: None/int - use a specific font size, this will prevent calculating a maximum font size for the text block
+# rand: True/False - randomly place contents within the area specified by height/width
+
+
+# More complex three row layout with images multiple horizontal blocks
+threeRow = {
+    'title':
+            {'image': None,
+             'max_lines': 2,
+             'padding': 10,
+             'width': 1,
+             'height': 4/7,
+             'abs_coordinates': (0, 0),
+             'hcenter': True,
+             'vcenter': True,
+             'relative': False,
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+    'coverart':
+            {'image': True,          # images will be dynamically resized using the PIL.Image.thumbnail() method to fit
+             'max_lines': None,
+             'padding': 2,
+             'width': 2/5,
+             'height': 3/7,
+             'abs_coordinates': (0, None),
+             'hcenter': True,
+             'vcenter': True,
+             'relative': ['coverart', 'title'], # use X=0 and Y=bottom of 'title'
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+
+    'artist':
+            {'image': None,
+             'max_lines': 2,
+             'padding': 10,
+             'width': 3/5,
+             'height': 3/14,
+             'abs_coordinates': (None, None), # no absolute coordinates 
+             'hcenter': False,
+             'vcenter': True,
+             'relative': ['coverart', 'title'], # use X=right of 'coverart' and Y=bottom of 'title'
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+    'album':
+            {'image': None,
+             'max_lines': 2,
+             'padding': 10,
+             'width': 3/5,
+             'height': 2/14,
+             'abs_coordinates': (None, None),
+             'hcenter': False,
+             'vcenter': True,
+             'relative': ['coverart', 'artist'],
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None},
+    'mode':
+            {'image': False,
+             'max_lines': 1,
+             'width': 3/5,
+             'height': 1/14,
+             'abs_coordinates': (None, None),
+             'hcenter': False,
+             'vcenter': True,
+             'rand': True,
+             'relative': ['coverart', 'album'],
+             'font': './fonts/Anton/Anton-Regular.ttf',
+             'font_size': None}
+}             
+```
+
+
+```python
+%alias mdconvert mdconvert Screen_Layouts.ipynb
+%mdconvert
+```
+
+    [NbConvertApp] WARNING | pattern 'Screen_Layouts.ipynb' matched no files
+
+
+
+```python
+
+```
