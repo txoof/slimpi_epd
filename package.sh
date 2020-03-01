@@ -46,7 +46,7 @@ fi
 
 if [[ $release -eq 1 ]]; then
   git add $filename
-  git commit -m "update build" $appName\_*.tgz
+  git commit -m "update build" $latestName
   git push
 fi
 
