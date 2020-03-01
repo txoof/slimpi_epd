@@ -127,7 +127,7 @@ To limit the visual disturbance of a pulsing screen, the default clock is the Wo
 * [Logitech Media Server](http://wiki.slimdevices.com/index.php/Logitech_Media_Server) running on local network
     * An LMS instance can be run on the Raspberry Pi - [Home Hack - Creating a Raspberry Pi Squeezebox server](https://homehack.nl/creating-a-raspberry-pi-squeezebox-server/) 
 
-### Opational Software
+### Optional Software
 * [squeezelite](http://wiki.slimdevices.com/index.php/Squeezelite) *(optional)*
     * Squeezelite, in combination with a HiFiBerry, allows the Pi to be usded as LMS display **and** client player
 
