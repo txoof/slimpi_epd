@@ -17,6 +17,9 @@ ExecStop=/bin/kill -s SIGINT $MAINPID
 #KillSignal=SIGINT
 User=slimpi
 Group=slimpi
+Restart=on-failure
+RestartSec=15s
+
 
 [Install]
 WantedBy=multi-user.target
