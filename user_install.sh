@@ -7,7 +7,7 @@ configFile="$configPath/$appName.cfg"
 if [[ ! -f $configFile ]]; then
   echo "creating configuration files"
   mkdir -p $configPath
-  cp $appName.cfg $configPath
+  cp ./dist/slimpi/$appName.cfg $configPath
 fi
 
 echo "Please check $configFile for required configuration settings"
