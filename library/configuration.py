@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[13]:
+# In[14]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./configuration.ipynb')
@@ -346,7 +346,7 @@ class ConfigFile():
                 bad_files.append(f)
             
             if len(bad_files) > 0:
-                logging.error(FileNotFoundError(f'config files not found: {bad_files}'))
+                logging.warning(FileNotFoundError(f'config files not found: {bad_files}'))
             
 #         self._config_files = [Path(i).expanduser().resolve() for i in config_files]
         
