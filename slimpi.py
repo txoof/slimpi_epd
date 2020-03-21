@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[10]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('load_ext', 'autoreload')
@@ -13,7 +13,7 @@
 
 
 
-# In[11]:
+# In[13]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -22,7 +22,7 @@
 
 
 
-# In[2]:
+# In[3]:
 
 
 import logging
@@ -64,7 +64,7 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[3]:
+# In[4]:
 
 
 def do_exit(status=0, message=None):
@@ -81,7 +81,7 @@ def do_exit(status=0, message=None):
 
 
 
-# In[4]:
+# In[5]:
 
 
 def scan_servers():
@@ -108,7 +108,7 @@ def scan_servers():
 
 
 
-# In[5]:
+# In[6]:
 
 
 logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ logger.root.setLevel('DEBUG')
 
 
 
-# In[6]:
+# In[11]:
 
 
 def main():
@@ -351,6 +351,9 @@ def main():
     # refresh placeholder
     refresh = False
     
+    # refresh delay - seconds to wait before refreshing
+    refresh_delay = 60
+    
     # startup loop
     startup_counter = 0
     while not sigHandler.kill_now and not lms:
@@ -434,6 +437,10 @@ def main():
                 error_layout.update_contents({'message': f'{config["lms_server"]["player_name"]} does not appear to be available. Is it on?', 'time': 'NO PLAYER'})
                 refresh = error_layout
                 response = None 
+            except KeyError as e:
+                logging.warning(f'bad response from lms server: {response}')
+                logging.warning('retrying...')
+                response = None
                 
                 
         if response:
@@ -513,7 +520,7 @@ def main():
 
 
 
-# In[8]:
+# In[12]:
 
 
 if __name__ == '__main__':
