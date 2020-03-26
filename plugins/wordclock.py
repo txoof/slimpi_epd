@@ -100,7 +100,7 @@ def update(time=None):
                '6': ["'o clock", "on the dot"],
                '1': ['ten after'],
                '2': ['twenty after'],
-               '3': ['half past', 'thirty after', 'thirty past'],
+               '3': ['half past', 'thirty after', 'thirty past', 'beer-thirty somewhere'],
                '4': ["twenty 'til"],
                '5': ["ten 'til"]}
 
