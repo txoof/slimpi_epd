@@ -13,17 +13,15 @@ The `build.sh` script will attempt to check the build environment and suggest an
         `apt-get install python3-pip`
     * pipevn
         - `pip3 install pipenv`
-    * RPi.GPIO python libraries - pipenv chokes on the '.' characters in the name
-        - `pip3 install RPi.GPIO`
 - System Libraries
     * `libtiff5-dev, libopenjp2-7-dev`
         * install with `sudo apt-get install libtiff5-dev libopenjp2-7-dev`
-- Python Libraires from PyPi:
-    * `Pillow, cachepath, ratelimiter, lmsquery-fork, spidev`
+- Python Libraires from PyPi using pipenv:
+    * `epdlib, cachepath, ratelimiter, lmsquery-fork, spidev, RPi.GPIO`
     *  Install with pipenv:
         - `pipenv --three; pipenv sync` 
             - This will create a virtual environment and install the appropriate packages and dependencies        
-            - NOTE: `RPi.GPIO` must be added to Pipfile by and and quotated: `"RPi.GPIO" = "*" `
+            - NOTE: pipenv cannot handle installing `RPi.GPIO` from the command line. It must be added by hand to Pipfile by and and quotated: `"RPi.GPIO" = "*" `
 
 ### Building SlimPi
 - Create a runnable package using PyInstaller
