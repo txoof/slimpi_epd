@@ -4,6 +4,7 @@ echo "attempting to configure build environment and build SlimPi"
 
 
 reqPackages=("libtiff5-dev" "libopenjp*-dev")
+halt=0
 
 for i in "${reqPackages[@]}"
 do
@@ -13,12 +14,18 @@ do
     echo package: $i not installed. Install with:
     echo $ sudo apt-get install $i
     echo ""
+    halt=$((halt+1))
   else
     echo $i...ok
     echo ""
   fi
 done
 
+if [[ $halt -gt 0 ]]; then
+  echo "$halt critical packages missing. See messages above."
+  echo "stopping here"
+  exit
+fi
 
 pipenvExec=`which pipenv`
 
