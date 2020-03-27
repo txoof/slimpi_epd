@@ -1,22 +1,20 @@
 [[source]]
-url = "https://pypi.python.org/simple"
-verify_ssl = true
 name = "pypi"
-
-[packages]
-pillow = "*"
-ipykernel = "*"
-docrep = "*"
-cachepath = "*"
-ratelimiter = "*"
-dynaconf = "*"
-spidev = "*"
-pyinstaller = "*"
-"RPi.GPIO" = "*"
-requests = "*"
-epdlib = "*"
-lmsquery-fork = "*"
+url = "https://pypi.org/simple"
+verify_ssl = true
 
 [dev-packages]
 
+[packages]
+ipykernel = "*"
+cachepath = "*"
+ratelimiter = "*"
+spidev = "*"
+"RPi.GPIO" = "*"
+requests = "*"
+lmsquery-fork = "*"
+pyinstaller = "*"
+epdlib = "*"
+
 [requires]
+python_version = "3.7"
