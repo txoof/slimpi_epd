@@ -1,12 +1,11 @@
 #!/bin/bash
 appName="slimpi"
-installPath="/usr/bin/slimpi/"
+installPath="/usr/bin/"
 sysConfig="$appName.cfg"
 sysConfigPath="./dist/$appName/$sysConfig"
 serviceName=$appName-daemon
 sysdService="./install/$serviceName.service"
 
-systemctl stop $serviceName
 
 if [ "$EUID" -ne 0 ]
   then 
@@ -31,20 +30,25 @@ To uninstall use:
 fi
 
 install () {
+  echo "adding user: $appName"
   # add the user
   useradd --system $appName
 
+  echo "addinng $appName to groups: spi, gpio"
   # add the user to the appropriate groups
   usermod -a -G spi,gpio $appName
 
+  echo "copying $appName to $installPath"
   # copy program files to $installPath
-  cp -r ./dist/$appName/* $installPath
 
+  cp -r ./dist/$appName $installPath
+
+  echo "installing config file to /etc/$sysConfig..."
   # copy the system configuration into /etc/
   if [[ ! -f /etc/$sysConfig ]]; then
     cp $sysConfigPath /etc/
   else
-    echo 'leaving existing configuration file intact'
+    echo 'config file found, leaving existing configuration file intact'
   fi
 
   # install the systemd unit file
@@ -53,6 +57,8 @@ install () {
   # start the service
   systemctl enable $serviceName
 
+  echo " "
+  echo " "
   echo "Please configure $appName by editing /etc/$appName.cfg
   HINT: $ sudo nano /etc/$appName.cfg
 
@@ -71,6 +77,8 @@ $appName will now start when this system is booted.
 
 
 uninstall () {
+
+  systemctl stop $serviceName
   echo "uninstalling $appName"
   if [ "$1" == "-p" ] || [ "$1" == "--purge" ]
   then
@@ -87,6 +95,8 @@ uninstall () {
   rm -r $installPath
 
 }
+
+
 
 if [ $# -eq 0 ]; then
   install
