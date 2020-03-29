@@ -37,10 +37,12 @@ if [[ -x ${pipenvExec} ]]; then
   if [[ $? -ne 0 ]]; then
     echo "building pipenv virtual environment"
     pipenv --three
+    pipenv lock
     pipenv sync
   else
     echo "sycning packages"
     echo pipenv sync
+    pipenv lock
     pipenv sync
   fi
 else
