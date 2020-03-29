@@ -47,7 +47,10 @@ class RaspberryPi:
         # SPI device, bus = 0, device = 0
         try:
             self.SPI = spidev.SpiDev(0, 0)
-        except PermissionError as e:
+        except (FileNotFoundError) as e:
+            logging.critical(f'Error initing SPI {e}')
+            logging.critical(f'is SPI enabled?')
+        except (PermissionError) as e:
             logging.critical(f'Error initing SPI {e}')
             logging.critical('The current user may not have access to /dev/spidev*')
             logging.critical('Remedy this by adding the user to the spi access group:')
