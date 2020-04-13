@@ -13,7 +13,7 @@
 
 
 
-# In[13]:
+# In[2]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
@@ -81,13 +81,13 @@ def do_exit(status=0, message=None):
 
 
 
-# In[5]:
+# In[18]:
 
 
 def scan_servers():
     """scan for and list all available LMS Servers and players"""
     print(f'Scanning for available LMS Server and players')
-    servers = lmsquery.LMSQuery.scanLMS()
+    servers = lmsquery.LMSQuery().scanLMS()
     if not servers:
         print('Error: no LMS servers were found on the network. Is there one running?')
         do_exit(1)
@@ -117,7 +117,7 @@ logger.root.setLevel('DEBUG')
 
 
 
-# In[11]:
+# In[8]:
 
 
 def main():
@@ -520,11 +520,19 @@ def main():
 
 
 
-# In[12]:
+# In[19]:
 
 
 if __name__ == '__main__':
     o = main()
+
+
+
+
+# In[ ]:
+
+
+
 
 
 
