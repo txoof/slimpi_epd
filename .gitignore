@@ -1,3 +1,7 @@
+slimpi*tgz
+Pipfile.lock
+build/*
+dist/*
 *.DS_Store
 *._*
 *.log
