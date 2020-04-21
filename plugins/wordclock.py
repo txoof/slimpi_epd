@@ -3,7 +3,7 @@
 # coding: utf-8
 
 
-# In[26]:
+# In[1]:
 
 
 #get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./wordclock.ipynb')
@@ -13,7 +13,7 @@
 
 
 
-# In[14]:
+# In[1]:
 
 
 import logging
@@ -23,7 +23,7 @@ from random import choice
 
 
 
-# In[15]:
+# In[2]:
 
 
 def time_list(time):
@@ -36,7 +36,7 @@ def time_list(time):
 
 
 
-# In[16]:
+# In[3]:
 
 
 def time_now():
@@ -45,7 +45,7 @@ def time_now():
 
 
 
-# In[28]:
+# In[4]:
 
 
 def map_val(a, b, s):
@@ -67,7 +67,7 @@ def map_val(a, b, s):
 
 
 
-# In[18]:
+# In[5]:
 
 
 def update(time=None):    
@@ -75,8 +75,8 @@ def update(time=None):
              '2':  ['two', 'really late', 'go to bed'],
              '3':  ['three', 'too late', "why aren't you in bed"],
              '4':  ['four', 'early morning', 'stupid early'],
-             '5':  ['five'],
-             '6':  ['six'],
+             '5':  ['five', 'crack of dark'],
+             '6':  ['six', 'crack of dawn'],
              '7':  ['seven'],
              '8':  ['eight'],
              '9':  ['nine'],
@@ -100,7 +100,7 @@ def update(time=None):
                '6': ["'o clock", "on the dot"],
                '1': ['ten after'],
                '2': ['twenty after'],
-               '3': ['half past', 'thirty after', 'thirty past', 'beer-thirty somewhere'],
+               '3': ['half past', 'thirty after', 'thirty past'],
                '4': ["twenty 'til"],
                '5': ["ten 'til"]}
 
