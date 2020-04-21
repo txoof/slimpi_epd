@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 appName="slimpi"
 
 version=`cat constants.py | sed -ne 's/version\W\{0,\}=\W\{0,\}\(.*\)["'"'"']/\1/p'`
