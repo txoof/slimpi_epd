@@ -120,7 +120,11 @@ If you have a working EPD installed, the following instructions will get you up 
 * [squeezelite](http://wiki.slimdevices.com/index.php/Squeezelite) *(optional)*
     * Squeezelite, in combination with a HiFiBerry, allows the Pi to be usded as LMS display **and** client player
 
+  Note: to make squeezelite play nice with other applications such as raspotify (librespot), add the following line to /etc/default/squeezelite:
 
+    `SB_EXTRA_ARGS="-C 10"`
+
+  This will allow squeezelite to close the output device after 10 seconds allowing other audio software to access it.
 
 ```python
 %alias mdconvert mdconvert README.ipynb
