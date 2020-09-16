@@ -25,7 +25,7 @@ SlimPi provides a Logitech Media Player display using a [WaveShare e-Paper displ
 
 
 ## Features
-
+<a name="features"></a>
 SlimPi provides a *now playing* display for a selected Logitech Media Player. When the player is paused, an alternative screen is displayed.
 
 <img width="500" src="./docs/SlimPi_playing.png"></img>
