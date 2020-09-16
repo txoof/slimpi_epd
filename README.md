@@ -57,14 +57,16 @@ To limit the visual disturbance of a pulsing screen, the default clock is the Wo
 
 
 ## Software Quick Install
+<a name="quick-install)"></a>
 If you have a working EPD installed, the following instructions will get you up and runing quickly. If you do not yet have a working screen installed, check the Hardware Setup instructions below.
 1. Download the installable package from [git hub](https://github.com/txoof/slimpi_epd/raw/master/slimpi_latest.tgz)
-2. Decompress the tarball: `tar xvzf slimpi_latest.tgz`
+2. Decompress the tarball: `tar xvzf slimpi_latest.tgz`\
+3. Make sure SPI is enabled on the Raspberry Pi
 3. Run the installer: 
    * `install.sh` for a daemon that starts automatically at boot, or see below for running in user space
    * `user_install.sh` to setup the user space configuration files
 4. Edit the appropriate configuation file: `/etc/slimpi.cfg` for daemon or `~/.config/com.txoof.slimpi/slimpi.cfg` for user space
-    * **Required** settings that must be set:
+    * **Required** settings that must be configured:
         - `display = waveShareEPDType`
         - example: `display = epd5in83`
             * The display type should match the model number of your HAT compatable e-Paper display
@@ -93,6 +95,7 @@ If you have a working EPD installed, the following instructions will get you up 
         ```
 
 ## Requirements
+<a name="requirements></a>
 ### Required Hardware
 * Raspberry Pi 4 Model B
     * RPI 3 Model A should work as well, but is untested
@@ -111,7 +114,14 @@ If you have a working EPD installed, the following instructions will get you up 
         * 16GB SD Card
         * PowerSupply (USB C 5.1V/3A)
         * 2x20 Pin Male Header (required for WaveShare HAT)
-    
+
+### Required Raspberry Pi Configuration:
+Enable SPI
+```
+$ sudo raspi-config
+```
+Select *Interfacing Options > SPI* and set to *Yes*
+
 ### Required Software
 * [Logitech Media Server](http://wiki.slimdevices.com/index.php/Logitech_Media_Server) running on local network
     * An LMS instance can be run on the Raspberry Pi - [Home Hack - Creating a Raspberry Pi Squeezebox server](https://homehack.nl/creating-a-raspberry-pi-squeezebox-server/) 
