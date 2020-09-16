@@ -91,7 +91,7 @@ If you have a working EPD installed, the following instructions will get you up 
         ```
 
 ## Requirements
-<a name="requirements></a>
+<a name="requirements"></a>
 ### Required Hardware
 * Raspberry Pi 4 Model B
     * RPI 3 Model A should work as well, but is untested
