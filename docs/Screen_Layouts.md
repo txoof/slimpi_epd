@@ -1,7 +1,7 @@
 ## Screen Layouts
 Layouts determine what content is displayed and where on the screen. The layouts are stored in `slimpi/layouts.py`. Layouts are designed to work on any sized screen as they will adapt to the number of pixels available.
 
-Some layouts are too with information to fit well on a small display, but they *will* work.
+Some layouts are too dense with information to fit well on a small display, but they *will* work.
 
 Any of the following information can be displayed on the "Now Playing" screen of slimpi. 
 ```
