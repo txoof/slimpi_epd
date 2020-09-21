@@ -92,7 +92,7 @@ uninstall () {
 
   userdel $appName
 
-  rm -r $installPath
+  rm -r $installPath/$appName
 
 }
 
