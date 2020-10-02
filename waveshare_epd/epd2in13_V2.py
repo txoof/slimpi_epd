@@ -30,7 +30,7 @@
 
 import logging
 from . import epdconfig
-#import numpy as np
+import numpy as np
 
 # Display resolution
 EPD_WIDTH       = 122
@@ -288,7 +288,7 @@ class EPD:
                 self.send_data(image[i + j * linewidth])  
         self.TurnOnDisplay()
     
-    def Clear(self):
+    def Clear(self, color):
         if self.width%8 == 0:
             linewidth = int(self.width/8)
         else:
@@ -302,10 +302,15 @@ class EPD:
         self.TurnOnDisplay()
 
     def sleep(self):
+        # self.send_command(0x22) #POWER OFF
+        # self.send_data(0xC3)
+        # self.send_command(0x20)
+
         self.send_command(0x10) #enter deep sleep
         self.send_data(0x01)
         epdconfig.delay_ms(100)
 
+    def Dev_exit(self):
         epdconfig.module_exit()
 
 ### END OF FILE ###

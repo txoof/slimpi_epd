@@ -331,7 +331,7 @@ class EPD:
           
         self.TurnOnDisplay()
         
-    def Clear(self):
+    def Clear(self, color):
         self.send_command(0x10)
         for i in range(0, int(self.width * self.height / 8)):
             self.send_data(0x00)
@@ -352,6 +352,7 @@ class EPD:
         self.send_command(0X07) # deep sleep  
         self.send_data(0xA5)
 
+    def Dev_exit(self):
         epdconfig.module_exit()
 
 ### END OF FILE ###

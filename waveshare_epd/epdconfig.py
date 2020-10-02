@@ -32,6 +32,7 @@ import logging
 import sys
 import time
 
+
 class RaspberryPi:
     # Pin definition
     RST_PIN         = 17
@@ -42,21 +43,12 @@ class RaspberryPi:
     def __init__(self):
         import spidev
         import RPi.GPIO
+
         self.GPIO = RPi.GPIO
 
         # SPI device, bus = 0, device = 0
-        try:
-            self.SPI = spidev.SpiDev(0, 0)
-        except (FileNotFoundError) as e:
-            logging.critical(f'Error initing SPI {e}')
-            logging.critical(f'is SPI enabled?')
-        except (PermissionError) as e:
-            logging.critical(f'Error initing SPI {e}')
-            logging.critical('The current user may not have access to /dev/spidev*')
-            logging.critical('Remedy this by adding the user to the spi access group:')
-            logging.critical('$ usermod -a spi <username>')
-            sys.exit(1)
-  
+        self.SPI = spidev.SpiDev(0, 0)
+
     def digital_write(self, pin, value):
         self.GPIO.output(pin, value)
 
@@ -70,10 +62,6 @@ class RaspberryPi:
         self.SPI.writebytes(data)
 
     def module_init(self):
-        # issue #36 - cannot wake from sleep
-        # once self.module_exit is called, the SPI.close() call prevents reiniting the device
-        # this explicitly calls the __init__ method to ensure that self.SPI is available
-        self.__init__() 
         self.GPIO.setmode(self.GPIO.BCM)
         self.GPIO.setwarnings(False)
         self.GPIO.setup(self.RST_PIN, self.GPIO.OUT)
@@ -82,7 +70,6 @@ class RaspberryPi:
         self.GPIO.setup(self.BUSY_PIN, self.GPIO.IN)
         self.SPI.max_speed_hz = 4000000
         self.SPI.mode = 0b00
-
         return 0
 
     def module_exit(self):

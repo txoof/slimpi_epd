@@ -131,7 +131,7 @@ class EPD:
         
         self.ReadBusy()
         
-    def Clear(self):
+    def Clear(self, color):
         self.send_command(0x24)
         for j in range(0, self.height):
             for i in range(0, int(self.width / 8)):
@@ -201,6 +201,7 @@ class EPD:
         self.send_command(0x10) # DEEP_SLEEP_MODE
         self.send_data(0x01)
         
+    def Dev_exit(self):
         epdconfig.module_exit()
 
 ### END OF FILE ###

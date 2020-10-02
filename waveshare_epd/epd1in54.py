@@ -234,7 +234,7 @@ class EPD:
                 self.send_data(image[i + j * int(self.width / 8)])   
         self.TurnOnDisplay()
         
-    def Clear(self):
+    def Clear(self, color):
         # self.SetWindow(0, 0, self.width - 1, self.height - 1)
         # send the color data
         self.SetWindow(0, 0, self.width, self.height)
@@ -252,6 +252,7 @@ class EPD:
         self.send_command(0x10) # DEEP_SLEEP_MODE
         self.send_data(0x01)
         
+    def Dev_exit(self):
         epdconfig.module_exit()
 
 ### END OF FILE ###
