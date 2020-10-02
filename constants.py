@@ -1,6 +1,6 @@
 from pathlib import Path
 # application version number
-version = '0.4.05'
+version = '0.4.06'
 
 # url of github project
 url = 'https://github.com/txoof/slimpi_epd'
@@ -40,6 +40,9 @@ noartwork = './images/No-album-art.png'
 ###### python modules that may change
 # EPD library
 waveshare = 'waveshare_epd'
+
+# waveshare library version
+ws_version = '751a9fb 2020-09-04 15:30:45 +0800'
 
 # layouts file for display
 layouts = 'layouts'
