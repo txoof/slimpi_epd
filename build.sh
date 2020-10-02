@@ -3,7 +3,7 @@
 echo "attempting to configure build environment and build SlimPi"
 
 # check for requried packages
-reqPackages=("libtiff5-dev" "libopenjp*-dev")
+reqPackages=("libtiff5" "libopenjp*")
 halt=0
 
 ws_version=$(grep ws_version ./constants.py)
