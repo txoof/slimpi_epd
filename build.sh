@@ -2,9 +2,19 @@
 
 echo "attempting to configure build environment and build SlimPi"
 
-
+# check for requried packages
 reqPackages=("libtiff5-dev" "libopenjp*-dev")
 halt=0
+
+ws_version=$(grep ws_version ./constants.py)
+
+echo "Waveshare epd library: $ws_version"
+read -p "Update? [y/N] " -n 1 -r
+echo 
+if [[ ! $REPLY =~ [^Yy]$ ]]
+then
+  bash ./update_waveshare.sh
+fi
 
 for i in "${reqPackages[@]}"
 do
@@ -27,7 +37,7 @@ if [[ $halt -gt 0 ]]; then
   exit
 fi
 
-pipenvExec=`which pipenv`
+pipenvExec=$(which pipenv)
 
 echo "checking pipenv virtual environment"
 
