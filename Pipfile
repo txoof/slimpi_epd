@@ -15,6 +15,7 @@ requests = "*"
 lmsquery-fork = "*"
 pyinstaller = "*"
 epdlib = "*"
+argconfigparse = "*"
 
 [requires]
 python_version = "3.7"
