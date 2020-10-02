@@ -11,3 +11,4 @@ __pycache__/
 *.swp
 *_checkpoints/
 *.pyo
+*.ignore
