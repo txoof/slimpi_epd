@@ -1,28 +1,11 @@
-#!/usr/bin/env python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 
-# In[1]:
-
-
-#get_ipython().run_line_magic('load_ext', 'autoreload')
-#get_ipython().run_line_magic('autoreload', '2')
-#get_ipython().run_line_magic('reload_ext', 'autoreload')
 
 
 
 
-# In[2]:
-
-
-#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./slimpi.ipynb')
-#get_ipython().run_line_magic('nbconvert', '')
-
-
-
-
-# In[3]:
 
 
 import logging
@@ -64,7 +47,6 @@ import waveshare_epd # explicitly import this to make sure that PyInstaller can 
 
 
 
-# In[4]:
 
 
 def do_exit(status=0, message=None):
@@ -81,7 +63,6 @@ def do_exit(status=0, message=None):
 
 
 
-# In[18]:
 
 
 def scan_servers():
@@ -108,7 +89,6 @@ def scan_servers():
 
 
 
-# In[6]:
 
 
 logger = logging.getLogger(__name__)
@@ -117,7 +97,6 @@ logger.root.setLevel('DEBUG')
 
 
 
-# In[8]:
 
 
 def main():
@@ -131,6 +110,7 @@ def main():
     app_name = constants.app_name
     app_long_name = constants.app_long_name
     url = constants.url
+    
         
     ## CONFIGURATION FILES ##
     # logging configuration file
@@ -146,6 +126,7 @@ def main():
     
     # set the waveshare library
     waveshare = constants.waveshare
+    ws_version = constants.ws_version
     
     # set plugins library
     plugins = constants.plugins
@@ -260,6 +241,7 @@ def main():
     ## EPD INIT ##
     try:
         # create the name of the module
+        logging.debug(f'using waveshare library version: {ws_version}')
         epd_module = '.'.join([waveshare, config['layouts']['display']])
         # load the epd module
         logging.debug(f'creating epd display object: {epd_module}')
@@ -520,7 +502,6 @@ def main():
 
 
 
-# In[19]:
 
 
 if __name__ == '__main__':
@@ -529,7 +510,6 @@ if __name__ == '__main__':
 
 
 
-# In[ ]:
 
 
 
@@ -537,7 +517,6 @@ if __name__ == '__main__':
 
 
 
-# In[ ]:
 
 
 
