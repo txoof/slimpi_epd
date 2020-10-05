@@ -1,19 +1,9 @@
-#!/usr/bin/env python
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 
-# In[1]:
 
 
-#get_ipython().run_line_magic('alias', 'nbconvert nbconvert ./wordclock.ipynb')
-
-#get_ipython().run_line_magic('nbconvert', '')
-
-
-
-
-# In[1]:
 
 
 import logging
@@ -23,7 +13,6 @@ from random import choice
 
 
 
-# In[2]:
 
 
 def time_list(time):
@@ -36,7 +25,6 @@ def time_list(time):
 
 
 
-# In[3]:
 
 
 def time_now():
@@ -45,7 +33,6 @@ def time_now():
 
 
 
-# In[4]:
 
 
 def map_val(a, b, s):
@@ -67,7 +54,6 @@ def map_val(a, b, s):
 
 
 
-# In[5]:
 
 
 def update(time=None):    
