@@ -16,6 +16,7 @@ lmsquery-fork = "*"
 pyinstaller = "*"
 epdlib = "*"
 argconfigparse = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.7"
