@@ -253,6 +253,50 @@ clock = {
           'font_size': None},
 }
 
+wordclockLG = {
+  'wordtime':
+         {'image': None,
+          'max_lines': 3,
+          'padding': 5,
+          'width': 1,
+          'height': 9/10,
+          'abs_coordinates': (0, 0),
+          'hcenter': False,
+          'vcenter': False,
+          'rand': True,
+          'inverse': True,
+          'relative': False,
+          'font': './fonts/Anton/Anton-Regular.ttf',
+          'font_size': None},
+  'time':
+         {'image': None,
+          'max_lines': 1,
+          'padding': 10,
+          'width': 1/2,
+          'height': 1/10,
+          'abs_coordinates': (0, None),
+          'vcenter': True,
+          'inverse': True,
+          'rand': True,
+          'relative': ['time', 'wordtime'],
+          'font': './fonts/Anton/Anton-Regular.ttf',
+          'font_size': None},
+  'mode':
+         {'image': None,
+          'max_lines': 1,
+          'padding': 10,
+          'width': 1/2,
+          'height': 1/10,
+          'abs_coordinates': (None, None),
+          'hcenter': False,
+          'vcenter': True,
+          'rand': True,
+          'inverse': True,
+          'relative': ['time', 'wordtime'],
+          'font': './fonts/Anton/Anton-Regular.ttf',
+          'font_size': None},
+}
+
 wordclock = {
   'wordtime':
          {'image': None,
