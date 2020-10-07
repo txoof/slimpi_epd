@@ -277,7 +277,12 @@ def main():
         do_exit(1, message=myE)
         
     ## SCREEN INIT ##
-    screen = epdlib.Screen()
+    rotation = int(config['main'].get('rotate', 0))
+    logging.debug(f"configured rotation: {rotation}")
+    if rotation not in (180, 90, -90):
+        logging.fatal(f"a screen rotation of {rotation} is not supported (only 0, 90, -90 and 180 are supported)")
+
+    screen = epdlib.Screen(rotation=rotation)
     try:
         screen.epd = epd
     except PermissionError as e:
@@ -287,7 +292,7 @@ def main():
         
     screen.initEPD()
 
-        
+
 
     ## LAYOUT INIT ##
     logging.debug(f'importing layouts from file: {layouts_file}')
