@@ -184,6 +184,10 @@ def main():
                          default=False, dest='lms_server__player_name', ignore_none=True,
                          help='set the name of the player to monitor')
     
+    options.add_argument('-r', '--rotation', type=int, required=False, metavar='angle',
+                        default=None, dest='main__rotation', ignore_none=True,
+                        help='set orientation of the screen 0: ribbon at bottom, 90: left, -90: right, 180: top')
+    
     # display the version and exit
     options.add_argument('-V', '--version', action='store_true', required=False,
                          dest='version', default=False, 
@@ -231,7 +235,10 @@ def main():
     # merge the configuration file(s) values with command line options
     # command line options override config files
     config = configuration.merge_dict(config_file.config_dict, options.nested_opts_dict)
-        
+    
+#     return config_file.config_dict, options.nested_opts_dict
+#     return config
+    
     # kludge to work around f-strings with quotes in Jupyter
     ll = config['main']['log_level']
     logging.root.setLevel(ll)
@@ -239,6 +246,7 @@ def main():
     
     #### HARDWARE INIT ####
     ## EPD INIT ##
+    
     try:
         # create the name of the module
         logging.debug(f'using waveshare library version: {ws_version}')
@@ -267,6 +275,28 @@ def main():
         logging.critical('The user executing this program does not have access to the SPI devices.')
         do_exit(0, 'This user does not have access to the SPI group\nThis can typically be resolved by running:\n$ sudo groupadd <username> spi')
         
+        
+    # set rotation
+    try: 
+        config['main']['rotation'] = int(config['main']['rotation'])
+    except (KeyError) as e:
+        myE = configKeyError_fmt.format('main', 'rotation')
+        logging.error(myE)
+        do_exit(1, myE)        
+    except ValueError as e:
+        myE = f"bad screen rotation value: {config['main']['rotation']}"
+        logging.critical(myE)
+        logging.critical('valid values are: 0, 90, -90, 180')
+        do_exit(1, myE)
+    try:
+        screen.rotation = config['main']['rotation']
+    except ValueError as e:
+        myE = configKeyError_fmt.format('main', 'rotation')
+        logging.error(myE)
+#         logging.critical(f'bad value set for `rotation` in configuration: {config.rotation}')
+#         logging.critical(f'{e}')
+        do_exit(1, myE)
+    
     screen.initEPD()
 
         
@@ -506,13 +536,6 @@ def main():
 
 if __name__ == '__main__':
     o = main()
-
-
-
-
-
-
-
 
 
 
