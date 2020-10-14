@@ -39,8 +39,11 @@ def time_list(time):
 # In[3]:
 
 
-def time_now():
-    return datetime.now().strftime("%H:%M")
+def time_now(time):
+    if not time:
+        return datetime.now().strftime("%H:%M")
+    else:
+        return time.strftime("%H:%M")
 
 
 
