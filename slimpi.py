@@ -25,6 +25,7 @@ from time import sleep
 
 # clock
 from datetime import datetime
+from datetime import timedelta
 
 ##### PyPi Modules #####
 # handle http requests
@@ -259,7 +260,12 @@ def main():
         do_exit(1, message=myE)
         
     ## SCREEN INIT ##
-    screen = epdlib.Screen()
+    rotation = int(config['main'].get('rotate', 0))
+    logging.debug(f"configured rotation: {rotation}")
+    if rotation not in (180, 90, -90):
+        logging.fatal(f"a screen rotation of {rotation} is not supported (only 0, 90, -90 and 180 are supported)")
+
+    screen = epdlib.Screen(rotation=rotation)
     try:
         screen.epd = epd
     except PermissionError as e:
@@ -269,7 +275,7 @@ def main():
         
     screen.initEPD()
 
-        
+
 
     ## LAYOUT INIT ##
     logging.debug(f'importing layouts from file: {layouts_file}')
@@ -354,7 +360,7 @@ def main():
             image = refresh.concat()
 #                 screen.elements = refresh.blocks.values()
 #                 image = screen.concat()
-            screen.writeEPD(image)        
+            screen.writeEPD(image)
         
         logging.info(f'{max_startup_loops - startup_counter} start up attempts reamain')
         logging.info('setting up LMS query connection')
@@ -465,7 +471,7 @@ def main():
         if nowplaying_mode != "play" and screen.update.last_updated > refresh_delay:
             logging.debug(f'next update will be in {refresh_delay} seconds')
             logging.info('music appears to be paused, switching to plugin display')
-            update = plugin.update()
+            update = plugin.update(datetime.now() + timedelta(seconds=screen.update_lag))
             update['mode'] = nowplaying_mode
             plugin_layout.update_contents(update)
             refresh = plugin_layout
