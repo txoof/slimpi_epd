@@ -1,4 +1,9 @@
 # SlimPi 
+
+## SlimPi Deprecated
+
+SlimPi has been replaced by [PaperPi](https://github.com/txoof/PaperP), a more robust, and plugin friendly version.
+
 ## ePaper based Logitech Media Player Display
 For complete build instructions and links to a spiffy case, head over to the [Project Log at Hackaday.io](https://hackaday.io/project/170051-slimpi).
 <img width="300" src="./docs/SlimPi_splash.png">
